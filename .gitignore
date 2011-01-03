@@ -1,0 +1,3 @@
+*.pyc
+settings.py
+util/util_conf.py
