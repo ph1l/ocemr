@@ -1,0 +1,7 @@
+{% extends "base_visit.html" %}
+{% block visitContent %}
+<TABLE>
+<TEXTAREA style="width: 100%;" rows=14 DISABLED>{{p.scratchNote}}</TEXTAREA><BR>
+<A HREF="#" onClick='window.open("/patient/edit/note/{{p.id}}/","Edit Note","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>
+</TABLE>
+{% endblock %}

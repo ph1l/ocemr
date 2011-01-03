@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Active Lab Queue{% endblock %}
+
+{% block extrahead %}
+  <META HTTP-EQUIV="Cache-Control" content="no-cache">
+  <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+  <META HTTP-EQUIV="Refresh" CONTENT="30"> 
+{% endblock %}  
+
+{% block extraheader %}
+  <A HREF=/patient_queue/>Patient Queue</A>|Lab Queue|<A HREF=/med_queue/>Med Queue</A>
+{% endblock %}
+
+{% block content %}
+<TABLE>
+<TR><TH>Ordered</TH><TH>Patient Id</TH><TH>Type</TH><TH>Status</TH><TH>Result</TH><TH></TH></TR>
+<TR><TH></TH><TH COLSPAN=6>Notes</TH></TR>
+{% for l in labs %}
+<TR>
+<TD>{{l.orderedDateTime|date:"d-m H:i"}}</TD>
+<TD><A HREF=/patient/{{l.patient.id}}/>{{ l.patient }}</A></TD>
+<TD>{{ l.type }}</TD>
+	{% ifequal l.status "ORD" %}
+		<TD STYLE='background-color:#FFFFFF;'>
+	{% else %} {% ifequal l.status "PEN" %}
+		<TD STYLE='background-color:#FFFF55;'>
+	{% else %} {% ifequal l.status "CAN" %}
+		<TD STYLE='background-color:#FFAAAA;'>
+	{% else %} {% ifequal l.status "COM" %}
+		<TD STYLE='background-color:#77FF77;'>
+	{% else %} {% ifequal l.status "FAI" %}
+		<TD STYLE='background-color:#FF5555;'>
+	{% endifequal %}
+	{% endifequal %}
+	{% endifequal %}
+	{% endifequal %}
+	{% endifequal %}
+{{l.displayStatus}}</TD>
+<TD>{{l.result}}
+<TD>
+		|
+		<A HREF=# onClick='window.open("/lab/{{l.id}}/notate/","Notate Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>note</A>
+		|
+	{% ifequal l.status "ORD" %}
+		<A HREF=# onClick='window.open("/lab/{{l.id}}/start/","Start Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>start</A>
+		|
+		<A HREF=# onClick='window.open("/lab/{{l.id}}/cancel/","Cancel Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>cancel</A>
+	{% else %} {% ifequal l.status "PEN" %}
+		<A HREF=# onClick='window.open("/lab/{{l.id}}/complete/","Complete Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>complete</A>
+		|
+		<A HREF=# onClick='window.open("/lab/{{l.id}}/cancel/","Cancel Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>cancel</A>
+		|
+		<A HREF=# onClick='window.open("/lab/{{l.id}}/fail/","Fail Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>fail</A>
+		|
+	{% endifequal %}
+	{% endifequal %}
+<TR>
+	<TD COLSPAN=1 STYLE='border: 0px;'></TD>
+	<TD COLSPAN=5>
+          {% for ln in l.get_notes %}
+            <DIV ID=labNote>
+                "{{ln.note}}" by {{ln.addedBy}} @{{ln.addedDateTime|date:"d-m H:i"}}
+            </DIV>
+            {% endfor %}
+
+	</TD></TR>
+{% endfor %}
+</TABLE>
+{% endblock %}
+

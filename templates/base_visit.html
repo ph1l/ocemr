@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block extrahead %}
+<link href="/css/base_visit.css" rel="stylesheet" />
+{% block visitExtrahead %}{% endblock %}
+{% endblock %}
+{% block extraheader %}
+<A HREF=/patient_queue/>Patient Queue</A>:<A HREF=/patient/{{p.id}}/>{{p}}</A> Visit #{{v.id}} 
+{% endblock %}
+{% block content %}
+<DIV ID="allergies">Allergies (<A HREF="#" onClick='window.open("/visit/{{v.id}}/allergy/new/","New Allergy","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</a>):
+{% for a in p.get_allergies %}
+{{a.to}}<A HREF="#" onClick='window.open("/visit/{{v.id}}/allergy/delete/{{a.id}}/","Delete Allergy","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>-</a> &nbsp;
+{% endfor  %}
+</DIV>
+<DIV ID="problemList">
+  Problem List:
+  <UL>
+    {% for d in v.get_active_diags %}
+      <LI><SPAN ID=problemlistAct>{{d.type.title}}</SPAN></LI>
+    {% endfor %}
+    <LI>--------------</LI>
+    {% for dt in v.get_inactive_diag_types %}
+      <LI><SPAN ID=problemlistIna>{{dt.title}}</SPAN></LI>
+    {% endfor %}
+  </UL>
+</DIV> <!-- problemList -->
+<DIV ID="visitContent">
+  <ul class="menuTabs">
+{% for mi in menu|dictsort:"ord" %}
+    {% if mi.active %}
+     <li class="MenuTabActive"><a class="MenuTabActive" href=/visit/{{v.id}}/{{mi.link}}/>{{ mi.title }}</a></li>
+    {% else %}
+     <li class="MenuTab"><a class="MenuTab" href=/visit/{{v.id}}/{{mi.link}}/>{{ mi.title }}</a></li>
+    {% endif %}
+{% endfor %}
+  </ul> 
+{% block visitContent %}{% endblock %}
+</DIV> <!-- visitContent -->
+{% endblock %}
+

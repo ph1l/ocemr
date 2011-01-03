@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Patient Search Results{% endblock %}
+{% block content %}
+{% if patients %}
+<TABLE>
+<TR><TH>Id</TH><TH>Name</TH><TH>Actions</TH></TR>
+{% for p in patients %}
+<TR>
+	<TD>{{p.id}}</TD>
+	<TD>
+		{{p.fullName}}</a>
+	</TD>
+	<TD><a href=/patient/{{p.id}}/ onclick="return loadIframe('contentFrame', this.href)">view</a></TD>
+{% endfor %}
+</TABLE>
+{% else %}
+<H2>None Found</H2>
+<P>If the patient <b>should</b> be in the system, consider using
+<SPAN ID=textUnterlined>alternate spellings</SPAN> or
+<SPAN ID=textUnterlined>broader search terms</span> before
+ <A HREF=#>Adding a new Patient</A>.
+{% endif %}
+{% endblock %}

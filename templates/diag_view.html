@@ -1,0 +1,23 @@
+{% extends "base_popup.html" %}
+
+{% block extrahead %}
+<link href="/css/diag_view.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<a href="#" onClick='opener.window.location.reload();self.close();return false;'>Close</a>
+<DIV ID=diagnosis>
+  <SPAN ID=diagnosisType><B>{{dt.title}}</B> :</SPAN>
+  <BR>
+  <DIV ID=diagnosisNotes>
+  {% for diag in diags %}
+  <DIV ID=diagnosisNote>
+    {{diag.diagnosedDateTime|date:"d-m H:i"}} - {{diag.displayStatus}} - {{diag.diagnosedBy}}<BR>
+    "{{diag.notes}}"
+  </DIV>
+  {% endfor %}
+  </DIV>
+</DIV>
+<a href="#" onClick='opener.window.location.reload();self.close();return false;'>Close</a>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base_visit.html" %}
+{% block visitContent %}
+Add New Symptom:
+<UL class="SubMenu">
+{% for ST in symptomTypes %}
+<LI class="SubMenuItem"><A class="SubMenuItem" HREF="#" onClick='window.open("/visit/{{v.id}}/subj/new/{{ST.id}}/","New Symptom","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>{{ST.title}}</A></LI>
+{% endfor %}
+</UL>
+Existing:
+{% for S in symptoms %}
+<DIV ID=symptomBox>
+	<SPAN ID=symptomTitle>{{S.type.title}}(<A HREF="#" onClick='window.open("/visit/{{v.id}}/subj/edit/{{S.id}}/","Edit Symptom","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A> | <A HREF="#" onClick='window.open("/visit/{{v.id}}/subj/delete/{{S.id}}/","Delete Symptom","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>delete</A>)</SPAN>
+	<TEXTAREA COLS=100% DISABLED>{{S.notes}}</TEXTAREA>
+</DIV> <!-- symptomBox -->
+{% endfor %}
+
+{% endblock %}

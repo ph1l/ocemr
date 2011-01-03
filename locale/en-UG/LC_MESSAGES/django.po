@@ -1,0 +1,9 @@
+msgid "DATETIME_FORMAT"
+msgstr "j N Y P"
+
+msgid "DATE_FORMAT"
+msgstr "j N Y"
+
+msgid "TIME_FORMAT"
+msgstr "P"
+

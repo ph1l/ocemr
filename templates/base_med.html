@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block extrahead %}
+<link href="/css/base_visit.css" rel="stylesheet" />
+{% block medExtrahead %}{% endblock %}
+{% endblock %}
+{% block extraheader %}
+<A HREF=/med_queue/>Med Queue</A>:<A HREF=/patient/{{p.id}}/>{{p}}</A><A HREF=/visit/{{v.id}}/>{{v}}</A>
+{% endblock %}
+{% block content %}
+{% endblock %}
+

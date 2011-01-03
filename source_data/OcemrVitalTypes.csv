@@ -1,0 +1,8 @@
+title,unit,minValue,maxValue
+Weight,kg,0,512
+Height,cm,0,296
+Temp,C,20,50
+HR,bpm,20,200
+RR,bpm,5,100
+BP - Systolic,mmHg,32,256
+BP - Diastolic,mmHg,24,192

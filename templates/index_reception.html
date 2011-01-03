@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Reception" %}{% endblock %}
+
+{% block submenu %}
+<ul class=SubMenu>{% trans "Appointments" %}
+<li class=SubMenuItem>
+	<a class=SubMenuItem href=/appointment/list/ onclick="return loadIframe('contentFrame', this.href)">{% trans "List" %}</a>
+<li class=SubMenuItem>
+	<a class=SubMenuItem href=/appointment/new/ onclick="return loadIframe('contentFrame', this.href)">{% trans "New" %}</a>
+</ul>
+<ul class=SubMenu>{% trans "Patients" %}
+<li class=SubMenuItem>
+	<a class=SubMenuItem href=/patient/search/ onclick="return loadIframe('contentFrame', this.href)">{% trans "Search" %}</a>
+<li class=SubMenuItem>
+	<a class=SubMenuItem href=/patient/new/ onclick="return loadIframe('contentFrame', this.href)">{% trans "New" %}</a>
+</ul>
+{% endblock %}
+

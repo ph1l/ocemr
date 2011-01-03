@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Patient Search{% endblock %}
+{% block extrahead %} {{ form.media }} {%endblock%}
+{% block content %}
+<form action="/patient/new/" method="POST">
+<TABLE>
+{{ form.as_table }}
+</TABLE>
+<input type="submit" value="Submit" />
+</form>
+{%endblock%}

@@ -1,0 +1,121 @@
+/*
+//#########################################################################
+//
+//    This file is part of OCEMR.
+//
+//    OCEMR is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    OCEMR is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with OCEMR.  If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//########################################################################
+//       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
+//#########################################################################
+*/
+
+#allergies
+{
+	width: 100%;
+}
+#problemList
+{
+	width: 15%;
+        float: left;
+	list-style-type: none;
+}
+#problemList ul {
+	list-style-type: none;
+	margin-left: 0;
+	padding-left: 0;
+
+}
+#problemlistAct
+{
+	font-size: .80em;
+}
+#problemlistIna
+{
+	font-size: .70em;
+	
+}
+#visitContent
+{
+	width: 85%;
+	float: left;
+}
+
+#submenu
+{
+        clear: left;
+        float: left;
+        width: 20%;
+	height: 100%;
+        margin: 0em;
+        padding: 0em;
+        background: #776;
+}
+
+ul.menuTabs {
+margin-left: 0;
+padding-left: 0;
+}
+
+li.MenuTab { 
+display:inline; 
+background-color: #FFF;
+border: .1em solid #03c;
+border-bottom: .5em solid #03c;
+margin-bottom: .3em;
+}
+li.MenuTabActive { 
+display:inline; 
+background-color: #03c;
+border: .1em solid #03c;
+border-bottom: .5em solid #03c;
+margin-bottom: .3em;
+}
+a.MenuTab {
+text-decoration: none;
+color: #03c;
+}
+a.MenuTab:hover {
+text-decoration: underline;
+}
+a.MenuTabActive {
+text-decoration: none;
+color: #fff;
+}
+
+ul.SubMenu {
+margin-left: .5em;
+padding-left: 0em;
+list-style-type: none;
+}
+
+li.SubMenuItem { 
+display:inline; 
+border: 1px outset #666;
+margin: .1em;
+padding: 0em;
+}
+a.SubMenuItem {
+text-decoration: none;
+background-color: #99A;
+color: #000;
+padding: .1em;
+}
+a.SubMenuItem:hover {
+text-decoration: underline;
+background-color: #AAF;
+color: #000;
+padding: .1em;
+}

@@ -1,0 +1,42 @@
+{% extends "base_med.html" %}
+
+{% block title %}Meds for: {{p}} - Visit {{v.scheduledDate}}{% endblock %}
+
+{% block medExtraheader %}
+	<A HREF=/med_queue/>Med Queue</A> : <A HREF=/patient/{{p.id}}/>{{p}}</A> : <A HREF=/visit/{{v.id}}/>Visit {{v.scheduledDate}}</A>
+{% endblock %}
+
+{% block content %}
+<TABLE>
+<TR>
+	<TH>Ordered @</TH>
+	<TH>Type</TH>
+	<TH>Dosage</TH>
+	<TH>Med Status</TH>
+	<TH>Actions</TH>
+</TR>
+{% for m in v.get_meds %}
+<TR>
+<TD>{{m.addedDateTime|date:"d-m H:i"}}</TD>
+<TD>{{ m.type.title }}</A></TD>
+<TD>{{ m.dosage }}</A></TD>
+        {% ifequal m.status "ORD" %}
+                <TD STYLE='background-color:#FFFF55;'>
+        {% endifequal %}
+        {% ifequal m.status "DIS" %}
+                <TD STYLE='background-color:#77FF77;'>
+        {% endifequal %}
+	{% ifequal m.status "SUB" %}
+                <TD STYLE='background-color:#FF7755;'>
+        {% endifequal %}
+	{% ifequal m.status "NDI" %}
+                <TD STYLE='background-color:#FF5555;'>
+        {% endifequal %}
+{{m.displayStatus}}
+</TD>
+<TD>
+</TD>
+</TR>
+{% endfor %}
+</TABLE>
+{% endblock %}

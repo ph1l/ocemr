@@ -1,0 +1,101 @@
+/*
+//#########################################################################
+//
+//    This file is part of OCEMR.
+//
+//    OCEMR is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    OCEMR is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with OCEMR.  If not, see <http://www.gnu.org/licenses/>.
+//
+//
+//########################################################################
+//       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
+//#########################################################################
+*/
+
+html,body { width:100%; height:100%; padding:0em; margin:0em; }
+
+a {color: #03c; }
+#container
+{
+        width: 100%;
+        height: 100%;
+        margin: 0em;
+        padding: 0em;
+}
+
+#titlebar
+{
+        clear: both;
+        float: left;
+        width: 100%;
+        margin: 0em;
+        padding: 0em;
+	color: #000;
+        background: #ccc;
+	border: 1px solid #000000;
+}
+
+#titlebarLeft { padding: .25em; clear: both; float: left; }
+#titlebarRight { padding: .25em; float: right; }
+
+#header
+{
+        clear: both;
+        float: left;
+        width: 100%;
+        margin: 0em;
+        padding: 0em;
+        background: #bbb;
+	color: #000;
+	border: 1px solid #000000;
+}
+#headerLeft { padding: .25em; clear: both; float: left; }
+#headerRight { padding: .25em; float: right; }
+#extraHeader {
+        clear: both;
+	float: left;
+        width: 100%;
+	text-align:center;
+        margin: 0em;
+        padding: 0em;
+        background: #aaa;
+	color: #000;
+	border: 1px solid #000000;
+}
+
+#content
+{
+        clear: both;
+	float: left;
+        width: 100%;
+        height: 100%;
+        margin: 0em;
+        padding: 0em;
+}
+
+table
+{
+        margin: 0em;
+        padding: 0em;
+}
+tr
+{
+        margin: 0em;
+        padding: 0em;
+}
+td
+{
+	border: 1px solid #000000;
+	margin: 0em;
+	padding: .1em;
+}

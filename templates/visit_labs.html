@@ -1,0 +1,41 @@
+{% extends "base_visit.html" %}
+{% block visitExtrahead %}
+<link href="/css/visit_labs.css" rel="stylesheet" />
+{% endblock %}
+{% block visitContent %}
+Order a Lab:
+<UL class="SubMenu">
+{% for LT in labTypes %}
+<LI class="SubMenuItem"><A class="SubMenuItem" HREF="#" onClick='window.open("/visit/{{v.id}}/labs/new/{{LT.id}}/","Order a Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>{{LT.title}}</A></LI>
+{% endfor %}
+</UL>
+<DIV ID=labTable>
+<TABLE>
+<TR><TH>ID<TH>Type<TH>Status<TH>Notes<TH>Result<TD></TR>
+{% for L in labs %}
+<TR>
+	<TD>{{L.id}}
+	<TD>{{L.type.title}}
+	<TD>{{L.displayStatus}}
+	<TD>
+	    {% for ln in L.get_notes %}
+	    <DIV ID=labNote>
+		"{{ln.note}}" by {{ln.addedBy}} @{{ln.addedDateTime|date:"d-m H:i"}}
+	    </DIV>
+	    {% endfor %}
+	<TD>{{L.result}}
+	<TD>
+		| <A HREF="#" onClick='window.open("/lab/{{L.id}}/notate/","Add Lab Note","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Add Note</A>
+	{% ifequal l.status "ORD" %}
+		| <A HREF="#" onClick='window.open("/lab/{{L.id}}/cancel/","Cancel Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Cancel</A>
+	{% else %} {% ifequal l.status "PEN" %}
+		| <A HREF="#" onClick='window.open("/lab/{{L.id}}/cancel/","Cancel Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Cancel</A>
+	{% endifequal %}
+	{% endifequal %}
+	|
+</TR>
+{% endfor %}
+</TABLE>
+</DIV> <!-- labTable -->
+
+{% endblock %}

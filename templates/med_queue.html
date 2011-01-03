@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Active Med Queue{% endblock %}
+
+{% block extrahead %}
+  <META HTTP-EQUIV="Cache-Control" content="no-cache">
+  <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+  <META HTTP-EQUIV="Refresh" CONTENT="30"> 
+{% endblock %}  
+
+{% block extraheader %}
+	<A HREF=/patient_queue/>Patient Queue</A>|<A HREF=/lab_queue/>Lab Queue</A>|Med Queue
+{% endblock %}
+
+{% block content %}
+<TABLE>
+<TR>
+	<TH>Ordered @</TH>
+	<TH>Patient Id</TH>
+	<TH># of Meds</TH>
+	<TH>Med Status</TH>
+	<TH>Visit Status</TH>
+	<TH>Actions</TH>
+</TR>
+{% for v in visits %}
+<TR>
+<TD>{{v.get_meds_order_datetime|date:"d-m H:i"}}</TD>
+<TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
+<TD>{{ v.get_num_meds }}</TD>
+        {% ifequal v.get_med_status 1 %}
+                <TD STYLE='background-color:#FFFF55;'>Waiting</SPAN>
+        {% endifequal %}
+        {% ifequal v.get_med_status 2 %}
+                <TD STYLE='background-color:#77FF77;'>Done</SPAN>
+        {% endifequal %}
+</TD>
+	{% ifequal v.status "CHOT" %}
+                <TD STYLE='background-color:#FFFF55;'>
+	{% else %}
+		<TD>
+        {% endifequal %}
+{{v.displayStatus}}</SPAN>
+</TD>
+<TD>
+		<A HREF="/meds/{{v.id}}/">View</A>
+
+		{% ifequal v.get_med_status 2 %}
+		
+		<A HREF=# onClick='window.open("/meds/{{v.id}}/checkout/","Checkout","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Checkout</A>
+		{% endifequal %}
+</TD>
+</TR>
+{% endfor %}
+</TABLE>
+{% endblock %}

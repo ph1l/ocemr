@@ -1,0 +1,38 @@
+{% extends "base_visit.html" %}
+{% block visitExtrahead %}
+<link href="/css/visit_obje.css" rel="stylesheet" />
+{% endblock %}
+{% block visitContent %}
+<DIV ID=vitals>
+Add Vital:
+<UL class="SubMenu">
+{% for VT in vitalTypes %}
+<LI class="SubMenuItem"><A class="SubMenuItem" HREF="#" onClick='window.open("/visit/{{v.id}}/obje/vital/new/{{VT.id}}/","New Vital","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>{{VT.title}}</A></LI>
+{% endfor %}
+</UL>
+<TABLE>
+<TR><TH>Time<TH>Type<TH>Data<TD></TR>
+{% for V in vitals %}
+<TR><TD>{{V.observedDateTime|date:"d-m H:i"}}<TD>{{V.type}}<TD>{{V.data}}
+<TD><A HREF="#" onClick='window.open("/visit/{{v.id}}/obje/vital/delete/{{V.id}}/","Delete Vital","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>del</A>
+</TR>
+{% endfor %}
+</TABLE>
+</DIV> <!-- vitals -->
+<DIV ID=physicalExam>
+Add Exam Note:
+<UL class="SubMenu">
+{% for ENT in examNoteTypes %}
+<LI class="SubMenuItem"><A class="SubMenuItem" HREF="#" onClick='window.open("/visit/{{v.id}}/obje/examNote/new/{{ENT.id}}/","New Exam Note","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>{{ENT.title}}</A></LI>
+{% endfor %}
+</UL>
+{% for EN in examNotes %}
+<DIV ID=examNote>
+<SPAN ID=examNoteType>{{EN.type}}</SPAN>(<A HREF="#" onClick='window.open("/visit/{{v.id}}/obje/examNote/edit/{{EN.id}}/","Edit Exam Note","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)
+<SPAN ID=examNoteByline>by {{EN.addedBy}} on {{EN.addedDateTime|date:"d-m H:i"}}</SPAN><BR>
+<TEXTAREA style="width: 95%;" DISABLED>{{EN.note}}</TEXTAREA><BR>
+</DIV> <!-- examNote -->
+{% endfor %}
+</DIV> <!-- physicalExam -->
+{% endblock %}
+

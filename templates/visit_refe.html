@@ -1,0 +1,16 @@
+{% extends "base_visit.html" %}
+{% block visitExtrahead %}
+<link href="/css/visit_refe.css" rel="stylesheet" />
+{% endblock %}
+{% block visitContent %}
+<A HREF="#" onClick='window.open("/visit/{{v.id}}/refe/new/","New Referral","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Add a Referral</A>
+{% for r in referrals %}
+<DIV ID=referral>
+<SPAN ID=referralType>{{r.to}} (<A HREF="#" onClick='window.open("/visit/{{v.id}}/refe/edit/{{r.id}}","Edit Referral","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)</SPAN><BR>
+<SPAN ID=referralReason>{{r.reason}}</TEXTAREA><BR>
+<SPAN ID=referralByline>by {{r.addedBy}} on {{r.addedDateTime|date:"m-d-Y H:i"}}</SPAN>
+</DIV> <!-- referral -->
+{% endfor %}
+
+{% endblock %}
+

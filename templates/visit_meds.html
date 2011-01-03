@@ -1,0 +1,23 @@
+{% extends "base_visit.html" %}
+{% block visitExtrahead %}
+<link href="/css/visit_meds.css" rel="stylesheet" />
+{% endblock %}
+{% block visitContent %}
+<OL>
+{% for d in diagnoses %}
+  <LI>{{d.type.title}}</LI>
+    <A HREF=# onClick='window.open("/visit/{{v.id}}/meds/new/{{d.id}}","Add Diagnosis","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Add Med</A>
+	{% for m in d.get_meds %}
+		{{ m.type.title }}
+		-
+		{{ m.dosage }}
+		({{ m.dispenseAmount }})
+		<A href="#">Edit</A>
+		<A href="#">Delete</A>
+		<A href="#">Add Note</A>
+		<BR>
+	{% endfor %}
+{% endfor %}
+</OL>
+{% endblock %}
+

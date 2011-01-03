@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Active Patient Queue{% endblock %}
+
+{% block extrahead %}
+  <META HTTP-EQUIV="Cache-Control" content="no-cache"> 
+  <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> 
+  <META HTTP-EQUIV="Refresh" CONTENT="30"> 
+{% endblock %}
+
+{% block extraheader %}
+	Patient Queue|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>
+{% endblock %}
+
+{% block content %}
+<TABLE>
+<TR><TH>Scheduled</TH><TH>Patient Id</TH><TH>Status</TH><TH>Seen</TH><TH>Labs</TH><TH>Meds</TH><TH>Done</TH><TH>Actions</TH></TR>
+{% for v in visits %}
+<TR>
+<TD>{{v.scheduledDate|date:"d-m"}} {{v.scheduledTime|time:"H:i"}}</TD>
+<TD><A HREF=/patient/{{p.id}}/>{{ v.patient }}</A></TD>
+	{% ifequal v.status "MISS" %}
+		<TD STYLE='background-color:#FF5555;'>
+	{% else %} {% ifequal v.status "INPR" %}
+		<TD STYLE='background-color:#77FF77;'>
+	{% else %} {% ifequal v.status "WAIT" %}
+		<TD STYLE='background-color:#FFFF55;'>
+	{% else %}
+		<TD STYLE='background-color:#FFFFFF;'>
+	{% endifequal %}
+	{% endifequal %}
+	{% endifequal %}
+{{v.displayStatus}} </TD>
+{%if v.is_claimed %}
+	<TD STYLE='background-color:#77FF77;'>Yes
+{% else %}
+	<TD STYLE='background-color:#FFFF55;'>No
+{% endif %}
+</TD>
+{% ifequal v.get_lab_status 1 %}
+	<TD STYLE='background-color:#FFFF55;'>Wait</SPAN>
+{% else %}{% ifequal v.get_lab_status 2 %}
+		<TD STYLE='background-color:#77FF77;'>Done</SPAN>
+	{% else %}
+		<TD>
+	{% endifequal %}
+{% endifequal %}
+</TD>
+{% ifequal v.get_med_status 1 %}
+	<TD STYLE='background-color:#FFFF55;'>Wait</SPAN>
+{% else %}{% ifequal v.get_lab_status 2 %}
+		<TD STYLE='background-color:#77FF77;'>Done</SPAN>
+	{% else %}
+		<TD>
+	{% endifequal %}
+{% endifequal %}
+</TD>
+{%if v.is_checking_out or v.is_finished %}<TD STYLE='background-color:#77FF77;'>Yes{%else%}<TD STYLE='background-color:#FFFF55;'>No{%endif%}</TD>
+<TD>
+
+<A HREF=/visit/{{v.id}}/>View Chart</A>
+{%if v.is_checking_out or v.is_finished %}
+	<A HREF=# onClick='window.open("/visit/{{v.id}}/unfinish/","Unfinish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo Finish</A>
+{%else%}
+	{%if v.is_claimed %}
+		<A HREF=# onClick='window.open("/visit/{{v.id}}/unclaim/","Unclaim Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo Claim</A>
+	{%else%}
+		<A HREF=# onClick='window.open("/visit/{{v.id}}/claim/","Claim Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Claim</A>
+	{%endif%}
+	<A HREF=# onClick='window.open("/visit/{{v.id}}/finish/","Finish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Finish</A>
+{%endif%}
+</TD>
+{% endfor %}
+</TABLE>
+{% endblock %}
+

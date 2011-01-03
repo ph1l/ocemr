@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Main Menu{% endblock %}
+
+{% block content %}
+<h1>Welcome to OCEMR!!!</h1>
+<UL>Queues:
+<LI><A HREF=/patient_queue/>Patient Queue</A>
+<LI><A HREF=/lab_queue/>Lab Queue</A>
+<LI><A HREF=/med_queue/>Prescription Queue</A>
+</UL>
+<UL>Patients:
+  <LI><A HREF=/patient/search/>Find a Patient</A>
+  <LI><A HREF=/patient/new/>Create a Patient</A>
+</UL>
+{% endblock %}
+

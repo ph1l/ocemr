@@ -1,0 +1,58 @@
+{% extends "base_visit.html" %}
+{% block visitExtrahead %}
+<link href="/css/visit_plan.css" rel="stylesheet" />
+{% endblock %}
+{% block visitContent %}
+<BR>
+<SPAN>Active Diagnoses:</SPAN>
+<HR>
+{% for d in v.get_active_diags %}
+  <DIV ID=diagnosisActive>
+  <SPAN ID=diagnosisType><B>{{d.type.title}}</B> : (
+  {% ifequal d.status "NEW" %}
+    |New
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/FOL/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Follow-up</A>
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/NOT/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Not Addressing</A>
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/RES/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Resolve</A>
+  {% endifequal %}
+  {% ifequal d.status "FOL" %}
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/NEW/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>New</A>
+    |Follow-up
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/NOT/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Not Addressing</A>
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/RES/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Resolve</A>
+  {% endifequal %}
+  {% ifequal d.status "NOT" %}
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/NEW/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>New</A>
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/FOL/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Follow-up</A>
+    |Not Addressing
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/RES/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Resolve</A>
+  {% endifequal %}
+  {% ifequal d.status "RES" %}
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/NEW/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>New</A>
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/FOL/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Followup</A>
+    |<A HREF="#" onClick='window.open("/diag/{{d.id}}/stat_change/NOT/","","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Not Addressing</A>
+    |Resolve
+  {% endifequal %}
+  |)</SPAN><BR>
+  <TEXTAREA COLS=100% DISABLED>{{d.notes}}</TEXTAREA>
+  <BR>
+  (<A HREF="#" onClick='window.open("/diag/{{d.id}}/edit/notes/","Edit Diagnosis Notes","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit notes</A> | <A HREF="#" onClick='window.open("/diag/{{d.id}}/history/","View Diagnosis History","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>view history</A>)
+  <BR>
+  <SPAN ID=diagnosisByline>by {{d.diagnosedBy}} on {{d.diagnosedDateTime|date:"m-d-Y H:i"}}</SPAN>
+  </DIV> <!-- ID=diagnosisActive -->
+
+{% endfor %}
+<BR>
+<A HREF="#" onClick='window.open("/visit/{{v.id}}/plan/diag/new/","Add Diagnosis","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Add Diagnosis</A>
+<DIV ID=diagnosisInactive>
+<SPAN>Inactive Diagnoses:</SPAN>
+<BR>
+{% for dt in v.get_inactive_diag_types %}
+  <SPAN ID=diagnosisType><B>{{ dt.title }}</B> (
+  <A HREF="#" onClick='window.open("/visit/{{v.id}}/plan/diag/new/{{dt.id}}/","Add Diagnosis","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Re-Add</A>
+  | <A HREF="#" onClick='window.open("/diag/patienttypehistory/{{v.patient.id}}/{{dt.id}}/","View Diagnosis History","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>view history</A>)
+  )</SPAN><BR>
+{% endfor %}
+</DIV> <!-- ID=diagnosisInactive -->
+{% endblock %}
+

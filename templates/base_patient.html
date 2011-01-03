@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block header %}
+<DIV ID="tabs">
+ <ul class="menuTabs">
+{% for title,mi in mm.items %}
+  {% if mi.authorized %}
+    {% if mi.active %}
+     <li class="MenuTabActive"><a class="MenuTabActive" href={{ mi.url }}>{{ title }}</a></li>
+    {% else %}
+     <li class="MenuTab"><a class="MenuTab" href={{ mi.url }}>{{ title }}</a></li>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+ </ul> 
+</div> <!-- tabs -->
+{% endblock %}
+{% block content %}
+
+<iframe id="contentFrame" name="contentFrame" src="/blank/" width=100% height=100% scrolling=auto>
+ <P>Your browser doesn' support iFrames. :-(</P>
+</iframe>
+{% endblock %}
+
