@@ -18,7 +18,7 @@
 {% for v in visits %}
 <TR>
 <TD>{{v.scheduledDate|date:"d-m"}} {{v.scheduledTime|time:"H:i"}}</TD>
-<TD><A HREF=/patient/{{p.id}}/>{{ v.patient }}</A></TD>
+<TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
 	{% ifequal v.status "MISS" %}
 		<TD STYLE='background-color:#FF5555;'>
 	{% else %} {% ifequal v.status "INPR" %}
