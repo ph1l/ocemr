@@ -21,4 +21,4 @@
 #########################################################################
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
-echo "OCEMR_VERSION=\"v0.1-r`svnversion`\""
+echo "OCEMR_VERSION=\"v0.2\""
