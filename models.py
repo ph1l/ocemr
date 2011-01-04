@@ -317,8 +317,8 @@ class Med(models.Model):
 	MED_STATUS_CHOICES = (
 		('ORD','Ordered'),
 		('DIS','Dispensed'),
-		('SUB','Substituted'), # Substituted
-		('NDI','Not Dispensed'), # 
+		('SUB','Substituted'),
+		('CAN','Canceled'),
 	)
 	type = models.ForeignKey(MedType)
 	patient = models.ForeignKey(Patient)
