@@ -423,12 +423,12 @@ def visit_meds(request,id):
 	Visit 
 	"""
 	menu = get_visit_menu('meds')
-	from ocemr.models import Visit
+	from ocemr.models import Visit, Diagnosis
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
-
-	diagnoses = v.get_active_diags()
+	q_status = Q( status='NEW' ) | Q( status='FOL' )
+	diagnoses = Diagnosis.objects.filter(visit=v).filter(q_status)
 
 
 	return render_to_response('visit_meds.html', locals())
