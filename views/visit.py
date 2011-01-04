@@ -671,7 +671,7 @@ def visit_print(request, id):
 
 	from ocemr.models import Visit
 	from subprocess import Popen, PIPE
-	from settings import PRINTER_NAME
+	from ocemr.settings import PRINTER_NAME
 
 	v = Visit.objects.get(pk=id)
 
