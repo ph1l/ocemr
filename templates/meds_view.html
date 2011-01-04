@@ -1,23 +1,33 @@
 {% extends "base_med.html" %}
 
-{% block title %}Meds for: {{p}} - Visit {{v.scheduledDate}}{% endblock %}
+{% block title %}Meds for: {{v.patient}} - Visit {{v.scheduledDate}}{% endblock %}
 
 {% block medExtraheader %}
-	<A HREF=/med_queue/>Med Queue</A> : <A HREF=/patient/{{p.id}}/>{{p}}</A> : <A HREF=/visit/{{v.id}}/>Visit {{v.scheduledDate}}</A>
+	<A HREF=/med_queue/>Med Queue</A>
+	:
+	<A HREF=/patient/{{v.patient.id}}/>{{v.patient}}</A>
+	:
+	<A HREF=/visit/{{v.id}}/>Visit {{v.scheduledDate}}</A>
 {% endblock %}
 
 {% block content %}
 <TABLE>
 <TR>
 	<TH>Ordered @</TH>
+	<TH>by</TH>
 	<TH>Type</TH>
 	<TH>Dosage</TH>
 	<TH>Med Status</TH>
 	<TH>Actions</TH>
 </TR>
+<TR>	
+	<TH>
+	<TH COLSPAN=5>Notes
+</TR>
 {% for m in v.get_meds %}
 <TR>
 <TD>{{m.addedDateTime|date:"d-m H:i"}}</TD>
+<TD>{{m.addedBy}}</TD>
 <TD>{{ m.type.title }}</A></TD>
 <TD>{{ m.dosage }}</A></TD>
         {% ifequal m.status "ORD" %}
@@ -29,13 +39,51 @@
 	{% ifequal m.status "SUB" %}
                 <TD STYLE='background-color:#FF7755;'>
         {% endifequal %}
-	{% ifequal m.status "NDI" %}
+	{% ifequal m.status "CAN" %}
                 <TD STYLE='background-color:#FF5555;'>
         {% endifequal %}
 {{m.displayStatus}}
 </TD>
 <TD>
+	|
+	<A HREF=# onClick='window.open("/med/{{m.id}}/notate/","Notate","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>note</A>
+        {% ifequal m.status "ORD" %}
+	|
+	<A HREF=# onClick='window.open("/med/{{m.id}}/dispense/","Dispense","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>dispense</A>
+	|
+	<A HREF=# onClick='window.open("/med/{{m.id}}/substitute/","Substitute","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>substitute</A>
+	|
+	<A HREF=# onClick='window.open("/med/{{m.id}}/cancel/","Cancel","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>cancel</A>
+	|
+        {% endifequal %}
+        {% ifequal m.status "DIS" %}
+	|
+	<A HREF=# onClick='window.open("/med/{{m.id}}/undo_dispense/","Undo Dispensed","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>undo</A>
+	|
+        {% endifequal %}
+        {% ifequal m.status "SUB" %}
+	|
+	<A HREF=# onClick='window.open("/med/{{m.id}}/substitute/","Substitute","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>substitute</A>
+	|
+        {% endifequal %}
+        {% ifequal m.status "CAN" %}
+	|
+	<A HREF=# onClick='window.open("/med/{{m.id}}/undo_cancel/","Undo Cancel","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>undo</A>
+	|
+        {% endifequal %}
 </TD>
+</TR>
+<TR>
+	<TD STYLE='border: 0px;'>
+	<TD COLSPAN=5>
+	{% for n in m.get_notes %}
+	    <DIV ID=medNote>
+		{{n.addedDateTime|date:"d-m H:i"}} |
+		{{n.addedBy}} |
+                "{{n.note}}"
+            </DIV>
+
+	{% endfor %}
 </TR>
 {% endfor %}
 </TABLE>

@@ -365,3 +365,18 @@ class NewMedForm(forms.ModelForm):
 		from models import MedType
 		d = MedType.objects.get(title=data)
 		return d
+
+class NewMedNoteForm(forms.ModelForm):
+	from models import Med
+	med = forms.ModelChoiceField(queryset=Med.objects.all(),widget=forms.HiddenInput)
+	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+	def __init__(self, m, user, *args, **kwargs):
+		
+		super(NewMedNoteForm, self).__init__(*args, **kwargs)
+		self.fields['med'].initial=m.id
+		self.fields['addedBy'].initial=user.id
+
+	class Meta:
+		model = get_model('ocemr','MedNote')
+                exclude = [ 'addedDateTime']
+

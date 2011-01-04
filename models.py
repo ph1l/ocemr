@@ -53,8 +53,8 @@ class Patient(models.Model):
 	givenName = models.CharField("First Name",max_length=128)
 	middleName = models.CharField("Middle Name",max_length=128, blank=True)
 	gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-	birthYear = models.IntegerField("Year of Birth",help_text="approx. or actual year of birth")
-	birthDate = EuDateField(blank=True, null=True)
+	birthYear = models.IntegerField("Year of Birth",help_text="Year of Birth or Age")
+	birthDate = EuDateField(blank=True, null=True, help_text="If Available, Not Required")
 	village = models.ForeignKey(Village)
 	createdDateTime = models.DateTimeField(default=datetime.datetime.now)
 	createdBy = models.ForeignKey(User)
@@ -260,7 +260,7 @@ class Lab(models.Model):
 		"""
 		"""
 		from models import LabNote
-		return LabNote.objects.filter(lab=self)
+		return LabNote.objects.filter(lab=self).order_by('-addedDateTime')
 	def __unicode__(self):
 		return "%s"%(self.type.title)
 
@@ -337,9 +337,15 @@ class Med(models.Model):
 				return displayStatus
 		return ""
 	displayStatus = property(_get_displayStatus)
+	def get_notes(self):
+		"""
+		"""
+		from models import MedNote
+		return MedNote.objects.filter(med=self).order_by('-addedDateTime')
+
 
 class MedNote(models.Model):
-	prescription = models.ForeignKey(Med)
+	med = models.ForeignKey(Med)
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	addedBy = models.ForeignKey(User)
 	note = models.TextField(default="")
@@ -381,6 +387,7 @@ class Allergy(models.Model):
 
 class CashLog(models.Model):
 	patient = models.ForeignKey(Patient)
+	visit = models.ForeignKey(Visit)
 	description = models.TextField(blank=True)
 	amount = models.FloatField()
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)

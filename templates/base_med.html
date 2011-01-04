@@ -4,7 +4,8 @@
 {% block medExtrahead %}{% endblock %}
 {% endblock %}
 {% block extraheader %}
-<A HREF=/med_queue/>Med Queue</A>:<A HREF=/patient/{{p.id}}/>{{p}}</A><A HREF=/visit/{{v.id}}/>{{v}}</A>
+{% block medExtraheader %}
+{% endblock %}
 {% endblock %}
 {% block content %}
 {% endblock %}

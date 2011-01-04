@@ -1,4 +1,3 @@
-
 ##########################################################################
 #
 #    This file is part of OCEMR.
@@ -55,6 +54,106 @@ def meds_view(request,vid):
 
 	vid = int(vid)
 	v = Visit.objects.get(pk=vid)
+	p = v.patient
 
 	return render_to_response('meds_view.html',locals())
+
+@login_required
+def med_dispense(request,id):
+        """
+        """
+        from ocemr.models import Med, MedNote
+
+        m = Med.objects.get(pk=id)
+        m.status = 'DIS'
+        m.save()
+	mn = MedNote( med=m, addedBy=request.user, note="Dispensed" )
+	mn.save()
+        return render_to_response('close_window.html', {})
+
+@login_required
+def med_substitute(request,id):
+        """
+        """
+        from ocemr.models import Med, MedNote
+
+        m = Med.objects.get(pk=id)
+        m.status = 'SUB'
+        m.save()
+	mn = MedNote( med=m, addedBy=request.user, note="Substituted" )
+	mn.save()
+	return HttpResponseRedirect('/visit/%s/meds/new/%s/'%(m.visit.id, m.diagnosis.id))
+
+@login_required
+def med_cancel(request,id):
+        """
+        """
+        from ocemr.models import Med, MedNote
+
+        m = Med.objects.get(pk=id)
+        m.status = 'CAN'
+        m.save()
+	mn = MedNote( med=m, addedBy=request.user, note="Canceled" )
+	mn.save()
+        return render_to_response('close_window.html', {})
+
+@login_required
+def med_undo_dispense(request,id):
+        """
+        """
+        from ocemr.models import Med, MedNote
+
+        m = Med.objects.get(pk=id)
+        m.status = 'ORD'
+        m.save()
+	mn = MedNote( med=m, addedBy=request.user, note="Undo Dispense" )
+	mn.save()
+        return render_to_response('close_window.html', {})
+
+@login_required
+def med_undo_cancel(request,id):
+        """
+        """
+        from ocemr.models import Med, MedNote
+
+        m = Med.objects.get(pk=id)
+        m.status = 'ORD'
+        m.save()
+	mn = MedNote( med=m, addedBy=request.user, note="Undo Cancel" )
+	mn.save()
+        return render_to_response('close_window.html', {})
+
+#@login_required
+#def med_(request,id):
+#        """
+#        """
+#        from ocemr.models import Med
+#
+#        m = Med.objects.get(pk=id)
+#        m.status = ''
+#        m.save()
+#        return render_to_response('close_window.html', {})
+
+@login_required
+def med_notate(request, id):
+        """
+        """
+        from ocemr.models import MedNote, Med, Visit
+        from ocemr.forms import NewMedNoteForm
+
+        medid=int(id)
+        m=Med.objects.get(pk=medid)
+
+        if request.method == 'POST': # If the form has been submitted...
+                form = NewMedNoteForm(m, request.user, request.POST) # A form bound to the POST data
+                if form.is_valid(): # All validation rules pass
+                        o = form.save()
+                        return HttpResponseRedirect('/close_window/')
+        else:
+                form = NewMedNoteForm(m, request.user) # An unbound form
+        return render_to_response('popup_form.html', {
+                'title': 'Add a Med Note: %s'%(m.type.title),
+                'form_action': '/med/%d/notate/'%(m.id),
+                'form': form,
+        })
 

@@ -99,3 +99,10 @@ td
 	margin: 0em;
 	padding: .1em;
 }
+
+textarea
+{
+	background-color: #FFF; 
+	color: #000; 
+	border: 1px solid #000000;
+}

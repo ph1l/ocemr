@@ -37,8 +37,9 @@ def blank(request):
 def index(request):
 	"""
 	Main Landing Page
+		-Redirect to patient Queue
 	"""
-	return render_to_response('index.html', locals())
+	return HttpResponseRedirect('/patient_queue/')
 
 def autocomplete_name(request, inapp, inmodel):
 	"""

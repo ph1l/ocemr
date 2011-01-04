@@ -53,14 +53,23 @@
 		|
 		<A HREF=# onClick='window.open("/lab/{{l.id}}/fail/","Fail Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>fail</A>
 		|
+	{% else %}{% ifequal l.status "FAI" %}
+		|
+		<A HREF=# onClick='window.open("/lab/{{l.id}}/reorder/","Reorder","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>reorder</A>
+		|
+
+	{% endifequal %}
 	{% endifequal %}
 	{% endifequal %}
 <TR>
 	<TD COLSPAN=1 STYLE='border: 0px;'></TD>
 	<TD COLSPAN=5>
-          {% for ln in l.get_notes %}
+          {% for n in l.get_notes %}
             <DIV ID=labNote>
-                "{{ln.note}}" by {{ln.addedBy}} @{{ln.addedDateTime|date:"d-m H:i"}}
+                {{n.addedDateTime|date:"d-m H:i"}} |
+                {{n.addedBy}} |
+                "{{n.note}}"
+
             </DIV>
             {% endfor %}
 

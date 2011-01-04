@@ -109,6 +109,12 @@ urlpatterns += patterns('ocemr.views.diag',
 urlpatterns += patterns('ocemr.views.med',
     (r'^med_queue/$', 'med_queue'),
     (r'^meds/(?P<vid>\d+)/$', 'meds_view'),
+    (r'^med/(?P<id>\d+)/dispense/$', 'med_dispense'),
+    (r'^med/(?P<id>\d+)/undo_dispense/$', 'med_undo_dispense'),
+    (r'^med/(?P<id>\d+)/substitute/$', 'med_substitute'),
+    (r'^med/(?P<id>\d+)/cancel/$', 'med_cancel'),
+    (r'^med/(?P<id>\d+)/undo_cancel/$', 'med_undo_cancel'),
+    (r'^med/(?P<id>\d+)/notate/$', 'med_notate'),
 )
 #urlpatterns += patterns('ocemr.views.prescription',
 #)

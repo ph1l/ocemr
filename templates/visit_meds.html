@@ -5,18 +5,43 @@
 {% block visitContent %}
 <OL>
 {% for d in diagnoses %}
-  <LI>{{d.type.title}}</LI>
-    <A HREF=# onClick='window.open("/visit/{{v.id}}/meds/new/{{d.id}}","Add Diagnosis","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Add Med</A>
+  <LI>{{d.type.title}}
+    <A HREF=# onClick='window.open("/visit/{{v.id}}/meds/new/{{d.id}}","Add Diagnosis","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Add Med</A></LI>
+	<TABLE>
 	{% for m in d.get_meds %}
-		{{ m.type.title }}
-		-
-		{{ m.dosage }}
-		({{ m.dispenseAmount }})
-		<A href="#">Edit</A>
-		<A href="#">Delete</A>
-		<A href="#">Add Note</A>
-		<BR>
+		<TR>
+		<TD>{{ m.type.title }}
+		<TD>{{ m.dosage }}
+		<TD>{{ m.dispenseAmount }}
+        {% ifequal m.status "ORD" %}
+                <TD STYLE='background-color:#FFFF55;'>
+        {% endifequal %}
+        {% ifequal m.status "DIS" %}
+                <TD STYLE='background-color:#77FF77;'>
+        {% endifequal %}
+	{% ifequal m.status "SUB" %}
+                <TD STYLE='background-color:#FF7755;'>
+        {% endifequal %}
+	{% ifequal m.status "CAN" %}
+                <TD STYLE='background-color:#FF5555;'>
+        {% endifequal %}
+{{m.displayStatus}}
+</TD>
+		<TD>
+		{% ifequal m.status "ORD" %}
+		<A HREF=# onClick='window.open("/med/{{m.id}}/cancel/","Cancel","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Cancel</A>
+		{% endifequal %}
+		<A href="#" onClick='window.open("/med/{{m.id}}/notate/","Notate","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Notate</A>
+		<TR><TD COLSPAN=4>
+		{% for n in m.get_notes %}
+		    <DIV ID=medNote>
+	                "{{n.note}}" by {{n.addedBy}} @{{n.addedDateTime|date:"d-m H:i"}}
+	            </DIV>
+
+		{% endfor %}
+		
 	{% endfor %}
+	</TABLE>
 {% endfor %}
 </OL>
 {% endblock %}
