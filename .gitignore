@@ -1,3 +1,4 @@
 *.pyc
+version.py
 settings.py
 util/util_conf.py
