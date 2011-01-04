@@ -200,6 +200,24 @@ class Visit(models.Model):
 				check_list.remove(d.type)
 		return check_list
 
+	def has_collected(self):
+		"""
+		"""
+		from models import CashLog
+		
+		c = CashLog.objects.filter(visit=self)
+		if len(c) > 0: return 1
+		return 0
+
+	def collected(self):
+		"""
+		"""
+		from models import CashLog
+		total = float(0)
+		for c in CashLog.objects.filter(visit=self):
+			total = total + c.amount
+		return total
+
 class SymptomType(models.Model):
 	title = models.CharField(max_length=128)
 	def __unicode__(self):
@@ -388,7 +406,7 @@ class Allergy(models.Model):
 class CashLog(models.Model):
 	patient = models.ForeignKey(Patient)
 	visit = models.ForeignKey(Visit)
-	description = models.TextField(blank=True)
+	#description = models.TextField(blank=True)
 	amount = models.FloatField()
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	addedBy = models.ForeignKey(User)

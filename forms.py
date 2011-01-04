@@ -341,6 +341,7 @@ class EditDiagnosisNotesForm(forms.Form):
 		from datetime import datetime
 		super(EditDiagnosisNotesForm, self).__init__(*args, **kwargs)
 		self.fields['notes'].initial=d.notes
+
 class NewMedForm(forms.ModelForm):
 	from models import Diagnosis, Patient, Visit
         type = forms.CharField(
@@ -389,3 +390,18 @@ class NewMedNoteForm(forms.ModelForm):
 		model = get_model('ocemr','MedNote')
                 exclude = [ 'addedDateTime']
 
+class NewCashLogForm(forms.ModelForm):
+	from models import Visit, Patient
+	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
+	visit = forms.ModelChoiceField(queryset=Visit.objects.all(),widget=forms.HiddenInput)
+	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+	def __init__(self, v, user, *args, **kwargs):
+		
+		super(NewCashLogForm, self).__init__(*args, **kwargs)
+		self.fields['patient'].initial=v.patient.id
+		self.fields['visit'].initial=v.id
+		self.fields['addedBy'].initial=user.id
+
+	class Meta:
+		model = get_model('ocemr','CashLog')
+                exclude = [ 'addedDateTime']

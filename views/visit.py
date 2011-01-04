@@ -614,4 +614,50 @@ def visit_allergy_delete(request,id, oid):
 		'form': form,
 	})
 
+
+@login_required
+def visit_collect(request,id):
+	"""
+	"""
+	from ocemr.models import Visit
+	from ocemr.forms import NewCashLogForm
+	vid=int(id)
+	v=Visit.objects.get(pk=vid)
+
+	if request.method == 'POST': # If the form has been submitted...
+		form = NewCashLogForm(v, request.user, request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			o = form.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = NewCashLogForm(v, request.user) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Collect',
+		'form_action': '/visit/%d/collect/'%(vid),
+		'form': form,
+	})
 	
+@login_required
+def visit_resolve(request,id):
+	"""
+	"""
+	from ocemr.models import Visit
+
+	v = Visit.objects.get(pk=id)
+	if v.status == 'CHOT':
+		v.status = 'RESO'
+		v.save()
+	return render_to_response('close_window.html', {})
+
+@login_required
+def visit_unresolve(request,id):
+	"""
+	"""
+	from ocemr.models import Visit
+
+	v = Visit.objects.get(pk=id)
+	if v.status == 'RESO':
+		v.status = 'CHOT'
+		v.save()
+	return render_to_response('close_window.html', {})
+

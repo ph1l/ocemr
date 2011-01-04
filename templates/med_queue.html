@@ -20,6 +20,7 @@
 	<TH># of Meds</TH>
 	<TH>Med Status</TH>
 	<TH>Visit Status</TH>
+	<TH>Collected</TH>
 	<TH>Actions</TH>
 </TR>
 {% for v in visits %}
@@ -42,11 +43,24 @@
 {{v.displayStatus}}</SPAN>
 </TD>
 <TD>
+{% ifequal v.get_med_status 2 %}
+	{% if v.has_collected %}
+		{{ v.collected }}	
+		(<A HREF=# onClick='window.open("/visit/{{v.id}}/collect/edit/","edit collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)
+	{% else %}
+		-
+		(<A HREF=# onClick='window.open("/visit/{{v.id}}/collect/","collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</A>)
+	{% endif %}
+		
+{% else %}
+		-
+{% endifequal %}
+</TD>
+<TD>
 		<A HREF="/meds/{{v.id}}/">View</A>
 
 		{% ifequal v.get_med_status 2 %}
-		
-		<A HREF=# onClick='window.open("/meds/{{v.id}}/checkout/","Checkout","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Checkout</A>
+		<A HREF=# onClick='window.open("/visit/{{v.id}}/resolve/","Resolve","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Resolve</A>
 		{% endifequal %}
 </TD>
 </TR>
