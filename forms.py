@@ -190,7 +190,16 @@ class EditVisitSymptomForm(forms.Form):
 	notes = forms.CharField(widget=forms.Textarea)
 
 class ConfirmDeleteForm(forms.Form):
-	doDelete = forms.BooleanField(label="Really Delete it?",widget=forms.CheckboxInput,required=False)
+	doDelete = forms.BooleanField(
+		label="Really Delete it?",
+		widget=forms.Select(
+			choices=(
+				(False,'No'),
+				(True,'Yes'),
+				)
+			),
+		required=False
+	)
 
 class NewVitalForm(forms.ModelForm):
 	from models import Visit, VitalType, Patient
