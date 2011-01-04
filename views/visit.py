@@ -210,7 +210,7 @@ def visit_subj_delete(request,id, visitsymptomid):
 	else:
 		form = ConfirmDeleteForm()
 	return render_to_response('popup_form.html', {
-		'title': 'Delete Symptom: %s'%(vs.type.title),
+		'title': 'Delete Symptom: %s'%(o.type.title),
 		'form_action': '/visit/%s/subj/delete/%s/'%(id,visitsymptomid),
 		'form': form,
 	})
