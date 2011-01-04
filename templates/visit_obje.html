@@ -11,7 +11,7 @@ Add Vital:
 {% endfor %}
 </UL>
 <TABLE>
-<TR><TH>Time<TH>Type<TH>Data<TD></TR>
+<TR><TH>Time<TH>Type<TH>Data<TH></TR>
 {% for V in vitals %}
 <TR><TD>{{V.observedDateTime|date:"d-m H:i"}}<TD>{{V.type}}<TD>{{V.data}}
 <TD><A HREF="#" onClick='window.open("/visit/{{v.id}}/obje/vital/delete/{{V.id}}/","Delete Vital","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>del</A>
