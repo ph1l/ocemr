@@ -4,7 +4,7 @@
 {% endblock %}
 {% block visitContent %}
 <BR>
-<SPAN>Active Diagnoses:</SPAN>
+<SPAN>Active Diagnoses: (<A HREF="#" onClick='window.open("/visit/{{v.id}}/plan/diag/new/","Add Diagnosis","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</A>)</SPAN>
 <HR>
 {% for d in v.get_active_diags %}
   <DIV ID=diagnosisActive>
