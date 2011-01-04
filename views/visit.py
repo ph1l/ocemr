@@ -614,7 +614,6 @@ def visit_allergy_delete(request,id, oid):
 		'form': form,
 	})
 
-
 @login_required
 def visit_collect(request,id):
 	"""
@@ -637,6 +636,7 @@ def visit_collect(request,id):
 		'form': form,
 	})
 	
+
 @login_required
 def visit_resolve(request,id):
 	"""
@@ -660,4 +660,3 @@ def visit_unresolve(request,id):
 		v.status = 'CHOT'
 		v.save()
 	return render_to_response('close_window.html', {})
-

@@ -45,11 +45,18 @@
 <TD>
 {% ifequal v.get_med_status 2 %}
 	{% if v.has_collected %}
+		{% if v.has_collected_multiple %}
+			{% for cl in v.get_cashlog %}
+				{{cl.amount}}<br>
+			{% endfor %}
+		<HR>
+		Total =
+		{% endif %}
 		{{ v.collected }}	
-		(<A HREF=# onClick='window.open("/visit/{{v.id}}/collect/edit/","edit collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)
+		(<A HREF=# onClick='window.open("/visit/{{v.id}}/collect/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</A>)
 	{% else %}
 		-
-		(<A HREF=# onClick='window.open("/visit/{{v.id}}/collect/","collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</A>)
+		(<A HREF=# onClick='window.open("/visit/{{v.id}}/collect/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</A>)
 	{% endif %}
 		
 {% else %}
@@ -60,7 +67,12 @@
 		<A HREF="/meds/{{v.id}}/">View</A>
 
 		{% ifequal v.get_med_status 2 %}
+			{% ifequal v.status "CHOT" %}
 		<A HREF=# onClick='window.open("/visit/{{v.id}}/resolve/","Resolve","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Resolve</A>
+			{% endifequal %}
+			{% ifequal v.status "RESO" %}
+		<A HREF=# onClick='window.open("/visit/{{v.id}}/unresolve/","Undo Resolve","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo Resolve</A>
+			{% endifequal %}
 		{% endifequal %}
 </TD>
 </TR>

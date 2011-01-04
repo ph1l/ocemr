@@ -92,6 +92,7 @@ urlpatterns += patterns('ocemr.views.visit',
     (r'^visit/(?P<id>\d+)/immu/new/$', 'visit_immu_new'),
     (r'^visit/(?P<id>\d+)/note/$', 'visit_note'),
     (r'^visit/(?P<id>\d+)/collect/$', 'visit_collect'),
+    (r'^visit/(?P<id>\d+)/collect/edit/$', 'visit_collect_edit'),
     (r'^visit/(?P<id>\d+)/resolve/$', 'visit_resolve'),
     (r'^visit/(?P<id>\d+)/unresolve/$', 'visit_unresolve'),
 )

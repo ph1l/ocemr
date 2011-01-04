@@ -209,6 +209,15 @@ class Visit(models.Model):
 		if len(c) > 0: return 1
 		return 0
 
+	def has_collected_multiple(self):
+		"""
+		"""
+		from models import CashLog
+		
+		c = CashLog.objects.filter(visit=self)
+		if len(c) > 1: return 1
+		return 0
+
 	def collected(self):
 		"""
 		"""
@@ -217,6 +226,13 @@ class Visit(models.Model):
 		for c in CashLog.objects.filter(visit=self):
 			total = total + c.amount
 		return total
+
+	def get_cashlog(self):
+		"""
+		"""
+		from models import CashLog
+		total = float(0)
+		return CashLog.objects.filter(visit=self)
 
 class SymptomType(models.Model):
 	title = models.CharField(max_length=128)

@@ -44,6 +44,7 @@ def med_queue(request):
 		if v.get_num_meds > 0:
 			cleaned_visits.append(v)
 	visits = cleaned_visits
+	visits.reverse()
 	return render_to_response('med_queue.html', locals())
 
 @login_required
