@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Patient Search Results{% endblock %}
+{% block extraheader %}
+        <A HREF=/patient_queue/>Patient Queue</A>(<A HREF=/patient/search/>search</a>,<a href=/patient/new>add</a>)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>
+{%endblock%}
 {% block content %}
 {% if patients %}
 <TABLE>
@@ -10,14 +13,14 @@
 	<TD>
 		{{p.fullName}}</a>
 	</TD>
-	<TD><a href=/patient/{{p.id}}/ onclick="return loadIframe('contentFrame', this.href)">view</a></TD>
+	<TD><a href=/patient/{{p.id}}/>view</a></TD>
 {% endfor %}
 </TABLE>
 {% else %}
 <H2>None Found</H2>
 <P>If the patient <b>should</b> be in the system, consider using
-<SPAN ID=textUnterlined>alternate spellings</SPAN> or
-<SPAN ID=textUnterlined>broader search terms</span> before
- <A HREF=#>Adding a new Patient</A>.
+<SPAN ID=textUnderlined><u>alternate spellings</u></SPAN> or
+<SPAN ID=textUnderlined><u>broader search terms</u></span> before
+ <A HREF=/patient/new/>Adding a new Patient</A>.
 {% endif %}
 {% endblock %}

@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Patient Search{% endblock %}
 {% block extrahead %} {{ form.media }} {%endblock%}
+{% block extraheader %}
+        <A HREF=/patient_queue/>Patient Queue</A>(<A HREF=/patient/search/>search</a>,add)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>
+{%endblock%}
+
 {% block content %}
 <form action="/patient/new/" method="POST">
 <TABLE>
