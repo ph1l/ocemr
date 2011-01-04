@@ -72,6 +72,7 @@
 			{% endifequal %}
 			{% ifequal v.status "RESO" %}
 		<A HREF=# onClick='window.open("/visit/{{v.id}}/unresolve/","Undo Resolve","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo Resolve</A>
+		<A HREF=# onClick='window.open("/visit/{{v.id}}/print/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Print</A>
 			{% endifequal %}
 		{% endifequal %}
 </TD>

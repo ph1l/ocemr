@@ -1,4 +1,14 @@
 {% extends "base_visit.html" %}
 {% block visitContent %}
+
+{% for pv in v.get_past_visits %}
+
+<h2>{{pv.scheduledDate|date:"d-m-Y"}}</h2>
+<PRE>
+{{pv.get_summary_text}}
+</PRE>
+
+{% endfor %}
+
 {% endblock %}
 

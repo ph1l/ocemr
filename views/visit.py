@@ -1,4 +1,3 @@
-
 ##########################################################################
 #
 #    This file is part of OCEMR.
@@ -20,6 +19,7 @@
 #########################################################################
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
@@ -129,6 +129,8 @@ def visit_past(request,id):
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
+
+	
 	return render_to_response('visit_past.html', locals())
 
 @login_required
@@ -659,4 +661,33 @@ def visit_unresolve(request,id):
 	if v.status == 'RESO':
 		v.status = 'CHOT'
 		v.save()
+	return render_to_response('close_window.html', {})
+
+@login_required
+def visit_print(request, id):
+	"""
+	['enscript', '-P', 'p1102w', '--header=Engeye Health Clinic', '--footer=Page $% of $=', '--word-wrap', '--mark-wrapped-lines=arrow', '/etc/motd']
+	"""
+
+	from ocemr.models import Visit
+	from subprocess import Popen, PIPE
+	from settings import PRINTER_NAME
+
+	v = Visit.objects.get(pk=id)
+
+	head_text = "%s\n\n"%(v.patient)
+	summ_text = v.get_summary_text()
+	acct_text = ""
+
+
+	p = Popen(
+		['enscript', '-P', PRINTER_NAME, '--header=Engeye Health Clinic', '--footer=Page $% of $=', '--word-wrap', '--mark-wrapped-lines=arrow'],
+		stdin=PIPE, stdout=PIPE, close_fds=True
+		)
+	(child_stdin, child_stdout) = (p.stdin, p.stdout)
+	child_stdin.write(head_text)
+	child_stdin.write(summ_text)
+	child_stdin.write(acct_text)
+	out,err=p.communicate()
+
 	return render_to_response('close_window.html', {})

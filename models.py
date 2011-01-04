@@ -233,6 +233,39 @@ class Visit(models.Model):
 		from models import CashLog
 		total = float(0)
 		return CashLog.objects.filter(visit=self)
+	def get_past_visits(self):
+		from models import Visit
+		past_visits = Visit.objects.filter(patient=self.patient).exclude(pk=self.id).order_by('-scheduledDate')
+		return past_visits
+	def get_summary_text(self):
+		"""
+		return a text summary of the Visit
+		"""
+
+		from models import VisitSymptom, Vital, ExamNote
+
+		out_txt="S: %s\n"%(self.reasonDetail)
+		
+		symptoms = VisitSymptom.objects.filter(visit=self)
+		for symptom in symptoms:
+			out_txt += "   %s: %s\n"%(symptom.type.title,symptom.notes)
+		vitals = Vital.objects.filter(visit=self)
+		out_txt += "O:"
+		for vital in vitals:
+			out_txt += " %s: %s" %(vital.type.title, vital.data)
+		out_txt += "\n"
+		examNotes = ExamNote.objects.filter(visit=self)
+		for examNote in examNotes:
+			out_txt += "   %s: %s\n"%(examNote.type.title, examNote.note)
+		diagnoses = Diagnosis.objects.filter(visit=self)
+		for diagnosis in diagnoses:
+			out_txt +="AP: %s:%s - %s\n"%(diagnosis.displayStatus,diagnosis.type.title, diagnosis.notes)
+			meds = Med.objects.filter(diagnosis=diagnosis, status='DIS')
+			for med in meds:
+				out_txt +="Med: %s - %s\n"%(med.type.title,med.dosage)
+			
+		return out_txt
+
 
 class SymptomType(models.Model):
 	title = models.CharField(max_length=128)
