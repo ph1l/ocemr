@@ -38,9 +38,9 @@ if [ -d /var/lib/mysql/ocemr ]; then
 	/etc/init.d/apache2 stop
 	echo Resetting MySQL
 	echo "drop database ocemr ; create database ocemr;" | mysql -p
-elif [ -e /tmp/ocemr.db ]; then
+elif [ -e ${HOME}/ocemr.db ]; then
 	echo Resetting SQLite3
-	rm -v /tmp/ocemr.db
+	rm -v ${HOME}/ocemr.db
 fi
 
 
