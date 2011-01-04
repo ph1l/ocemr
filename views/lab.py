@@ -73,7 +73,7 @@ def lab_cancel(request,id):
 def lab_fail(request,id):
 	"""
 	"""
-	from ocemr.models import Lab
+	from ocemr.models import Lab, LabNote
 
 	l = Lab.objects.get(pk=id)
 	l.status = 'FAI'
