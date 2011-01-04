@@ -31,7 +31,7 @@
 		{% ifequal m.status "ORD" %}
 		<A HREF=# onClick='window.open("/med/{{m.id}}/cancel/","Cancel","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Cancel</A>
 		{% endifequal %}
-		<A href="#" onClick='window.open("/med/{{m.id}}/notate/","Notate","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Notate</A>
+		<A href="#" onClick='window.open("/med/{{m.id}}/notate/","Notate","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Note</A>
 		<TR><TD COLSPAN=4>
 		{% for n in m.get_notes %}
 		    <DIV ID=medNote>
