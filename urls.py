@@ -98,6 +98,7 @@ urlpatterns += patterns('ocemr.views.lab',
     (r'^lab/(?P<id>\d+)/cancel/$', 'lab_cancel'),
     (r'^lab/(?P<id>\d+)/fail/$', 'lab_fail'),
     (r'^lab/(?P<id>\d+)/complete/$', 'lab_complete'),
+    (r'^lab/(?P<id>\d+)/reorder/$', 'lab_reorder'),
     (r'^lab/(?P<id>\d+)/notate/$', 'lab_notate'),
 )
 urlpatterns += patterns('ocemr.views.diag',
