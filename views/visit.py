@@ -675,13 +675,18 @@ def visit_print(request, id):
 
 	v = Visit.objects.get(pk=id)
 
-	head_text = "%s\n\n"%(v.patient)
+	head_text = """\t\tEngeye Health Clinic - Ddegeya-Masaka\t\t%s
+P.O. Box 26592, Kampala          0772-556105         www.engeye.org
+
+
+"""%(v.scheduledDate)
+	head_text = "Patient: %s\t\tVisit# %06d\n\n"%(v.patient,v.id)
 	summ_text = v.get_summary_text()
-	acct_text = ""
+	acct_text = "\n\nTotal Amount Collected: %s" %(v.collected)
 
 
 	p = Popen(
-		['enscript', '-P', PRINTER_NAME, '--header=Engeye Health Clinic', '--footer=Page $% of $=', '--word-wrap', '--mark-wrapped-lines=arrow'],
+		['enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman12'],
 		stdin=PIPE, stdout=PIPE, close_fds=True
 		)
 	(child_stdin, child_stdout) = (p.stdin, p.stdout)
