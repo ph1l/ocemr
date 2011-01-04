@@ -93,3 +93,27 @@ def diag_edit_notes(request, id):
 		'form_action': '/diag/%d/edit/notes/'%(d.id),
 		'form': form,
 	})
+
+@login_required
+def diag_delete(request,id):
+        """
+        """
+        from ocemr.models import Diagnosis
+        o = Diagnosis.objects.get(pk=id)
+
+        from ocemr.forms import ConfirmDeleteForm
+
+        if request.method == 'POST':
+                form = ConfirmDeleteForm(request.POST)
+                if form.is_valid():
+                        if form.cleaned_data['doDelete']:
+                                o.delete()
+                        return HttpResponseRedirect('/close_window/')
+        else:
+                form = ConfirmDeleteForm()
+        return render_to_response('popup_form.html', {
+                'title': 'Delete Diagnosis: %s'%(o),
+                'form_action': '/diag/%s/delete/'%(id),
+                'form': form,
+        })
+

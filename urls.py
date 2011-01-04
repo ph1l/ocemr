@@ -106,6 +106,7 @@ urlpatterns += patterns('ocemr.views.diag',
     (r'^diag/(?P<id>\d+)/edit/notes/$', 'diag_edit_notes'),
     (r'^diag/(?P<id>\d+)/history/$', 'diag_history'),
     (r'^diag/patienttypehistory/(?P<pid>\d+)/(?P<dtid>\d+)/$', 'diag_patienttypehistory'),
+    (r'^diag/(?P<id>\d+)/delete/$', 'diag_delete'),
 )
 urlpatterns += patterns('ocemr.views.med',
     (r'^med_queue/$', 'med_queue'),
