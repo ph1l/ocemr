@@ -327,10 +327,10 @@ class Med(models.Model):
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	addedBy = models.ForeignKey(User)
 	dosage = models.CharField(max_length=64) # 1x1x1
-	dispenseAmount = models.FloatField() # 15 capsules or 2.5 ml ?
+	dispenseAmount = models.FloatField(null=True,blank=True) # 15 capsules or 2.5 ml ?
 	status = models.CharField(max_length=3, choices=MED_STATUS_CHOICES)
-	dispensedDateTime = models.DateTimeField(null=True)
-	dispensedBy = models.ForeignKey(User,related_name='dispensedBy',null=True)
+	dispensedDateTime = models.DateTimeField(null=True,blank=True)
+	dispensedBy = models.ForeignKey(User,related_name='dispensedBy',null=True,blank=True)
 	def _get_displayStatus(self):
 		for code, displayStatus in self.MED_STATUS_CHOICES:
 			if code == self.status:
