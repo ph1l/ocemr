@@ -91,6 +91,7 @@ def daily_patient_records(request, date_in=datetime.today()):
 	months_visits = Visit.objects.filter(q_this_month)
 	pt_monthly_index = len(months_visits)
 	days_visits = Visit.objects.filter(q_this_day)
+	q_dignosis_active = (Q(status="NEW") | Q(status="FOL"))
 	daily_index=0	
 	summary_rows=[]
 	for v in days_visits:
@@ -110,9 +111,20 @@ def daily_patient_records(request, date_in=datetime.today()):
 			'prescription': '',
 			'referral': referral,
 		})
-		for d in Diagnosis.objects.filter(visit=v):
+		for d in Diagnosis.objects.filter(visit=v).filter(q_dignosis_active):
 			diagnosis = d.type.title
-			for m in Med.objects.filter(diagnosis=d):
+			summary_rows.append( {
+				'pt_daily_index': '', 
+				'pt_name': '',
+				'pt_monthly_index': '',
+				'sex': '',
+				'age': '',
+				'village': '',
+				'diagnosis': diagnosis,
+				'prescription': '',
+				'referral': '',
+			})
+			for m in Med.objects.filter(diagnosis=d,status='DIS'):
 				prescription = m.type.title
 				summary_rows.append( {
 					'pt_daily_index': '', 
