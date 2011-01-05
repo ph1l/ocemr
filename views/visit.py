@@ -640,6 +640,30 @@ def visit_collect(request,id):
 	
 
 @login_required
+def visit_bill_amount(request,id):
+	"""
+	"""
+	from ocemr.models import Visit
+	from ocemr.forms import EditBillAmountForm
+	vid=int(id)
+	v=Visit.objects.get(pk=vid)
+
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditBillAmountForm(v.cost, request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			v.cost=form.cleaned_data['amount']
+			v.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditBillAmountForm(v.cost) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Bill Amount',
+		'form_action': '/visit/%d/bill_amount/'%(vid),
+		'form': form,
+	})
+	
+
+@login_required
 def visit_resolve(request,id):
 	"""
 	"""

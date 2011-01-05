@@ -45,7 +45,7 @@ class EditPatientNameForm(forms.Form):
 	middleName = forms.CharField(label='Middle Name',required=False)
 
 class EditPatientAgeForm(forms.Form):
-	birthYear = forms.CharField(required=False)
+	birthYear = forms.IntegerField(required=False)
 	birthDate = EuDateFormField(required=False,widget=widgets.CalendarWidget)
 	def clean_birthYear(self):
 		import datetime
@@ -59,6 +59,7 @@ class EditPatientAgeForm(forms.Form):
 		else:
 			raise forms.ValidationError("Birth Year must be less than %d or greater than %d."%(MAX_AGE, CURRENT_YEAR-MAX_AGE))
 		return new_data
+		
 
 class EditPatientVillageForm(forms.Form):
         village = forms.CharField(
@@ -96,7 +97,11 @@ class NewVisitForm(forms.ModelForm):
 
         class Meta:
                 model = get_model('ocemr','Visit')
-                exclude = [ 'followupTo' ]
+                exclude = [ 'followupTo',
+				'claimedDateTime', 'claimedBy',
+				'resolvedDateTime', 'resolvedBy',
+				'cost',
+				 ]
 
 	def clean_scheduledDate(self):
 		data = self.cleaned_data['scheduledDate']
@@ -138,7 +143,7 @@ class NewPatientForm(forms.ModelForm):
 
         class Meta:
                 model = get_model('ocemr','Patient')
-                exclude = [ 'createdDateTime', 'status', 'scratchNote' ]
+                exclude = [ 'createdDateTime', 'status', 'scratchNote',]
 
 	def clean_birthYear(self):
 		import datetime
@@ -405,3 +410,10 @@ class NewCashLogForm(forms.ModelForm):
 	class Meta:
 		model = get_model('ocemr','CashLog')
                 exclude = [ 'addedDateTime']
+
+class EditBillAmountForm(forms.Form):
+	amount = forms.FloatField(widget=forms.TextInput)
+
+	def __init__(self, a, *args, **kwargs):
+		super(EditBillAmountForm, self).__init__(*args, **kwargs)
+		self.fields['amount'].initial = a

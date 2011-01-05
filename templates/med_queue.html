@@ -20,6 +20,7 @@
 	<TH># of Meds</TH>
 	<TH>Med Status</TH>
 	<TH>Visit Status</TH>
+	<TH>Billed</TH>
 	<TH>Collected</TH>
 	<TH>Actions</TH>
 </TR>
@@ -42,6 +43,7 @@
         {% endifequal %}
 {{v.displayStatus}}</SPAN>
 </TD>
+<TD>{{v.cost}}(<A HREF=# onClick='window.open("/visit/{{v.id}}/bill_amount/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)</TD>
 <TD>
 {% ifequal v.get_med_status 2 %}
 	{% if v.has_collected %}

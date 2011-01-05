@@ -33,8 +33,8 @@ def lab_queue(request):
 	"""
 	"""
 	from datetime import datetime, timedelta
-	d_yesterday = datetime.today()-timedelta(1)
-	d_now = datetime.today()
+	d_today = datetime.today()
+	d_yesterday = d_today-timedelta(1)
 
 	from ocemr.models import Lab
 

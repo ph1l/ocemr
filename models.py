@@ -96,11 +96,17 @@ class Visit(models.Model):
 	patient = models.ForeignKey(Patient)
 	scheduledDate = EuDateField('Date scheduled')
 	scheduledTime = models.TimeField('Time scheduled')
-	scheduledBy = models.ForeignKey(User)
+	scheduledBy = models.ForeignKey(User, related_name="visit_scheduled_by")
 	status = models.CharField(max_length=4, choices=VISIT_STATUS_CHOICES, default='SCHE')
 	reason = models.CharField(max_length=3, choices=VISIT_REASON_CHOICES, default='NEW')
 	reasonDetail = models.TextField(default="")
 	#followupTo = models.ForeignKey('self', null=True)
+	#
+	claimedDateTime = models.TimeField('Date and Time Claimed',null=True,blank=True)
+	claimedBy = models.ForeignKey(User,null=True,blank=True, related_name="visit_claimed_by")
+	resolvedDateTime = models.TimeField('Date and Time Resolved',null=True,blank=True)
+	resolvedBy = models.ForeignKey(User,null=True,blank=True, related_name="visit_resolved_by")
+	cost = models.FloatField(default=0)
 	def __unicode__(self):
 		return "Visit %d: %s %s"%(self.id,self.patient,self.scheduledDate)
 	def _get_displayStatus(self):
@@ -458,7 +464,7 @@ class Allergy(models.Model):
 class CashLog(models.Model):
 	patient = models.ForeignKey(Patient)
 	visit = models.ForeignKey(Visit)
-	#description = models.TextField(blank=True)
 	amount = models.FloatField()
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	addedBy = models.ForeignKey(User)
+

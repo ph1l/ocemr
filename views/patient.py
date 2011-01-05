@@ -39,7 +39,7 @@ def patient_queue(request):
 
 	from ocemr.models import Visit
 
-	unresolved_q = Q(scheduledDate__lte=d_today.date) & ( Q(status='SCHE') | Q(status='WAIT') | Q(status='INPR') | Q(status='CHOT') )
+	unresolved_q = Q(scheduledDate__lte=d_today.date) & ( Q(status='SCHE') | Q(status='WAIT') | Q(status='INPR') )
 	resolved_q =  Q(scheduledDate=d_today.date) & ( Q(status='MISS') | Q(status='CHOT') | Q(status='RESO') )
 	missed_q = Q(scheduledDate__gt=d_missed.date) & Q(status='MISS')
 	
