@@ -709,7 +709,7 @@ def visit_record(request, id, type):
 
 	v = Visit.objects.get(pk=id)
 
-	head_text = """\t\t\t\tEngeye Health Clinic - Ddegeya-Masakai
+	head_text = """\t\t\t\tEngeye Health Clinic - Ddegeya-Masaka
 \t\t\t\tP.O. Box 26592, Kampala\t\t0772-556105\t\twww.engeye.org
 
 \t\tBino bye bikwata ku kujjanjabibwa kwo funnye leero
@@ -736,7 +736,7 @@ def visit_record(request, id, type):
 
 	if type == "print":
 		p = Popen(
-			['enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman12', '--header='],
+			['enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman12', '--header=', '--media=A4'],
 			stdin=PIPE, stdout=PIPE, close_fds=True
 			)
 		(child_stdin, child_stdout) = (p.stdin, p.stdout)
