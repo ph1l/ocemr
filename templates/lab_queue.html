@@ -16,7 +16,7 @@
 <TABLE>
 <TR><TH>Ordered</TH><TH>Patient Id</TH><TH>Type</TH><TH>Status</TH><TH>Result</TH><TH></TH></TR>
 <TR><TH></TH><TH COLSPAN=6>Notes</TH></TR>
-{% for l in labs %}
+{% for l in labs_active %}
 <TR>
 <TD>{{l.orderedDateTime|date:"d-m H:i"}}</TD>
 <TD><A HREF=/patient/{{l.patient.id}}/>{{ l.patient }}</A></TD>
@@ -60,6 +60,49 @@
 
 	{% endifequal %}
 	{% endifequal %}
+	{% endifequal %}
+<TR>
+	<TD COLSPAN=1 STYLE='border: 0px;'></TD>
+	<TD COLSPAN=5>
+          {% for n in l.get_notes %}
+            <DIV ID=labNote>
+                {{n.addedDateTime|date:"d-m H:i"}} |
+                {{n.addedBy}} |
+                "{{n.note}}"
+
+            </DIV>
+            {% endfor %}
+
+	</TD></TR>
+{% endfor %}
+</TABLE>
+Resolved:
+<TABLE>
+{% for l in labs_inactive %}
+<TR>
+<TD>{{l.orderedDateTime|date:"d-m H:i"}}</TD>
+<TD><A HREF=/patient/{{l.patient.id}}/>{{ l.patient }}</A></TD>
+<TD>{{ l.type }}</TD>
+	{% ifequal l.status "CAN" %}
+		<TD STYLE='background-color:#FFAAAA;'>
+	{% else %} {% ifequal l.status "COM" %}
+		<TD STYLE='background-color:#77FF77;'>
+	{% else %} {% ifequal l.status "FAI" %}
+		<TD STYLE='background-color:#FF5555;'>
+	{% endifequal %}
+	{% endifequal %}
+	{% endifequal %}
+{{l.displayStatus}}</TD>
+<TD>{{l.result}}
+<TD>
+		|
+		<A HREF=# onClick='window.open("/lab/{{l.id}}/notate/","Notate Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>note</A>
+		|
+	{% ifequal l.status "FAI" %}
+		|
+		<A HREF=# onClick='window.open("/lab/{{l.id}}/reorder/","Reorder","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>reorder</A>
+		|
+
 	{% endifequal %}
 <TR>
 	<TD COLSPAN=1 STYLE='border: 0px;'></TD>
