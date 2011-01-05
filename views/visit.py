@@ -708,23 +708,27 @@ def visit_record(request, id, type):
 
 	v = Visit.objects.get(pk=id)
 
-	head_text = """\t\t\t\t\tEngeye Health Clinic - Ddegeya-Masakai
-\t\tP.O. Box 26592, Kampala\t\t0772-556105\t\twww.engeye.org
-\n
+	head_text = """\t\t\t\tEngeye Health Clinic - Ddegeya-Masakai
+\t\t\t\tP.O. Box 26592, Kampala\t\t0772-556105\t\twww.engeye.org
+
+\t\tBino bye bikwata ku kujjanjabibwa kwo funnye leero
+
 """
 	head_text += "\tPatient: %s\tVisit# %05d\tDate: %02d-%02d-%02d\n"%(v.patient,v.id,
 		v.scheduledDate.day, v.scheduledDate.month, v.scheduledDate.year)
 	summ_text = v.get_summary_text()
-	upco_text = "\n\t\tUpcoming Visit(s):\n"
 	next_visits = Visit.objects.filter(patient=v.patient,scheduledDate__gt=v.scheduledDate)
-	for uv in next_visits:
-		upco_text += "\t%02d-%02d-%02d - %s:%s\n"%(
-			uv.scheduledDate.day,
-			uv.scheduledDate.month,
-			uv.scheduledDate.year,
-			uv.displayReason,
-			uv.reasonDetail,
-		)
+	upco_text=""
+	if len(next_visits) > 0:
+		upco_text = "\n\n\t\tKomawo Kudwaliro nga:\n"
+		for uv in next_visits:
+			upco_text += "\t%02d-%02d-%02d - %s:%s\n"%(
+				uv.scheduledDate.day,
+				uv.scheduledDate.month,
+				uv.scheduledDate.year,
+				uv.displayReason,
+				uv.reasonDetail,
+			)
 		
 
 	text_out = head_text + summ_text + upco_text
