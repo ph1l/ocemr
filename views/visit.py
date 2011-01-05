@@ -699,24 +699,21 @@ def visit_print(request, id):
 
 	v = Visit.objects.get(pk=id)
 
-	head_text = """\t\tEngeye Health Clinic - Ddegeya-Masaka\t\t%s
-P.O. Box 26592, Kampala          0772-556105         www.engeye.org
-
-
+	head_text = """\t\tEngeye Health Clinic - Ddegeya-Masakai\t\t\t\t%s
+\t\tP.O. Box 26592, Kampala\t\t0772-556105\t\twww.engeye.org
+\n\n\n
 """%(v.scheduledDate)
-	head_text += "Patient: %s\t\tVisit# %06d\n\n"%(v.patient,v.id)
+	head_text += "\tPatient: %s\t\tVisit# %06d\n\n"%(v.patient,v.id)
 	summ_text = v.get_summary_text()
-	acct_text = "\n\nTotal Amount Collected: %s" %(v.collected)
 
 
 	p = Popen(
-		['enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman12', '--header='],
+		['enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman13', '--header='],
 		stdin=PIPE, stdout=PIPE, close_fds=True
 		)
 	(child_stdin, child_stdout) = (p.stdin, p.stdout)
 	child_stdin.write(head_text)
 	child_stdin.write(summ_text)
-	child_stdin.write(acct_text)
 	out,err=p.communicate()
 
 	return render_to_response('close_window.html', {})
