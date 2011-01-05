@@ -11,7 +11,7 @@ Order a Lab:
 </UL>
 <DIV ID=labTable>
 <TABLE>
-<TR><TH>ID<TH>Type<TH>Status<TH>Notes<TH>Result<TD></TR>
+<TR><TH>ID<TH>Type<TH>Status<TH>Notes<TH>Result<TH></TR>
 {% for L in labs %}
 <TR>
 	<TD>{{L.id}}
@@ -26,9 +26,9 @@ Order a Lab:
 	<TD>{{L.result}}
 	<TD>
 		| <A HREF="#" onClick='window.open("/lab/{{L.id}}/notate/","Add Lab Note","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Add Note</A>
-	{% ifequal l.status "ORD" %}
+	{% ifequal L.status "ORD" %}
 		| <A HREF="#" onClick='window.open("/lab/{{L.id}}/cancel/","Cancel Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Cancel</A>
-	{% else %} {% ifequal l.status "PEN" %}
+	{% else %} {% ifequal L.status "PEN" %}
 		| <A HREF="#" onClick='window.open("/lab/{{L.id}}/cancel/","Cancel Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Cancel</A>
 	{% endifequal %}
 	{% endifequal %}
