@@ -32,7 +32,12 @@
 <TR>
     <TD>Village</TD>
     <TD>{{p.village}}</TD>
-    <TD><a href="#" onClick='window.open("/patient/edit/village/{{p.id}}/","Edit Village","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
+    <TD>
+{% comment %}
+TODO: Fix village edit here!
+<a href="#" onClick='window.open("/patient/edit/village/{{p.id}}/","Edit Village","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a>
+{% endcomment %}
+</TD>
 </TR>
 <TR>
     <TD COLSPAN=2>Record Created by {{p.createdBy}} on {{p.createdDateTime|date:"d-m H:i"}}</TD>
