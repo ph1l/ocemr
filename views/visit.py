@@ -699,20 +699,22 @@ def visit_print(request, id):
 
 	v = Visit.objects.get(pk=id)
 
-	head_text = """\t\tEngeye Health Clinic - Ddegeya-Masakai\t\t\t%s-%s-%s
+	head_text = """\t\t\t\t\tEngeye Health Clinic - Ddegeya-Masakai
 \t\tP.O. Box 26592, Kampala\t\t0772-556105\t\twww.engeye.org
-\n\n\n
-"""%(v.scheduledDate.day, v.scheduledDate.month, v.scheduledDate.year)
-	head_text += "\tPatient: %s\t\tVisit# %05d\n\n"%(v.patient,v.id)
+\n
+"""
+	head_text += "\tPatient: %s\tVisit# %05d\tDate: %02d-%02d-%02d\n"%(v.patient,v.id,
+		v.scheduledDate.day, v.scheduledDate.month, v.scheduledDate.year)
 	summ_text = v.get_summary_text()
 	upco_text = "\n\t\tUpcoming Visit(s):\n"
 	next_visits = Visit.objects.filter(scheduledDate__gt=v.scheduledDate)
 	for uv in next_visits:
-		upco_text += " %s-%s-%s %s - %s:%s"%(
+		upco_text += "\t%02d-%02d-%02d %02d:%02d - %s:%s"%(
 			uv.scheduledDate.day,
 			uv.scheduledDate.month,
 			uv.scheduledDate.year,
-			uv.scheduledTime,
+			uv.scheduledTime.hour,
+			uv.scheduledTime.minute,
 			uv.reason,
 			uv.reasonDetail,
 		)
