@@ -1,14 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Title{% endblock %}
+{% block title %}System Reports{% endblock %}
 
-{% block submenu %}
-<ul class=SubMenu>SubMenu
-<li class=SubMenuItem><a class=SubMenuItem href=/blank/ onclick="return loadIframe('contentFrame', this.href)">Item</a>
-<li class=SubMenuItem><a class=SubMenuItem href=/blank/ onclick="return loadIframe('contentFrame', this.href)">Item</a>
-</ul>
-<ul class=SubMenu>SubMenu
-<li class=SubMenuItem><a class=SubMenuItem href=/blank/ onclick="return loadIframe('contentFrame', this.href)">Item</a>
-<li class=SubMenuItem><a class=SubMenuItem href=/blank/ onclick="return loadIframe('contentFrame', this.href)">Item</a>
-</ul>
+{% block content %}
+
+<A HREF=/reports/daily/>Daily Patient Report</A>
+
 {% endblock %}
 

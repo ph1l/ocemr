@@ -1,5 +1,4 @@
-##########################################################################
-#
+########################################################################## #
 #    This file is part of OCEMR.
 #
 #    OCEMR is free software: you can redistribute it and/or modify
@@ -123,5 +122,7 @@ urlpatterns += patterns('ocemr.views.med',
     (r'^med/(?P<id>\d+)/undo_cancel/$', 'med_undo_cancel'),
     (r'^med/(?P<id>\d+)/notate/$', 'med_notate'),
 )
-#urlpatterns += patterns('ocemr.views.prescription',
-#)
+urlpatterns += patterns('ocemr.views.reports',
+    (r'^reports/$', 'index'),
+    (r'^reports/daily/$', 'daily_patient_records')
+)
