@@ -70,7 +70,7 @@ def visit_claim(request,id):
 	if old_v != None:
 		old_diags = Diagnosis.objects.filter(visit=old_v).exclude(status='RES')
 		for old_diag in old_diags:
-			d, is_new = Diagnosis.objects.get_or_create(type=old_diag.type, patient=p, visit=v)
+			d, is_new = Diagnosis.objects.get_or_create(type=old_diag.type, patient=p, visit=v, diagnosedBy=request.user)
 			if is_new:
 				d.save()
 				
@@ -680,13 +680,13 @@ P.O. Box 26592, Kampala          0772-556105         www.engeye.org
 
 
 """%(v.scheduledDate)
-	head_text = "Patient: %s\t\tVisit# %06d\n\n"%(v.patient,v.id)
+	head_text += "Patient: %s\t\tVisit# %06d\n\n"%(v.patient,v.id)
 	summ_text = v.get_summary_text()
 	acct_text = "\n\nTotal Amount Collected: %s" %(v.collected)
 
 
 	p = Popen(
-		['enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman12'],
+		['enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman12', '--header='],
 		stdin=PIPE, stdout=PIPE, close_fds=True
 		)
 	(child_stdin, child_stdout) = (p.stdin, p.stdout)

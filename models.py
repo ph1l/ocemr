@@ -263,6 +263,9 @@ class Visit(models.Model):
 			meds = Med.objects.filter(diagnosis=diagnosis, status='DIS')
 			for med in meds:
 				out_txt +="Med: %s - %s\n"%(med.type.title,med.dosage)
+		referrals = Referral.objects.filter(visit=self)
+		for referral in referrals:
+			out_txt +="Referral: %s - %s"%(referral.to, referral.reason)
 			
 		return out_txt
 
