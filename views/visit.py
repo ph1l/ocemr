@@ -699,12 +699,24 @@ def visit_print(request, id):
 
 	v = Visit.objects.get(pk=id)
 
-	head_text = """\t\tEngeye Health Clinic - Ddegeya-Masakai\t\t\t\t%s
+	head_text = """\t\tEngeye Health Clinic - Ddegeya-Masakai\t\t\t%s-%s-%s
 \t\tP.O. Box 26592, Kampala\t\t0772-556105\t\twww.engeye.org
 \n\n\n
-"""%(v.scheduledDate)
-	head_text += "\tPatient: %s\t\tVisit# %06d\n\n"%(v.patient,v.id)
+"""%(v.scheduledDate.day, v.scheduledDate.month, v.scheduledDate.year)
+	head_text += "\tPatient: %s\t\tVisit# %05d\n\n"%(v.patient,v.id)
 	summ_text = v.get_summary_text()
+	upco_text = "\n\t\tUpcoming Visit(s):\n"
+	next_visits = Visit.objects.filter(scheduledDate__gt=v.scheduledDate)
+	for uv in next_visits:
+		upco_text += " %s-%s-%s %s - %s:%s"%(
+			uv.scheduledDate.day,
+			uv.scheduledDate.month,
+			uv.scheduledDate.year,
+			uv.scheduledTime,
+			uv.reason,
+			uv.reasonDetail,
+		)
+		
 
 
 	p = Popen(
@@ -714,6 +726,7 @@ def visit_print(request, id):
 	(child_stdin, child_stdout) = (p.stdin, p.stdout)
 	child_stdin.write(head_text)
 	child_stdin.write(summ_text)
+	child_stdin.write(upco_text)
 	out,err=p.communicate()
 
 	return render_to_response('close_window.html', {})

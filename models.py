@@ -250,7 +250,7 @@ class Visit(models.Model):
 
 		from models import VisitSymptom, Vital, ExamNote
 
-		out_txt="S: %s\n"%(self.reasonDetail)
+		out_txt="S:\n"
 		
 		symptoms = VisitSymptom.objects.filter(visit=self)
 		for symptom in symptoms:
@@ -268,7 +268,7 @@ class Visit(models.Model):
 			out_txt +="AP: %s:%s - %s\n"%(diagnosis.displayStatus,diagnosis.type.title, diagnosis.notes)
 			meds = Med.objects.filter(diagnosis=diagnosis, status='DIS')
 			for med in meds:
-				out_txt +="Med: %s - %s\n"%(med.type.title,med.dosage)
+				out_txt +="    Med: %s - %s\n"%(med.type.title,med.dosage)
 		referrals = Referral.objects.filter(visit=self)
 		for referral in referrals:
 			out_txt +="Referral: %s - %s"%(referral.to, referral.reason)
