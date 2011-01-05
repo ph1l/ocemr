@@ -72,5 +72,26 @@
 </TD>
 {% endfor %}
 </TABLE>
+<TABLE> Resolved:
+<TR><TH>Scheduled</TH><TH>Patient Id</TH><TH>Status</TH><TH>Actions</TH></TR>
+{% for v in r_visits %}
+<TR>
+<TD>{{v.scheduledDate|date:"d-m"}} {{v.scheduledTime|time:"H:i"}}</TD>
+<TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
+	{% ifequal v.status "MISS" %}
+		<TD STYLE='background-color:#FF5555;'>
+	{% else %} {% ifequal v.status "INPR" %}
+		<TD STYLE='background-color:#77FF77;'>
+	{% else %} {% ifequal v.status "WAIT" %}
+		<TD STYLE='background-color:#FFFF55;'>
+	{% else %}
+		<TD STYLE='background-color:#FFFFFF;'>
+	{% endifequal %}
+	{% endifequal %}
+	{% endifequal %}
+{{v.displayStatus}} </TD>
+<TD>
+</TR>
+{% endfor %}
 {% endblock %}
 

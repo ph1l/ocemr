@@ -39,12 +39,12 @@ def patient_queue(request):
 
 	from ocemr.models import Visit
 
-	unresolved_q = Q(scheduledDate__lt=d_today.date) & ( Q(status='SCHE') | Q(status='WAIT') | Q(status='INPR') | Q(status='CHOT') )
+	unresolved_q = Q(scheduledDate__lte=d_today.date) & ( Q(status='SCHE') | Q(status='WAIT') | Q(status='INPR') | Q(status='CHOT') )
+	resolved_q =  Q(scheduledDate=d_today.date) & ( Q(status='MISS') | Q(status='INPR') | Q(status='RESO') )
 	missed_q = Q(scheduledDate__gt=d_missed.date) & Q(status='MISS')
-	today_q = Q(scheduledDate=d_today)
-	upcoming_q = Q(scheduledDate__lt=d_upcoming) & Q(scheduledDate__gt=d_today)
-	q = unresolved_q  | missed_q |today_q | upcoming_q
-	visits = Visit.objects.filter(q).order_by('-scheduledDate', '-scheduledTime', '-id')
+	
+	visits = Visit.objects.filter(unresolved_q).order_by('scheduledDate', 'scheduledTime', 'id')
+	r_visits = Visit.objects.filter(resolved_q).order_by('scheduledDate', 'scheduledTime', 'id')
 	return render_to_response('patient_queue.html', locals())
 
 @login_required
