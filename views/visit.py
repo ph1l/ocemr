@@ -718,12 +718,10 @@ def visit_record(request, id, type):
 	upco_text = "\n\t\tUpcoming Visit(s):\n"
 	next_visits = Visit.objects.filter(patient=v.patient,scheduledDate__gt=v.scheduledDate)
 	for uv in next_visits:
-		upco_text += "\t%02d-%02d-%02d %02d:%02d - %s:%s\n"%(
+		upco_text += "\t%02d-%02d-%02d - %s:%s\n"%(
 			uv.scheduledDate.day,
 			uv.scheduledDate.month,
 			uv.scheduledDate.year,
-			uv.scheduledTime.hour,
-			uv.scheduledTime.minute,
 			uv.displayReason,
 			uv.reasonDetail,
 		)
