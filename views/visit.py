@@ -59,6 +59,9 @@ def visit_claim(request,id):
 
 	v = Visit.objects.get(pk=id)
 	v.status = 'INPR'
+	from datetime import datetime
+	v.claimedBy = request.user
+	v.claimedDateTime = datetime.now()
 	v.save()
 	
 	p = v.patient
@@ -102,6 +105,9 @@ def visit_finish(request,id):
 			v.status = 'RESO'
 	else:
 		v.status = 'MISS'
+	from datetime import datetime
+	v.finishedBy = request.user
+	v.finishedDateTime = datetime.now()
 	v.save()
 	return render_to_response('close_window.html', {})
 
@@ -672,6 +678,9 @@ def visit_resolve(request,id):
 	v = Visit.objects.get(pk=id)
 	if v.status == 'CHOT':
 		v.status = 'RESO'
+		from datetime import datetime
+		v.resolvedBy = request.user
+		v.resolvedDateTime = datetime.now()
 		v.save()
 	return render_to_response('close_window.html', {})
 
@@ -688,7 +697,7 @@ def visit_unresolve(request,id):
 	return render_to_response('close_window.html', {})
 
 @login_required
-def visit_print(request, id):
+def visit_record(request, id, type):
 	"""
 	['enscript', '-P', 'p1102w', '--header=Engeye Health Clinic', '--footer=Page $% of $=', '--word-wrap', '--mark-wrapped-lines=arrow', '/etc/motd']
 	"""
@@ -707,28 +716,29 @@ def visit_print(request, id):
 		v.scheduledDate.day, v.scheduledDate.month, v.scheduledDate.year)
 	summ_text = v.get_summary_text()
 	upco_text = "\n\t\tUpcoming Visit(s):\n"
-	next_visits = Visit.objects.filter(scheduledDate__gt=v.scheduledDate)
+	next_visits = Visit.objects.filter(patient=v.patient,scheduledDate__gt=v.scheduledDate)
 	for uv in next_visits:
-		upco_text += "\t%02d-%02d-%02d %02d:%02d - %s:%s"%(
+		upco_text += "\t%02d-%02d-%02d %02d:%02d - %s:%s\n"%(
 			uv.scheduledDate.day,
 			uv.scheduledDate.month,
 			uv.scheduledDate.year,
 			uv.scheduledTime.hour,
 			uv.scheduledTime.minute,
-			uv.reason,
+			uv.displayReason,
 			uv.reasonDetail,
 		)
 		
 
+	text_out = head_text + summ_text + upco_text
 
-	p = Popen(
-		['enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman13', '--header='],
-		stdin=PIPE, stdout=PIPE, close_fds=True
-		)
-	(child_stdin, child_stdout) = (p.stdin, p.stdout)
-	child_stdin.write(head_text)
-	child_stdin.write(summ_text)
-	child_stdin.write(upco_text)
-	out,err=p.communicate()
-
-	return render_to_response('close_window.html', {})
+	if type == "print":
+		p = Popen(
+			['enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman12', '--header='],
+			stdin=PIPE, stdout=PIPE, close_fds=True
+			)
+		(child_stdin, child_stdout) = (p.stdin, p.stdout)
+		child_stdin.write(text_out)
+		out,err=p.communicate()
+		return render_to_response('close_window.html', {})
+	else:
+		return render_to_response('popup_info.html', {'info': text_out})

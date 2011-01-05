@@ -100,11 +100,13 @@ class Visit(models.Model):
 	status = models.CharField(max_length=4, choices=VISIT_STATUS_CHOICES, default='SCHE')
 	reason = models.CharField(max_length=3, choices=VISIT_REASON_CHOICES, default='NEW')
 	reasonDetail = models.TextField(default="")
-	#followupTo = models.ForeignKey('self', null=True)
+	followupTo = models.ForeignKey('self', null=True, blank=True)
 	#
-	claimedDateTime = models.TimeField('Date and Time Claimed',null=True,blank=True)
+	claimedDateTime = models.DateTimeField('Claimed',null=True,blank=True)
 	claimedBy = models.ForeignKey(User,null=True,blank=True, related_name="visit_claimed_by")
-	resolvedDateTime = models.TimeField('Date and Time Resolved',null=True,blank=True)
+	finishedDateTime = models.DateTimeField('Finished',null=True,blank=True)
+	finishedBy = models.ForeignKey(User,null=True,blank=True, related_name="visit_finished_by")
+	resolvedDateTime = models.DateTimeField('Resolved',null=True,blank=True)
 	resolvedBy = models.ForeignKey(User,null=True,blank=True, related_name="visit_resolved_by")
 	cost = models.FloatField(default=0)
 	def __unicode__(self):
@@ -113,6 +115,11 @@ class Visit(models.Model):
 		for code, displayStatus in self.VISIT_STATUS_CHOICES:
 			if code == self.status:
 				return displayStatus
+		return ""
+	def _get_displayReason(self):
+		for code, displayReason in self.VISIT_REASON_CHOICES:
+			if code == self.reason:
+				return displayReason
 		return ""
 	def _is_claimed(self):
 		if self.status == 'SCHE' or self.status == 'WAIT':
@@ -132,6 +139,7 @@ class Visit(models.Model):
 		return len(meds)
 
 	displayStatus = property(_get_displayStatus)
+	displayReason = property(_get_displayReason)
 	is_claimed = property(_is_claimed)
 	is_checking_out = property(_is_checking_out)
 	is_finished = property(_is_finished)
