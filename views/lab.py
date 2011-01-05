@@ -22,6 +22,7 @@
 ##########################################################################
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 
 
@@ -41,7 +42,7 @@ def lab_queue(request):
 	past_24h_q = Q(orderedDateTime__gt=d_yesterday)
 
 	labs = Lab.objects.filter(past_24h_q).order_by('-orderedDateTime', '-id')
-	return render_to_response('lab_queue.html', locals())
+	return render_to_response('lab_queue.html', locals(),context_instance=RequestContext(request))
 
 @login_required
 def lab_start(request,id):

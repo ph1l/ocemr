@@ -23,6 +23,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+from django.template import RequestContext
 from ocemr.forms import *
 
 from django.db.models import get_model, Q
@@ -45,7 +46,9 @@ def patient_queue(request):
 	
 	visits = Visit.objects.filter(unresolved_q).order_by('scheduledDate', 'scheduledTime', 'id')
 	r_visits = Visit.objects.filter(resolved_q).order_by('scheduledDate', 'scheduledTime', 'id')
-	return render_to_response('patient_queue.html', locals())
+	return render_to_response(
+		'patient_queue.html', locals(),
+		context_instance=RequestContext(request))
 
 @login_required
 def patient_new(request):
@@ -63,7 +66,7 @@ def patient_new(request):
 
 	return render_to_response('patient_new.html', {
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_edit_name(request, id):
@@ -157,7 +160,7 @@ def patient(request,id):
 	return render_to_response('patient.html', {
 		'p':p,
 		'visits': visits,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_search(request):
@@ -181,13 +184,13 @@ def patient_search(request):
 				patients = patients.filter(givenName__icontains=givenName)
 			return render_to_response('patient_list.html', {
 				'patients':patients,
-			})
+			}, context_instance=RequestContext(request),)
 	else:
 		form = PatientSearchForm() # An unbound form
 
 	return render_to_response('patient_search.html', {
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_new_visit(request, id):

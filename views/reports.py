@@ -21,6 +21,7 @@
 ##########################################################################
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.db.models import get_model, Q
 from datetime import datetime
@@ -66,6 +67,7 @@ def dump_csv(filename,field_names,headers,data_rows):
         response['Content-Disposition'] = 'attachment; filename=%s' % (filename)
         return response
 
+@login_required
 def daily_patient_records(request, date_in=datetime.today()):
 	"""
 	"""
@@ -130,5 +132,5 @@ def index(request):
         """
         Reports Landing Page
         """
-        return render_to_response('index_reports.html')
+        return render_to_response('index_reports.html',context_instance=RequestContext(request))
 

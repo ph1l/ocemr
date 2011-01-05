@@ -21,6 +21,7 @@
 ##########################################################################
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from ocemr.forms import *
 
@@ -45,7 +46,7 @@ def med_queue(request):
 			cleaned_visits.append(v)
 	visits = cleaned_visits
 	visits.reverse()
-	return render_to_response('med_queue.html', locals())
+	return render_to_response('med_queue.html', locals(),context_instance=RequestContext(request))
 
 @login_required
 def meds_view(request,vid):
@@ -57,7 +58,7 @@ def meds_view(request,vid):
 	v = Visit.objects.get(pk=vid)
 	p = v.patient
 
-	return render_to_response('meds_view.html',locals())
+	return render_to_response('meds_view.html',locals(),context_instance=RequestContext(request))
 
 @login_required
 def med_dispense(request,id):

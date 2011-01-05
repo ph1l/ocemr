@@ -22,6 +22,7 @@
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 
 
@@ -137,7 +138,7 @@ def visit_past(request,id):
 	p = v.patient
 
 	
-	return render_to_response('visit_past.html', locals())
+	return render_to_response('visit_past.html', locals(),context_instance=RequestContext(request))
 
 @login_required
 def visit_subj(request,id):
@@ -153,7 +154,7 @@ def visit_subj(request,id):
 	symptomTypes = SymptomType.objects.all()
 	symptoms = VisitSymptom.objects.filter(visit=v)
 
-	return render_to_response('visit_subj.html', locals())
+	return render_to_response('visit_subj.html', locals(),context_instance=RequestContext(request))
 
 @login_required
 def visit_subj_new(request,id, symptomtypeid):
@@ -243,7 +244,7 @@ def visit_obje(request,id):
 	examNoteTypes = ExamNoteType.objects.all()
 	examNotes = ExamNote.objects.filter(visit=v)
 
-	return render_to_response('visit_obje.html', locals())
+	return render_to_response('visit_obje.html', locals(),context_instance=RequestContext(request))
 
 @login_required
 def visit_obje_vital_new(request,id, vitaltypeid):
@@ -354,7 +355,7 @@ def visit_labs(request,id):
 	labTypes = LabType.objects.all()
 	labs = Lab.objects.filter(visit=v)
 	
-	return render_to_response('visit_labs.html', locals())
+	return render_to_response('visit_labs.html', locals(),context_instance=RequestContext(request))
 
 @login_required
 def visit_labs_new(request,id, labtypeid):
@@ -381,7 +382,7 @@ def visit_plan(request,id):
 	v = Visit.objects.get(pk=id)
 	p = v.patient
 
-	return render_to_response('visit_plan.html', locals())
+	return render_to_response('visit_plan.html', locals(),context_instance=RequestContext(request))
 
 @login_required
 def visit_plan_diag_new(request,id):
@@ -439,7 +440,7 @@ def visit_meds(request,id):
 	diagnoses = Diagnosis.objects.filter(visit=v).filter(q_status)
 
 
-	return render_to_response('visit_meds.html', locals())
+	return render_to_response('visit_meds.html', locals(),context_instance=RequestContext(request))
 
 #NewMedForm
 @login_required
@@ -479,7 +480,7 @@ def visit_refe(request,id):
 
 	referrals = Referral.objects.filter(patient=p).order_by('-addedDateTime')
 
-	return render_to_response('visit_refe.html', locals())
+	return render_to_response('visit_refe.html', locals(),context_instance=RequestContext(request))
 
 @login_required
 def visit_refe_new(request,id):
@@ -540,7 +541,7 @@ def visit_immu(request,id):
 
 	immunizationLogs = ImmunizationLog.objects.filter(patient=p)
 
-	return render_to_response('visit_immu.html', locals())
+	return render_to_response('visit_immu.html', locals(),context_instance=RequestContext(request))
 
 @login_required
 def visit_immu_new(request,id):
@@ -575,7 +576,7 @@ def visit_note(request,id):
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
-	return render_to_response('visit_note.html', locals())
+	return render_to_response('visit_note.html', locals(),context_instance=RequestContext(request))
 
 @login_required
 def visit_allergy_new(request,id):
