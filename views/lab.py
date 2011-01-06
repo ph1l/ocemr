@@ -40,7 +40,7 @@ def lab_queue(request):
 	from ocemr.models import Lab
 
 	active_q = Q(status='ORD' ) | Q(status='PEN' )
-	inactive_q = Q(orderedDateTime__gt=d_yesterday) & ( Q(status='CAN' ) | Q(status='COM' ) | Q(status='FAI') )
+	inactive_q = Q(orderedDateTime=d_today) & ( Q(status='CAN' ) | Q(status='COM' ) | Q(status='FAI') )
 
 	labs_active = Lab.objects.filter(active_q).order_by('-orderedDateTime', '-id')
 	labs_inactive = Lab.objects.filter(inactive_q).order_by('-orderedDateTime', '-id')
