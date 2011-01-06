@@ -68,9 +68,34 @@ def dump_csv(filename,field_names,headers,data_rows):
         return response
 
 @login_required
-def daily_patient_records(request, date_in=datetime.today()):
+def index(request):
+        """
+        Reports Landing Page
+        """
+        return render_to_response('reports.html',context_instance=RequestContext(request))
+
+@login_required
+def legacy_patient_daily(request):
 	"""
 	"""
+	from ocemr.forms import SelectDateForm
+
+	form_valid=0
+        if request.method == 'POST':
+                form = SelectDateForm(request.POST)
+                if form.is_valid():
+                        date_in = form.cleaned_data['date']
+			form_valid=1
+        else:
+                form = SelectDateForm()
+	if not form_valid:
+	        return render_to_response('popup_form.html', {
+	                'title': 'Enter Date For Report',
+	                'form_action': '/reports/legacy/patient/daily/',
+	                'form': form,
+	        })
+
+
 	from ocemr.models import Visit, Diagnosis, Med, Referral
 	field_names=['pt_daily_index','pt_name','pt_monthly_index','sex','age','village','diagnosis','prescription','referral']
 	headers={
@@ -137,12 +162,5 @@ def daily_patient_records(request, date_in=datetime.today()):
 					'prescription': prescription,
 					'referral': '',
 				})
-	return dump_csv( "daily.csv", field_names, headers, summary_rows )
-
-@login_required
-def index(request):
-        """
-        Reports Landing Page
-        """
-        return render_to_response('index_reports.html',context_instance=RequestContext(request))
+	return dump_csv( "patient-daily-%s.csv"%(date_in.strftime("%Y%m%d")), field_names, headers, summary_rows )
 
