@@ -230,7 +230,7 @@ def waiting_new_visit(request, id):
 
 	from datetime import datetime
 	dt_now = datetime.now()
-	v = Visit.Visit(
+	v = Visit(
 		scheduledDate=dt_now.date(),
 		scheduledTime=dt_now.time(),
 		#seenDateTime=dt_now,
