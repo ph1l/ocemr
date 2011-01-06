@@ -35,12 +35,12 @@ def lab_queue(request):
 	"""
 	from datetime import datetime, timedelta
 	d_today = datetime.today()
-	d_yesterday = d_today-timedelta(1)
+	d_midnight = datetime.strptime("%s-%s-%s 00:00:00"%(d_today.year,d_today.month,d_today.day), "%Y-%m-%d %H:%M:%S")
 
 	from ocemr.models import Lab
 
 	active_q = Q(status='ORD' ) | Q(status='PEN' )
-	inactive_q = Q(orderedDateTime=d_today) & ( Q(status='CAN' ) | Q(status='COM' ) | Q(status='FAI') )
+	inactive_q = Q(orderedDateTime__gte=d_midnight) & ( Q(status='CAN' ) | Q(status='COM' ) | Q(status='FAI') )
 
 	labs_active = Lab.objects.filter(active_q).order_by('-orderedDateTime', '-id')
 	labs_inactive = Lab.objects.filter(inactive_q).order_by('-orderedDateTime', '-id')
