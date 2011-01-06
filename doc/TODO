@@ -1,7 +1,10 @@
-Needed Functionality:
+-Reports
+	- Add Reports to main menu
+	- Show Outstanding Balances
+	- Legacy Monthly Report
 
-	- Show outstanding balances
-	- Tag Lab Orderer
-Features:
-
+-Patient Queue
 	- Scroll to other days in the patient queue
+
+-Med Queue
+	- 
