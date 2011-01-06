@@ -70,12 +70,13 @@
 {% endifequal %}
 </TD>
 <TD>
-		<A HREF="/meds/{{v.id}}/">View</A>
+		|
+		<A HREF="/meds/{{v.id}}/">View</A> |
 
-		<A HREF=# onClick='window.open("/visit/{{v.id}}/record/print/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Print Record</A>
-		<A HREF=# onClick='window.open("/visit/{{v.id}}/record/view/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>View Record</A>
+		<A HREF=# onClick='window.open("/visit/{{v.id}}/record/print/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Print Record</A> |
+		<A HREF=# onClick='window.open("/visit/{{v.id}}/record/view/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>View Record</A> |
 		{% ifequal v.get_med_status 2 %}
-		<A HREF=# onClick='window.open("/visit/{{v.id}}/resolve/","Resolve","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Resolve</A>
+		<A HREF=# onClick='window.open("/visit/{{v.id}}/resolve/","Resolve","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Resolve</A> |
 		{% endifequal %}
 </TD>
 </TR>
