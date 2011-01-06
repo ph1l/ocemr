@@ -4,7 +4,9 @@
         <A HREF=/patient_queue/>Patient Queue</A>(<A HREF=/patient/search/>search</a>,<a href=/patient/new>add</a>)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>|<A HREF=/reports/>Reports</A>
 {% endblock %}
 {% block content %}
-<H1>Patient Info: {{p}}</H1>
+<DIV ALIGN=CENTER><B>{{p}}</B></DIV>
+<TABLE WIDTH=100%>
+<TR><TD VALIGN=TOP>
 <TABLE>
 <TR>
     <TD>Patient ID</TD>
@@ -37,23 +39,48 @@ TODO: Fix village edit here!
     <TD COLSPAN=2>Record Created by {{p.createdBy}} on {{p.createdDateTime|date:"d-m H:i"}}</TD>
 </TR>
 </TABLE>
-
-<H2>Visits (<A HREF="#" onClick='window.open("/patient/new_visit/{{p.id}}/","Add Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>NEW</a>)</H2>
-<TABLE>
-<TR><TH>Visit ID<TH>Scheduled<TH>Status<TH>Claimed<TH>Finished<TH>Resolved</TR>
+</TD><TD VALIGN=TOP>
+<TABLE>Scheduled Visits(<A HREF="#" onClick='window.open("/patient/schedule_new_visit/{{p.id}}/","Add Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Schedule Future Visit</a>):
+<TR><TH>Visit ID<TH>Scheduled<TH>Status<TH>Reason<TH>Detail</TR>
+{% for v in upcoming_visits %}
+<TR>
+  <TD><A HREF=/visit/{{v.id}}>{{ v.id }}</A>
+  <TD>{{ v.scheduledDate|date:"d-m-Y" }} by {{ v.scheduledBy }}
+  <TD>{{ v.displayStatus }}
+   <TD>{{ v.reason }}
+   <TD>{{ v.reasonDetail }}
+{% endfor %}
+</TABLE>
+</TD></TR></TABLE>
+<TABLE>Past &amp; Current Visits
+(<A HREF="#" onClick='window.open("/patient/waiting_new_visit/{{p.id}}/","Add Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Schedule Walk-up Visit Now!</a>):
+<TR><TH>Scheduled<TH>Status<TH>Seen<TH>Claimed<TH>Finished<TH>Resolved<TH>Actions</TR>
 <TR><TH>Reason<TH>Detail</TR>
 {% for v in visits %}
 <TR>
-   <TH><A HREF=/visit/{{v.id}}>{{ v.id }}</A>
-   <TD>{{ v.scheduledDate|date:"d-m-Y" }} {{ v.scheduledTime|time:"H:i" }}
+   <TD>{{ v.scheduledDate|date:"d-m-Y" }}
    by {{ v.scheduledBy }}
-   <TD>{{ v.displayStatus }}
-   <TD>{{ v.claimedDateTime|date:"d-m-Y H:i" }}
+
+	{% ifequal v.status "MISS" %}
+		<TD STYLE='background-color:#FF5555;'>
+	{% else %} {% ifequal v.status "INPR" %}
+		<TD STYLE='background-color:#77FF77;'>
+	{% else %} {% ifequal v.status "WAIT" %}
+		<TD STYLE='background-color:#FFFF55;'>
+	{% else %}
+		<TD STYLE='background-color:#FFFFFF;'>
+	{% endifequal %}
+	{% endifequal %}
+	{% endifequal %}
+{{v.displayStatus}} </TD>
+   <TD>{{ v.seenDateTime|date:"d-m H:i" }}
+   <TD>{{ v.claimedDateTime|date:"d-m H:i" }}
    by {{ v.claimedBy }}
-   <TD>{{ v.finishedDateTime|date:"d-m-Y H:i" }}
+   <TD>{{ v.finishedDateTime|date:"d-m H:i" }}
    by {{ v.finishedBy }}
-   <TD>{{ v.resolvedDateTime|date:"d-m-Y H:i" }}
+   <TD>{{ v.resolvedDateTime|date:"d-m H:i" }}
    by {{ v.resolvedBy }}
+   <TD><A HREF=/visit/{{v.id}}>View Chart</A>
 </TR>
 <TR>
    <TD>{{ v.reason }}

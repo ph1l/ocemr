@@ -155,10 +155,12 @@ def patient(request,id):
 	from ocemr.models import Patient, Visit
 
 	p = Patient.objects.get(pk=id)
-	visits = Visit.objects.filter(patient=p).order_by('-id')
+	upcoming_visits = Visit.objects.filter(patient=p).filter(status='SCHE').order_by('scheduledDate')
+	visits = Visit.objects.filter(patient=p).exclude(status='SCHE').order_by('scheduledDate')
 	return render_to_response('patient.html', {
 		'p':p,
 		'visits': visits,
+		'upcoming_visits': upcoming_visits,
 	},context_instance=RequestContext(request))
 
 @login_required
@@ -192,7 +194,7 @@ def patient_search(request):
 	},context_instance=RequestContext(request))
 
 @login_required
-def patient_new_visit(request, id):
+def schedule_new_visit(request, id):
 	"""
 	"""
 	from ocemr.models import Patient
@@ -200,15 +202,36 @@ def patient_new_visit(request, id):
 	p = Patient.objects.get(pk=id)
 
 	if request.method == 'POST': # If the form has been submitted...
-		form = NewVisitForm(request.user, p, request.POST) # A form bound to the POST data
+		form = NewScheduledVisitForm(request.user, p, request.POST) # A form bound to the POST data
 		if form.is_valid(): # All validation rules pass
 			o = form.save()
 			return HttpResponseRedirect('/close_window/')
 	else:
-		form = NewVisitForm(request.user, p) # An unbound form
+		form = NewScheduledVisitForm(request.user, p) # An unbound form
 
 	return render_to_response('popup_form.html', {
 		'title': 'Scedule Patient Visit',
-		'form_action': '/patient/new_visit/%s/'%(id),
+		'form_action': '/patient/schedule_new_visit/%s/'%(id),
 		'form': form,
 	})
+
+@login_required
+def waiting_new_visit(request, id):
+	"""
+	"""
+	from ocemr.models import Patient, Visit
+	p = Patient.objects.get(pk=id)
+
+	from datetime import datetime
+	dt_now = datetime.now()
+	v = Visit.Visit(
+		scheduledDate=dt_now.date(),
+		scheduledTime=dt_now.time(),
+		#seenDateTime=dt_now,
+		status='WAIT',
+		patient=p,
+		scheduledBy=request.user,
+		)
+	v.save()
+	
+	return render_to_response('close_window.html');

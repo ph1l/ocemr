@@ -75,24 +75,23 @@ class EditPatientVillageForm(forms.Form):
 
 
 
-class NewVisitForm(forms.ModelForm):
+class NewScheduledVisitForm(forms.ModelForm):
 	from models import Patient
 	from models import Visit
         scheduledDate = EuDateFormField(required=False,widget=widgets.CalendarWidget)
-        scheduledTime = forms.CharField(required=False)
+        scheduledTime = forms.CharField(required=False,widget=forms.HiddenInput)
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
 	scheduledBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-	status = forms.ChoiceField(
-		(
-			('WAIT','Waiting'),
-			('SCHE','Scheduled'),
-		) )
+	status = forms.CharField(widget=forms.HiddenInput)
+
 	def __init__(self, user, p, *args, **kwargs):
 		
-		super(NewVisitForm, self).__init__(*args, **kwargs)
+		super(NewScheduledVisitForm, self).__init__(*args, **kwargs)
 		#raise(" | ".join(dir(self.fields['createdBy'])))
 		self.fields['scheduledBy'].initial=user.id
 		self.fields['patient'].initial=p.id
+		self.fields['status'].initial='SCHE'
+		self.fields['scheduledTime'].initial="09:00"
 		
 
         class Meta:
@@ -110,21 +109,6 @@ class NewVisitForm(forms.ModelForm):
 			from datetime import datetime
 			return datetime.now().date()
 		return data
-
-	def clean_scheduledTime(self):
-		data = self.cleaned_data['scheduledTime']
-		if data == "" or data == None:
-			from datetime import datetime
-			return datetime.now().time()
-		try:
-			i = int(data)
-			h = i/100
-			m = i%100
-			return "%02d:%02d"%(h,m)
-		except:
-			return data
-		
-
 
 class NewPatientForm(forms.ModelForm):
         birthDate = EuDateFormField(required=False,widget=widgets.CalendarWidget)
