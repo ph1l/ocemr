@@ -90,10 +90,10 @@
 	{% endifequal %}
 {{v.displayStatus}} </TD>
 <TD>
-{%ifequal v.status "CHOT" %}
-	<A HREF=# onClick='window.open("/visit/{{v.id}}/unfinish/","Unfinish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Finish</A>
-{% else %}
+{%ifequal v.status "MISS" %}
 	<A HREF=# onClick='window.open("/visit/{{v.id}}/unfinish/","Unfinish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Miss</A>
+{% else %}
+	<A HREF=# onClick='window.open("/visit/{{v.id}}/unfinish/","Unfinish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Finish</A>
 {% endifequal %}
 	
 </TR>
