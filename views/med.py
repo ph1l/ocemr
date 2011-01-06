@@ -39,7 +39,7 @@ def med_queue(request):
 
 	from ocemr.models import Visit
 	visits_active = Visit.objects.filter(q_active).order_by('finishedDateTime')
-	visits_inactive = Visit.objects.filter(q_inactive).order_by('finishedDateTime')
+	visits_inactive = Visit.objects.filter(q_inactive).order_by('-resolvedDateTime')
 	return render_to_response('med_queue.html', locals(),context_instance=RequestContext(request))
 
 @login_required
