@@ -1,10 +1,16 @@
--Reports
-	- Add Reports to main menu
-	- Show Outstanding Balances
-	- Legacy Monthly Report
+-Software Design
+	-Reports
+		- Add Reports to main menu
+		- Show Outstanding Balances
+		- Legacy Monthly Report
 
--Patient Queue
-	- Scroll to other days in the patient queue
-
--Med Queue
+	-Patient Queue
+		- Scroll to other days in the patient queue
+	-Med Queue
+		- 
+-Administration
+	- MySQL Replication Setup
+	- MySQL Replication Testing
+-Infrastructure
+	- Test Failure states of server
 	- 
