@@ -100,10 +100,7 @@ def visit_finish(request,id):
 
 	v = Visit.objects.get(pk=id)
 	if v.status == 'INPR':
-		if v.get_num_meds > 0:
-			v.status = 'CHOT'
-		else:
-			v.status = 'RESO'
+		v.status = 'CHOT'
 	else:
 		v.status = 'MISS'
 	from datetime import datetime

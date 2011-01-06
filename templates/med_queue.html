@@ -34,10 +34,11 @@
 <TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
 <TD>{{ v.get_num_meds }}</TD>
         {% ifequal v.get_med_status 1 %}
-                <TD STYLE='background-color:#FFFF55;'>Waiting</SPAN>
+                <TD STYLE='background-color:#FFFF55;'>Waiting
+        {% else %}{% ifequal v.get_med_status 2 %}
+                <TD STYLE='background-color:#77FF77;'>Done
+	{% else %}<TD STYLE='background-color:#77FF77;'>N/A
         {% endifequal %}
-        {% ifequal v.get_med_status 2 %}
-                <TD STYLE='background-color:#77FF77;'>Done</SPAN>
         {% endifequal %}
 </TD>
 	{% ifequal v.status "CHOT" %}
