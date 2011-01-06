@@ -85,7 +85,7 @@ class NewVisitForm(forms.ModelForm):
 	status = forms.ChoiceField(
 		(
 			('WAIT','Waiting'),
-			('SCHE','Sceduled'),
+			('SCHE','Scheduled'),
 		) )
 	def __init__(self, user, p, *args, **kwargs):
 		
