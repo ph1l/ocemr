@@ -72,7 +72,7 @@
 </TD>
 <TD>
 		<A HREF="/meds/{{v.id}}/">View</A>
-		{% ifequal v.get_num_meds 1 %}
+		{% ifequal v.get_num_meds 0 %}
 		| <A HREF=# onClick='window.open("/visit/{{v.id}}/resolve/","Resolve","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Resolve</A>
 		{% endifequal %}
 		{% ifequal v.get_med_status 2 %}
