@@ -16,13 +16,14 @@
 
 {% block content %}
 <TABLE>
-<TR><TH>Ordered</TH><TH>Patient Id</TH><TH>Type</TH><TH>Status</TH><TH>Result</TH><TH></TH></TR>
+<TR><TH>Ordered</TH><TH>Patient Id</TH><TH>Type</TH><TH>Ord By</TH><TH>Status</TH><TH>Result</TH><TH></TH></TR>
 <TR><TH></TH><TH COLSPAN=6>Notes</TH></TR>
 {% for l in labs_active %}
 <TR>
 <TD>{{l.orderedDateTime|date:"d-m H:i"}}</TD>
 <TD><A HREF=/patient/{{l.patient.id}}/>{{ l.patient }}</A></TD>
 <TD>{{ l.type }}</TD>
+<TD>{{l.orderedBy}}
 	{% ifequal l.status "ORD" %}
 		<TD STYLE='background-color:#FFFFFF;'>
 	{% else %} {% ifequal l.status "PEN" %}
@@ -78,6 +79,8 @@
 	</TD></TR>
 {% endfor %}
 </TABLE>
+<BR>
+<BR>
 Resolved:
 <TABLE>
 {% for l in labs_inactive %}
