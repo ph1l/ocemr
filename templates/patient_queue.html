@@ -24,7 +24,7 @@ Showing Data For:
 )
 </DIV>
 {% if visits %}
-<DIV STYLE="font-size: 1.2em;">Active:</DIV>
+<DIV STYLE="font-size: 1.2em;">Active({{num_active}}):</DIV>
 <TABLE>
 <TR><TH>Scheduled</TH><TH>Patient Id</TH><TH>Status</TH><TH>Claimed</TH><TH>Labs</TH><TH>Meds</TH><TH>Done</TH><TH>Actions</TH></TR>
 {% for v in visits %}
@@ -82,7 +82,7 @@ Showing Data For:
 {% endfor %}
 {% endif %}
 </TABLE>
-<DIV STYLE="font-size: 1.2em;">Inactive:</DIV>
+<DIV STYLE="font-size: 1.2em;">Inactive({{num_inactive}}):</DIV>
 <TABLE>
 <TR><TH>Finished</TH><TH>Patient Id</TH><TH>Status</TH><TH>Actions</TH></TR>
 {% for v in r_visits %}

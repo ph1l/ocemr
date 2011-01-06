@@ -48,6 +48,9 @@ def patient_queue(request,dayoffset=0):
 	
 	visits = Visit.objects.filter(unresolved_q).order_by('scheduledDate', 'scheduledTime', 'id')
 	r_visits = Visit.objects.filter(resolved_q).order_by('-scheduledDate', '-scheduledTime', 'id')
+	num_active = len(visits)
+	num_inactive = len(r_visits)
+
 	return render_to_response(
 		'patient_queue.html', locals(),
 		context_instance=RequestContext(request))
