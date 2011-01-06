@@ -97,9 +97,19 @@ def legacy_patient_daily(request):
 
 
 	from ocemr.models import Visit, Diagnosis, Med, Referral
-	field_names=['pt_daily_index','pt_name','pt_monthly_index','sex','age','village','diagnosis','prescription','referral']
+	field_names=[
+		'pt_daily_index',
+		'pt_name',
+		'pt_monthly_index',
+		'sex',
+		'age',
+		'village',
+		'diagnosis',
+		'prescription',
+		'referral'
+			]
 	headers={
-		'pt_daily_index': 'Pt # od Day',
+		'pt_daily_index': 'Pt # of Day',
 		'pt_name': 'Patient Name',
 		'pt_monthly_index': 'Pt # of Month',
 		'sex': 'Sex',
@@ -111,7 +121,7 @@ def legacy_patient_daily(request):
 	}
 	data_rows = []
 	d_today = date_in
-	q_this_month = Q(scheduledDate__month=d_today.month) & (Q(status="CHOT") | Q(status="RESO"))
+	q_this_month = (Q(scheduledDate__month=d_today.month) & Q(scheduledDate__lt=d_today)) & (Q(status="CHOT") | Q(status="RESO"))
 	q_this_day = Q(scheduledDate=d_today) & (Q(status="CHOT") | Q(status="RESO"))
 	months_visits = Visit.objects.filter(q_this_month)
 	pt_monthly_index = len(months_visits)
