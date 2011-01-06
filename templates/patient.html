@@ -1,58 +1,63 @@
 {% extends "base.html" %}
-{% block title %}Patient: {{p}} ({{p.id}}){% endblock %}
+{% block title %}{{p}} ({{p.id}}){% endblock %}
 {% block extraheader %}
         <A HREF=/patient_queue/>Patient Queue</A>(<A HREF=/patient/search/>search</a>,<a href=/patient/new>add</a>)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>|<A HREF=/reports/>Reports</A>
 {% endblock %}
 {% block content %}
-<H1>Patient Info: {{p.fullName}} ({{p.id}})</H1>
+<H1>Patient Info: {{p}}</H1>
 <TABLE>
 <TR>
-    <TD>ID</TD>
+    <TD>Patient ID</TD>
     <TD>{{p.id}}</TD>
-    <TD></TD>
 </TR>
 <TR>
-    <TD>Name</TD>
-    <TD>{{p.familyName}}, {{p.givenName}} {{p.middleName}}</TD>
-    <TD><a href="#" onClick='window.open("/patient/edit/name/{{p.id}}/","Edit Name","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
+    <TD>Name <a href="#" onClick='window.open("/patient/edit/name/{{p.id}}/","Edit Name","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
+    <TD>{{p.fullName}}</TD>
 </TR>
 {% if p.birthDate %}
 <TR>
     <TD>Birthdate (Age)</TD>
     <TD>{{p.birthDate|date:"d-m-Y"}} ({{p.age}})</TD>
-    <TD><a href="#" onClick='window.open("/patient/edit/age/{{p.id}}/","Edit Age","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
-</TR>
 {% else %}
 <TR>
-    <TD>Approx. Age</TD>
+    <TD>Approx. Age <A href="#" onClick='window.open("/patient/edit/age/{{p.id}}/","Edit Age","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
     <TD>{{p.age}}</TD>
-    <TD><a href="#" onClick='window.open("/patient/edit/age/{{p.id}}/","Edit Age","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
-</TR>
 {% endif %}
+</TR>
 <TR>
-    <TD>Village</TD>
-    <TD>{{p.village}}</TD>
-    <TD>
+    <TD>Village
 {% comment %}
 TODO: Fix village edit here!
 <a href="#" onClick='window.open("/patient/edit/village/{{p.id}}/","Edit Village","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a>
 {% endcomment %}
 </TD>
+    <TD>{{p.village}}</TD>
 </TR>
 <TR>
     <TD COLSPAN=2>Record Created by {{p.createdBy}} on {{p.createdDateTime|date:"d-m H:i"}}</TD>
 </TR>
 </TABLE>
+
 <H2>Visits (<A HREF="#" onClick='window.open("/patient/new_visit/{{p.id}}/","Add Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>NEW</a>)</H2>
 <TABLE>
-<TR><TH>ID<TH>Scheduled<TH>Status<TH>Reason<TH>Detail</TR>
+<TR><TH>Visit ID<TH>Scheduled<TH>Status<TH>Claimed<TH>Finished<TH>Resolved</TR>
+<TR><TH>Reason<TH>Detail</TR>
 {% for v in visits %}
 <TR>
    <TH><A HREF=/visit/{{v.id}}>{{ v.id }}</A>
-   <TD>{{ v.scheduledDate|date:"d-m" }} {{ v.scheduledTime|time:"H:i" }}
+   <TD>{{ v.scheduledDate|date:"d-m-Y" }} {{ v.scheduledTime|time:"H:i" }}
+   by {{ v.scheduledBy }}
    <TD>{{ v.displayStatus }}
+   <TD>{{ v.claimedDateTime|date:"d-m-Y H:i" }}
+   by {{ v.claimedBy }}
+   <TD>{{ v.finishedDateTime|date:"d-m-Y H:i" }}
+   by {{ v.finishedBy }}
+   <TD>{{ v.resolvedDateTime|date:"d-m-Y H:i" }}
+   by {{ v.resolvedBy }}
+</TR>
+<TR>
    <TD>{{ v.reason }}
-   <TD>{{ v.reasonDetail }}
+   <TD COLSPAN=100>{{ v.reasonDetail }}
 </TR>
 {% endfor %}
 </TABLE>
