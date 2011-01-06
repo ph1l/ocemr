@@ -27,7 +27,7 @@
 	<TH>Collected</TH>
 	<TH>Actions</TH>
 </TR>
-{% for v in visits %}
+{% for v in visits_active %}
 <TR>
 <TD>{{v.finishedDateTime|date:"d-m H:i"}}</TD>
 <TD>{{v.finishedBy}}
@@ -72,16 +72,54 @@
 <TD>
 		<A HREF="/meds/{{v.id}}/">View</A>
 
-		{% ifequal v.get_med_status 2 %}
-			{% ifequal v.status "CHOT" %}
-		<A HREF=# onClick='window.open("/visit/{{v.id}}/resolve/","Resolve","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Resolve</A>
-			{% endifequal %}
-			{% ifequal v.status "RESO" %}
-		<A HREF=# onClick='window.open("/visit/{{v.id}}/unresolve/","Undo Resolve","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo Resolve</A>
 		<A HREF=# onClick='window.open("/visit/{{v.id}}/record/print/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Print Record</A>
 		<A HREF=# onClick='window.open("/visit/{{v.id}}/record/view/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>View Record</A>
-			{% endifequal %}
+		{% ifequal v.get_med_status 2 %}
+		<A HREF=# onClick='window.open("/visit/{{v.id}}/resolve/","Resolve","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Resolve</A>
 		{% endifequal %}
+</TD>
+</TR>
+{% endfor %}
+</TABLE>
+Resolved:
+<TABLE>
+<TR>
+	<TH>Resolved @</TH>
+	<TH>Resolved By</TH>
+	<TH>Patient Id</TH>
+	<TH># of Meds</TH>
+	<TH>Billed</TH>
+	<TH>Collected</TH>
+	<TH>Actions</TH>
+</TR>
+{% for v in visits_inactive %}
+<TR>
+<TD>{{v.resolvedDateTime|date:"d-m H:i"}}</TD>
+<TD>{{v.resolvedBy}}
+<TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
+<TD>{{ v.get_num_meds }}</TD>
+<TD>{{v.cost}}(<A HREF=# onClick='window.open("/visit/{{v.id}}/bill_amount/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)</TD>
+<TD>
+	{% if v.has_collected %}
+		{% if v.has_collected_multiple %}
+			{% for cl in v.get_cashlog %}
+				{{cl.amount}}<br>
+			{% endfor %}
+		<HR>
+		Total =
+		{% endif %}
+		{{ v.collected }}	
+		(<A HREF=# onClick='window.open("/visit/{{v.id}}/collect/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</A>)
+	{% else %}
+		-
+		(<A HREF=# onClick='window.open("/visit/{{v.id}}/collect/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</A>)
+	{% endif %}
+		
+</TD>
+<TD>
+		<A HREF="/meds/{{v.id}}/">View</A>
+
+		<A HREF=# onClick='window.open("/visit/{{v.id}}/unresolve/","Undo Resolve","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo Resolve</A>
 </TD>
 </TR>
 {% endfor %}
