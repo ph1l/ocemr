@@ -16,7 +16,7 @@
 
 {% block content %}
 <TABLE>
-<TR><TH>Scheduled</TH><TH>Patient Id</TH><TH>Status</TH><TH>Seen</TH><TH>Labs</TH><TH>Meds</TH><TH>Done</TH><TH>Actions</TH></TR>
+<TR><TH>Scheduled</TH><TH>Patient Id</TH><TH>Status</TH><TH>Claimed</TH><TH>Labs</TH><TH>Meds</TH><TH>Done</TH><TH>Actions</TH></TR>
 {% for v in visits %}
 <TR>
 <TD>{{v.scheduledDate|date:"d-m"}} {{v.scheduledTime|time:"H:i"}}</TD>
@@ -34,7 +34,7 @@
 	{% endifequal %}
 {{v.displayStatus}} </TD>
 {%if v.is_claimed %}
-	<TD STYLE='background-color:#77FF77;'>Yes
+	<TD STYLE='background-color:#77FF77;'>{{v.claimedBy}}
 {% else %}
 	<TD STYLE='background-color:#FFFF55;'>No
 {% endif %}
