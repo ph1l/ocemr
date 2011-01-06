@@ -99,6 +99,7 @@ class NewVisitForm(forms.ModelForm):
                 model = get_model('ocemr','Visit')
                 exclude = [ 'followupTo',
 				'claimedDateTime', 'claimedBy',
+				'finishedDateTime', 'finishedBy',
 				'resolvedDateTime', 'resolvedBy',
 				'cost',
 				 ]
