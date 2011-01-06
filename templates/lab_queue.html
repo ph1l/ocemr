@@ -16,7 +16,7 @@
 
 {% block content %}
 <TABLE>
-<TR><TH>Ordered</TH><TH>Patient Id</TH><TH>Type</TH><TH>Ord By</TH><TH>Status</TH><TH>Result</TH><TH></TH></TR>
+<TR><TH>Ordered</TH><TH>Patient Id</TH><TH>Type</TH><TH>Ord By</TH><TH>Status</TH><TH></TH></TR>
 <TR><TH></TH><TH COLSPAN=6>Notes</TH></TR>
 {% for l in labs_active %}
 <TR>
@@ -40,7 +40,6 @@
 	{% endifequal %}
 	{% endifequal %}
 {{l.displayStatus}}</TD>
-<TD>{{l.result}}
 <TD>
 		|
 		<A HREF=# onClick='window.open("/lab/{{l.id}}/notate/","Notate Lab","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>note</A>
@@ -83,6 +82,9 @@
 <BR>
 Resolved:
 <TABLE>
+<TABLE>
+<TR><TH>Ordered</TH><TH>Patient Id</TH><TH>Type</TH><TH>Ord By</TH><TH>Status</TH><TH>Result</TH><TH></TH></TR>
+<TR><TH></TH><TH COLSPAN=6>Notes</TH></TR>
 {% for l in labs_inactive %}
 <TR>
 <TD>{{l.orderedDateTime|date:"d-m H:i"}}</TD>
