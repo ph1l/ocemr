@@ -33,19 +33,11 @@ def med_queue(request):
 	"""
 	from datetime import datetime, timedelta
         d_today = datetime.today().date()
-	t_missed = datetime.today()-timedelta(7)
-	d_missed = t_missed.date()
 
 	q_today = Q( scheduledDate=d_today ) & Q(Q(status='CHOT')|Q(status='RESO'))
-	q_missed = Q( scheduledDate__gte=d_missed )& Q( status='CHOT' )
+	q_missed = Q( scheduledDate__lt=d_today )& Q( status='CHOT' )
 	from ocemr.models import Visit
-	visits = Visit.objects.filter(q_today|q_missed)
-	cleaned_visits=[]
-	for v in visits:
-		if v.get_num_meds > 0:
-			cleaned_visits.append(v)
-	visits = cleaned_visits
-	visits.reverse()
+	visits = Visit.objects.filter(q_today|q_missed).order_by('finishedDateTime')
 	return render_to_response('med_queue.html', locals(),context_instance=RequestContext(request))
 
 @login_required

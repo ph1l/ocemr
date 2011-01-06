@@ -17,7 +17,8 @@
 {% block content %}
 <TABLE>
 <TR>
-	<TH>Ordered @</TH>
+	<TH>Finished @</TH>
+	<TH>Finished By</TH>
 	<TH>Patient Id</TH>
 	<TH># of Meds</TH>
 	<TH>Med Status</TH>
@@ -28,7 +29,8 @@
 </TR>
 {% for v in visits %}
 <TR>
-<TD>{{v.get_meds_order_datetime|date:"d-m H:i"}}</TD>
+<TD>{{v.finishedDateTime|date:"d-m H:i"}}</TD>
+<TD>{{v.finishedBy}}
 <TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
 <TD>{{ v.get_num_meds }}</TD>
         {% ifequal v.get_med_status 1 %}
