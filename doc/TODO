@@ -1,4 +1,6 @@
 -Software Design
+	-General
+		- Force Popup to foreground?
 	-Reports
 		- Add Reports to main menu
 		- Show Outstanding Balances
@@ -8,9 +10,12 @@
 		- Scroll to other days in the patient queue
 	-Med Queue
 		- 
+	-Record
+		- Add Clinician Tag to Record
 -Administration
 	- MySQL Replication Setup
 	- MySQL Replication Testing
+	- Printing Issues !!!
 -Infrastructure
 	- Test Failure states of server
 	- 
