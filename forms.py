@@ -418,3 +418,6 @@ class EditBillAmountForm(forms.Form):
 	def __init__(self, a, *args, **kwargs):
 		super(EditBillAmountForm, self).__init__(*args, **kwargs)
 		self.fields['amount'].initial = a
+
+class SelectDateForm(forms.Form):
+	date = EuDateFormField(required=False,widget=widgets.CalendarWidget)
