@@ -30,13 +30,16 @@ from django.db.models import get_model, Q
 from django.views.decorators.cache import cache_page
 
 @login_required
-def patient_queue(request):
+def patient_queue(request,dayoffset=0):
 	"""
 	"""
+	dayoffset = int(dayoffset)
+	dayoffset_prev = dayoffset-1
+	dayoffset_next = dayoffset+1
 	from datetime import datetime, timedelta
-	d_today = datetime.today()
-	d_missed = datetime.today()-timedelta(7)
-	d_upcoming = datetime.today()+timedelta(7)
+	d_today = datetime.today()+timedelta(dayoffset)
+	d_missed = d_today-timedelta(7)
+	d_upcoming = d_today+timedelta(7)
 
 	from ocemr.models import Visit
 

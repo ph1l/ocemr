@@ -2,20 +2,21 @@
 	-General
 		- Force Popup to foreground?
 	-Reports
-		- Add Reports to main menu
+		X Add Reports to main menu
 		- Show Outstanding Balances
 		- Legacy Monthly Report
 
 	-Patient Queue
-		- Scroll to other days in the patient queue
+		X Scroll to other days in the patient queue
 	-Med Queue
 		- 
 	-Record
-		- Add Clinician Tag to Record
+		X Add Clinician Tag to Record
 -Administration
 	- MySQL Replication Setup
 	- MySQL Replication Testing
 	- Printing Issues !!!
+
 -Infrastructure
 	- Test Failure states of server
-	- 
+	- Battery Backup ?

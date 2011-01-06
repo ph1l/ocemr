@@ -49,6 +49,7 @@ urlpatterns += patterns('ocemr.views.util',
 )
 urlpatterns += patterns('ocemr.views.patient',
     (r'^patient_queue/$', 'patient_queue'),
+    (r'^patient_queue/(?P<dayoffset>[-0-9]+)/$', 'patient_queue'),
     (r'^patient/(?P<id>\d+)/$', 'patient'),
     (r'^patient/edit/age/(?P<id>\d+)/$', 'patient_edit_age'),
     (r'^patient/edit/village/(?P<id>\d+)/$', 'patient_edit_village'),

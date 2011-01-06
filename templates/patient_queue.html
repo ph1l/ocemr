@@ -11,10 +11,20 @@
 {% endblock %}
 
 {% block extraheader %}
-	Patient Queue(<A HREF=/patient/search/>search</a>,<a href=/patient/new>add</a>)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>|<A HREF=/reports/>Reports</A>
+	<A HREF=/patient_queue/>Patient Queue</a>(<A HREF=/patient/search/>search</a>,<a href=/patient/new>add</a>)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>|<A HREF=/reports/>Reports</A>
 {% endblock %}
 
 {% block content %}
+<DIV STYLE="font-size: 1.2em; text-align: center;">
+Showing Data For:
+(
+<A HREF=/patient_queue/{{dayoffset_prev}}/>&#60;prev</A>
+{{d_today|date:"d-m-Y"}}
+<A HREF=/patient_queue/{{dayoffset_next}}/>next&#62;</A>
+)
+</DIV>
+{% if visits %}
+<DIV STYLE="font-size: 1.2em;">Active:</DIV>
 <TABLE>
 <TR><TH>Scheduled</TH><TH>Patient Id</TH><TH>Status</TH><TH>Claimed</TH><TH>Labs</TH><TH>Meds</TH><TH>Done</TH><TH>Actions</TH></TR>
 {% for v in visits %}
@@ -70,12 +80,14 @@
 {%endif%}
 </TD>
 {% endfor %}
+{% endif %}
 </TABLE>
-<TABLE> Resolved:
-<TR><TH>Scheduled</TH><TH>Patient Id</TH><TH>Status</TH><TH>Actions</TH></TR>
+<DIV STYLE="font-size: 1.2em;">Inactive:</DIV>
+<TABLE>
+<TR><TH>Finished</TH><TH>Patient Id</TH><TH>Status</TH><TH>Actions</TH></TR>
 {% for v in r_visits %}
 <TR>
-<TD>{{v.scheduledDate|date:"d-m"}} {{v.scheduledTime|time:"H:i"}}</TD>
+<TD>{{v.finishedDateTime|date:"d-m H:i"}}</TD>
 <TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
 	{% ifequal v.status "MISS" %}
 		<TD STYLE='background-color:#FF5555;'>
