@@ -60,16 +60,13 @@
 {%if v.is_checking_out or v.is_finished %}<TD STYLE='background-color:#77FF77;'>Yes{%else%}<TD STYLE='background-color:#FFFF55;'>No{%endif%}</TD>
 <TD>
 
-<A HREF=/visit/{{v.id}}/>View Chart</A>
-{%if v.is_checking_out or v.is_finished %}
-	<A HREF=# onClick='window.open("/visit/{{v.id}}/unfinish/","Unfinish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo Finish</A>
+<A HREF=/visit/{{v.id}}/>View-Chart</A>
+{%if v.is_claimed %}
+	| <A HREF=# onClick='window.open("/visit/{{v.id}}/unclaim/","Unclaim Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Claim</A>
+	| <A HREF=# onClick='window.open("/visit/{{v.id}}/finish/","Finish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Finish</A>
 {%else%}
-	{%if v.is_claimed %}
-		<A HREF=# onClick='window.open("/visit/{{v.id}}/unclaim/","Unclaim Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo Claim</A>
-	{%else%}
-		<A HREF=# onClick='window.open("/visit/{{v.id}}/claim/","Claim Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Claim</A>
-	{%endif%}
-	<A HREF=# onClick='window.open("/visit/{{v.id}}/finish/","Finish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Finish</A>
+	| <A HREF=# onClick='window.open("/visit/{{v.id}}/claim/","Claim Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Claim</A>
+	| <A HREF=# onClick='window.open("/visit/{{v.id}}/finish/","Patient Missed","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>No-Show</A>
 {%endif%}
 </TD>
 {% endfor %}
@@ -93,6 +90,12 @@
 	{% endifequal %}
 {{v.displayStatus}} </TD>
 <TD>
+{%if v.is_claimed %}
+	<A HREF=# onClick='window.open("/visit/{{v.id}}/unfinish/","Unfinish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Finish</A>
+{% else %}
+	<A HREF=# onClick='window.open("/visit/{{v.id}}/unfinish/","Unfinish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Miss</A>
+{% endif %}
+	
 </TR>
 {% endfor %}
 {% endblock %}
