@@ -38,25 +38,28 @@
 </TABLE>
 </TD><TD VALIGN=TOP>
 <TABLE>Scheduled Visits(<A HREF="#" onClick='window.open("/patient/schedule_new_visit/{{p.id}}/","Add Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Schedule Future Visit</a>):
-<TR><TH>Visit ID<TH>Scheduled<TH>Status<TH>Reason<TH>Detail</TR>
+<TR><TH>Visit ID<TH>Scheduled<TH>Status<TH>Reason<TH>Detail<TH>Action</TR>
 {% for v in upcoming_visits %}
 <TR>
   <TD><A HREF=/visit/{{v.id}}>{{ v.id }}</A>
   <TD>{{ v.scheduledDate|date:"d-m-Y" }} by {{ v.scheduledBy }}
   <TD>{{ v.displayStatus }}
    <TD>{{ v.reason }}
-   <TD>{{ v.reasonDetail }}
+   <TD>{{ v.reasonDetail }} 
+  <TD>
+<A HREF="#" onClick='window.open("/patient/edit_visit/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit</a> |
+<A HREF="#" onClick='window.open("/patient/delete_visit/{{v.id}}/","Delete Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Delete</a>
 {% endfor %}
 </TABLE>
 </TD></TR></TABLE>
 <TABLE>Past &amp; Current Visits
 (<A HREF="#" onClick='window.open("/patient/schedule_walkin_visit/{{p.id}}/","Add Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Schedule Walk-up Visit Now!</a>):
-<TR><TH>Scheduled<TH>Status<TH>Seen<TH>Claimed<TH>Finished<TH>Resolved<TH>Actions</TR>
+<TR><TH>Scheduled<TH>by<TH>Status<TH>Seen<TH>Claimed<TH>Finished<TH>Resolved<TH>Actions</TR>
 <TR><TH>Reason<TH>Detail</TR>
 {% for v in visits %}
 <TR>
-   <TD>{{ v.scheduledDate|date:"d-m-Y" }}
-   by {{ v.scheduledBy }}
+   <TD>{{ v.scheduledDate|date:"d-m-Y" }} {{ v.scheduledTime|time:"H:i"}}
+   <TD>{{ v.scheduledBy }}
 
 	{% ifequal v.status "MISS" %}
 		<TD STYLE='background-color:#FF5555;'>
@@ -77,11 +80,17 @@
    by {{ v.finishedBy }}
    <TD>{{ v.resolvedDateTime|date:"d-m H:i" }}
    by {{ v.resolvedBy }}
-   <TD><A HREF=/visit/{{v.id}}>View Chart</A>
+   <TD><A HREF=/visit/{{v.id}}>View Chart</A> |
+{% ifequal v.status 'WAIT' %}
+   <A HREF="#" onClick='window.open("/patient/edit_visit/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit</a>
+{% else %}
+   <A HREF="#" onClick='window.open("/patient/edit_visit_reason/{{v.id}}/","Edit Visit Reason","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Reason</a>
+{% endifequal %}
 </TR>
 <TR>
    <TD>{{ v.reason }}
    <TD COLSPAN=100>{{ v.reasonDetail }}
+
 </TR>
 {% endfor %}
 </TABLE>

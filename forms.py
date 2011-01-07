@@ -112,6 +112,30 @@ class NewScheduledVisitForm(forms.ModelForm):
 			return datetime.now().date()
 		return data
 
+class EditScheduledVisitForm(forms.Form):
+	scheduledBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+        scheduledDate = EuDateFormField()
+        scheduledTime = forms.CharField()
+        reasonDetail = forms.CharField(widget=forms.Textarea)
+
+	def __init__(self, v, user, *args, **kwargs):
+		
+		super(EditScheduledVisitForm, self).__init__(*args, **kwargs)
+		#raise(" | ".join(dir(self.fields['createdBy'])))
+		self.fields['scheduledBy'].initial=user.id
+		self.fields['scheduledTime'].initial=v.scheduledTime
+		self.fields['scheduledDate'].initial=v.scheduledDate
+		self.fields['reasonDetail'].initial=v.reasonDetail
+
+class EditVisitReasonForm(forms.Form):
+        reasonDetail = forms.CharField(widget=forms.Textarea)
+
+	def __init__(self, v, *args, **kwargs):
+		
+		super(EditVisitReasonForm, self).__init__(*args, **kwargs)
+		#raise(" | ".join(dir(self.fields['createdBy'])))
+		self.fields['reasonDetail'].initial=v.reasonDetail
+		
 class NewWalkinVisitForm(forms.ModelForm):
 	from models import Patient
 	from models import Visit

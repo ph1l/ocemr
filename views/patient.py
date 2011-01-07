@@ -243,3 +243,74 @@ def schedule_walkin_visit(request, id):
 		'form': form,
 	})
 
+@login_required
+def delete_visit(request, id):
+	"""
+	"""
+	from ocemr.models import Visit
+
+	o = Visit.objects.get(pk=id)
+	if not (o.status == 'SCHE' or o.status == 'WAIT'):
+		return render_to_response('popup_info.html', {
+			'title': 'Schedule Patient Visit',
+			'info': "Cannot Delete Active Visit",
+		})
+
+
+        from ocemr.forms import ConfirmDeleteForm
+
+        if request.method == 'POST':
+                form = ConfirmDeleteForm(request.POST)
+                if form.is_valid():
+                        if form.cleaned_data['doDelete']:
+                                o.delete()
+                        return HttpResponseRedirect('/close_window/')
+        else:
+                form = ConfirmDeleteForm()
+        return render_to_response('popup_form.html', {
+                'title': 'Delete Visit: %s'%(o),
+                'form_action': '/patient/delete_visit/%s/'%(id),
+                'form': form,
+        })
+
+@login_required
+def edit_visit(request, id):
+	from ocemr.models import Visit
+
+	v = Visit.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditScheduledVisitForm(v,request.user, request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			v.scheduledBy = form.cleaned_data['scheduledBy']
+			v.scheduledTime = form.cleaned_data['scheduledTime']
+			v.scheduledDate = form.cleaned_data['scheduledDate']
+			v.reasonDetail = form.cleaned_data['reasonDetail']
+			v.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditScheduledVisitForm(v, request.user) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Visit',
+		'form_action': '/patient/edit_visit/%s/'%(id),
+		'form': form,
+	})
+
+@login_required
+def edit_visit_reason(request, id):
+	from ocemr.models import Visit
+
+	v = Visit.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditVisitReasonForm(v, request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			v.reasonDetail = form.cleaned_data['reasonDetail']
+			v.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditVisitReasonForm(v) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Visit Reason',
+		'form_action': '/patient/edit_visit_reason/%s/'%(id),
+		'form': form,
+	})
+

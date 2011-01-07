@@ -9,8 +9,8 @@
 	-Patient Queue
 		X Scroll to other days in the patient queue
 	-Patient Info
-		- Edit Scheduled Visits
-		- Delete Sceduled Visits
+		X Edit reasonDetail for Visits
+		X Delete Sceduled Visits
 		X Edit Village Name
 		X Can't edit age when actual birthdate used.
 		X- Need to be able to specify reason detail when scheduling walk-ins
