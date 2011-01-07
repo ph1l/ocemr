@@ -26,7 +26,7 @@ Showing Data For:
 {% if visits %}
 <DIV STYLE="font-size: 1.2em;">Active({{num_active}}):</DIV>
 <TABLE>
-<TR><TH>Scheduled</TH><TH>Patient Id</TH><TH>Status</TH><TH>Claimed</TH><TH>Labs</TH><TH>Meds</TH><TH>Actions</TH></TR>
+<TR><TH>Scheduled</TH><TH>Patient Id</TH><TH>Status</TH><TH>Claimed</TH><TH>Labs</TH><TH>Actions</TH></TR>
 {% for v in visits %}
 <TR>
 <TD>{{v.scheduledDate|date:"d-m"}} {{v.scheduledTime|time:"H:i"}}</TD>
@@ -58,15 +58,6 @@ Showing Data For:
 	{% endifequal %}
 {% endifequal %}
 </TD>
-{% ifequal v.get_med_status 1 %}
-	<TD STYLE='background-color:#FFFF55;'>Wait</SPAN>
-{% else %}{% ifequal v.get_med_status 2 %}
-		<TD STYLE='background-color:#77FF77;'>Done</SPAN>
-	{% else %}
-		<TD>
-	{% endifequal %}
-{% endifequal %}
-</TD>
 <TD>
 
 <A HREF=/visit/{{v.id}}/>View-Chart</A>
@@ -83,16 +74,16 @@ Showing Data For:
 </TABLE>
 <DIV STYLE="font-size: 1.2em;">Inactive({{num_inactive}}):</DIV>
 <TABLE>
-<TR><TH>Finished</TH><TH>Patient Id</TH><TH>Status</TH><TH>Actions</TH></TR>
+<TR><TH>Finished</TH><TH>Patient Id</TH><TH>Status</TH><TH>Finished By</TH><TH>Meds</TH><TH>Actions</TH></TR>
 {% for v in r_visits %}
 <TR>
 <TD>{{v.finishedDateTime|date:"d-m H:i"}}</TD>
 <TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
 	{% ifequal v.status "MISS" %}
 		<TD STYLE='background-color:#FF5555;'>
-	{% else %} {% ifequal v.status "INPR" %}
+	{% else %} {% ifequal v.status "RESO" %}
 		<TD STYLE='background-color:#77FF77;'>
-	{% else %} {% ifequal v.status "WAIT" %}
+	{% else %} {% ifequal v.status "CHOT" %}
 		<TD STYLE='background-color:#FFFF55;'>
 	{% else %}
 		<TD STYLE='background-color:#FFFFFF;'>
@@ -100,6 +91,16 @@ Showing Data For:
 	{% endifequal %}
 	{% endifequal %}
 {{v.displayStatus}} </TD>
+<TD>{{v.finishedBy}}</TD>
+{% ifequal v.get_med_status 1 %}
+	<TD STYLE='background-color:#FFFF55;'>Wait</SPAN>
+{% else %}{% ifequal v.get_med_status 2 %}
+		<TD STYLE='background-color:#77FF77;'>Done</SPAN>
+	{% else %}
+		<TD>
+	{% endifequal %}
+{% endifequal %}
+</TD>
 <TD>
 {%ifequal v.status "MISS" %}
 	<A HREF=# onClick='window.open("/visit/{{v.id}}/unfinish/","Unfinish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Miss</A>
