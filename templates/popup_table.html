@@ -1,0 +1,9 @@
+{% extends "base_popup.html" %}
+
+{% block content %}
+<TABLE>
+{{ table|safe }}
+</TABLE>
+<a href="#" onClick='opener.window.location.reload();self.close();return false;'>Close</a>
+
+{% endblock %}
