@@ -90,6 +90,7 @@ Resolved:
 <TD>{{l.orderedDateTime|date:"d-m H:i"}}</TD>
 <TD><A HREF=/patient/{{l.patient.id}}/>{{ l.patient }}</A></TD>
 <TD>{{ l.type }}</TD>
+<TD>{{l.orderedBy}}
 	{% ifequal l.status "CAN" %}
 		<TD STYLE='background-color:#FFAAAA;'>
 	{% else %} {% ifequal l.status "COM" %}
