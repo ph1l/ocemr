@@ -18,7 +18,7 @@
 </TR>
 {% if p.birthDate %}
 <TR>
-    <TD>Birthdate (Age)</TD>
+    <TD>Birthdate (Age)<A href="#" onClick='window.open("/patient/edit/age/{{p.id}}/","Edit Age","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
     <TD>{{p.birthDate|date:"d-m-Y"}} ({{p.age}})</TD>
 {% else %}
 <TR>
