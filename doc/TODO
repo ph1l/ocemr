@@ -9,6 +9,7 @@
 	-Patient Queue
 		X Scroll to other days in the patient queue
 	-Patient Info
+		- Show Account $tatu$ / collect fees per visit.
 		X Edit reasonDetail for Visits
 		X Delete Sceduled Visits
 		X Edit Village Name
