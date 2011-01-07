@@ -59,8 +59,9 @@ def dump_csv(filename,field_names,headers,data_rows):
 	"""
         out=[]
         row=[]
-        for field in field_names:
-                row.append(headers[field])
+	if headers:
+        	for field in field_names:
+                	row.append(headers[field])
         out.append(row)
         for data_row in data_rows:
                 row=[]
@@ -143,7 +144,66 @@ def clinician_daily(request):
 		summary_rows.append({'clinician':clinician, 'num_patients_day':totals[clinician]['day'],'num_patients_month': totals[clinician]['month']})
 	return dump_table( field_names, headers, summary_rows )
 	
+@login_required
+def legacy_diagnosis_daily(request):
+	"""
+	"""
+	from ocemr.forms import SelectDateForm
+
+	form_valid=0
+        if request.method == 'POST':
+                form = SelectDateForm(request.POST)
+                if form.is_valid():
+                        date_in = form.cleaned_data['date']
+			form_valid=1
+        else:
+                form = SelectDateForm()
+	if not form_valid:
+	        return render_to_response('popup_form.html', {
+	                'title': 'Enter Date For Report',
+	                'form_action': '/reports/legacy/diagnosis/daily/',
+	                'form': form,
+	        })
+
+	field_names=[
+		'diag',
+		'tally',
+		]
+	headers={}
+	#	'diag': 'Diagnosis',
+	#	'tally': 'Tally',
+	#	}
+	from ocemr.models import Visit, Diagnosis
+	d_today = date_in
+	q_this_day = Q(scheduledDate=d_today) & (Q(status="CHOT") | Q(status="RESO"))
+	days_visits = Visit.objects.filter(q_this_day)
+	q_dignosis_active = (Q(status="NEW") | Q(status="FOL"))
+	s={}
+	num_visits=0
+	for v in days_visits:
+		num_visits += 1
+		for d in Diagnosis.objects.filter(visit=v).filter(q_dignosis_active):
+			diagnosis = d.type.title
+			if diagnosis not in s.keys():
+				s[diagnosis]=1
+			else:
+				s[diagnosis] += 1
+	sorted_keys=sorted(s, key=s.get)
+	sorted_keys.reverse()
+
+	summary_rows=[]
+	summary_rows.append({'diag':'Date:', 'tally': "%s-%s-%s"%(d_today.day,d_today.month,d_today.year )} )
+	summary_rows.append({'diag':'Total Patients:', 'tally':num_visits})
+	summary_rows.append({'diag':'', 'tally':''})
+	summary_rows.append({'diag':'Diagnosis', 'tally':'Tally'})
+	for key in sorted_keys:
+		summary_rows.append({'diag': key, 'tally': s[key]})
+	return dump_csv( "diagnosis-daily-%s.csv"%(date_in.strftime("%Y%m%d")), field_names, headers, summary_rows )
+		
+		
 	
+
+
 @login_required
 def legacy_patient_daily(request):
 	"""
@@ -189,7 +249,6 @@ def legacy_patient_daily(request):
 		'prescription': 'Prescription',
 		'referral': 'Referral',
 	}
-	data_rows = []
 	d_today = date_in
 	q_this_month = (Q(scheduledDate__month=d_today.month) & Q(scheduledDate__lt=d_today)) & (Q(status="CHOT") | Q(status="RESO"))
 	q_this_day = Q(scheduledDate=d_today) & (Q(status="CHOT") | Q(status="RESO"))

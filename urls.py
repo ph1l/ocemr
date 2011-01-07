@@ -130,5 +130,6 @@ urlpatterns += patterns('ocemr.views.med',
 urlpatterns += patterns('ocemr.views.reports',
     (r'^reports/$', 'index'),
     (r'^reports/legacy/patient/daily/$', 'legacy_patient_daily'),
+    (r'^reports/legacy/diagnosis/daily/$', 'legacy_diagnosis_daily'),
     (r'^reports/clinician/daily/$', 'clinician_daily'),
 )
