@@ -222,22 +222,24 @@ def schedule_new_visit(request, id):
 	})
 
 @login_required
-def waiting_new_visit(request, id):
+def schedule_walkin_visit(request, id):
 	"""
 	"""
-	from ocemr.models import Patient, Visit
+	from ocemr.models import Patient
+
 	p = Patient.objects.get(pk=id)
 
-	from datetime import datetime
-	dt_now = datetime.now()
-	v = Visit(
-		scheduledDate=dt_now.date(),
-		scheduledTime=dt_now.time(),
-		#seenDateTime=dt_now,
-		status='WAIT',
-		patient=p,
-		scheduledBy=request.user,
-		)
-	v.save()
-	
-	return render_to_response('close_window.html');
+	if request.method == 'POST': # If the form has been submitted...
+		form = NewWalkinVisitForm(request.user, p, request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			o = form.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = NewWalkinVisitForm(request.user, p) # An unbound form
+
+	return render_to_response('popup_form.html', {
+		'title': 'Schedule Patient Visit',
+		'form_action': '/patient/schedule_walkin_visit/%s/'%(id),
+		'form': form,
+	})
+

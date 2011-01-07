@@ -110,6 +110,46 @@ class NewScheduledVisitForm(forms.ModelForm):
 			return datetime.now().date()
 		return data
 
+class NewWalkinVisitForm(forms.ModelForm):
+	from models import Patient
+	from models import Visit
+        scheduledDate = forms.DateField(widget=forms.HiddenInput)
+        scheduledTime = forms.CharField(widget=forms.HiddenInput)
+	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
+	scheduledBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+	status = forms.CharField(widget=forms.HiddenInput)
+	reason = forms.CharField(widget=forms.HiddenInput)
+
+	def __init__(self, user, p, *args, **kwargs):
+		
+		super(NewWalkinVisitForm, self).__init__(*args, **kwargs)
+		#raise(" | ".join(dir(self.fields['createdBy'])))
+		self.fields['scheduledBy'].initial=user.id
+		self.fields['patient'].initial=p.id
+		self.fields['status'].initial='WAIT'
+		self.fields['reason'].initial='NEW'
+		from datetime import datetime
+		#self.fields['scheduledTime'].initial="09:00"
+		self.fields['scheduledTime'].initial=datetime.now().time()
+		self.fields['scheduledDate'].initial=datetime.today().date()
+		
+
+        class Meta:
+                model = get_model('ocemr','Visit')
+                exclude = [ 'followupTo',
+				'claimedDateTime', 'claimedBy',
+				'finishedDateTime', 'finishedBy',
+				'resolvedDateTime', 'resolvedBy',
+				'cost',
+				 ]
+
+	def clean_scheduledDate(self):
+		data = self.cleaned_data['scheduledDate']
+		if data == "" or data == None:
+			from datetime import datetime
+			return datetime.now().date()
+		return data
+
 class NewPatientForm(forms.ModelForm):
         birthDate = EuDateFormField(required=False,widget=widgets.CalendarWidget)
         village = forms.CharField(
@@ -405,3 +445,4 @@ class EditBillAmountForm(forms.Form):
 
 class SelectDateForm(forms.Form):
 	date = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+
