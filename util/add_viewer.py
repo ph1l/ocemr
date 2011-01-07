@@ -13,7 +13,7 @@ setup_environ(settings)
 
 
 from django.contrib.auth.models import User
-user = User.objects.create_user('viewer', 'asdf@asdf.com', 'vi3wer')
+user = User.objects.create_user('viewer', 'asdf@asdf.com', util_conf.VIEWER_PASSWORD)
 
 user.is_staff = True
 user.is_superuser = True

@@ -1,1 +1,3 @@
 APP_PATH='/home/user/ocemr'
+VIEWER_PASSWORD='changeme'
+
