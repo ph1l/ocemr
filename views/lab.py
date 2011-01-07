@@ -35,7 +35,7 @@ def lab_queue(request):
 	"""
 	from datetime import datetime, timedelta
 	d_today = datetime.today()
-	d_midnight = datetime.strptime("%s-%s-%s 00:00:00"%(d_today.year,d_today.month,d_today.day), "%Y-%m-%d %H:%M:%S")
+	d_midnight = datetime(d_today.year,d_today.month,d_today.day,0,0,0)
 
 	from ocemr.models import Lab
 
