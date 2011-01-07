@@ -26,6 +26,23 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadReque
 from django.db.models import get_model, Q
 from datetime import datetime
 
+def dump_table(field_names,headers,data_rows):
+	"""
+	"""
+	out_txt="<TABLE>\n"
+	out_txt += "<TR>"
+	for f in field_names:
+		out_txt += "<TH>" + f
+	out_txt += "</TR>\n"
+	for r in data_rows:
+		out_txt += "<TR>"
+		for f in field_names:
+			out_txt += "<TD>%s</TD>"%r[f]
+		out_txt += "</TR>\n"
+	out_txt += "</TABLE>\n"
+
+	return render_to_response('popup_table.html', {'table': out_txt})
+	
 def dump_csv(filename,field_names,headers,data_rows):
 	"""
 	return dump_csv(
@@ -74,6 +91,59 @@ def index(request):
         """
         return render_to_response('reports.html',context_instance=RequestContext(request))
 
+@login_required
+def clinician_daily(request):
+	"""
+	"""
+	from ocemr.forms import SelectDateForm
+
+	form_valid=0
+	if request.method == 'POST':
+		form = SelectDateForm(request.POST)
+		if form.is_valid():
+			date_in = form.cleaned_data['date']
+			form_valid=1
+	else:
+		form = SelectDateForm()
+	if not form_valid:
+		return render_to_response('popup_form.html', {
+	                'title': 'Enter Date For Report',
+	                'form_action': '/reports/clinician/daily/',
+	                'form': form,
+	        })
+	from ocemr.models import Visit, Diagnosis, Med, Referral
+	field_names=[
+		'clinician',
+		'num_patients_day',
+		'num_patients_month',
+		]
+	headers={
+		'clinician': 'Clinician',
+		'num_patients_day': 'Number of Patients per Day',
+		'num_patients_month': 'Number of Patients per Month',
+		}
+	d_today = date_in
+	q_this_month = (Q(scheduledDate__month=d_today.month) & Q(scheduledDate__lt=d_today)) & (Q(status="CHOT") | Q(status="RESO"))
+	q_this_day = Q(scheduledDate=d_today) & (Q(status="CHOT") | Q(status="RESO"))
+	months_visits = Visit.objects.filter(q_this_month)
+	pt_monthly_index = len(months_visits)
+	days_visits = Visit.objects.filter(q_this_day)
+	daily_index=0
+	totals={}
+	for v in months_visits:
+		if v.finishedBy not in totals.keys():
+			totals[v.finishedBy] = {'day': 0, 'month': 0}
+		totals[v.finishedBy]['month'] += 1
+	for v in days_visits:
+		if v.finishedBy not in totals.keys():
+			totals[v.finishedBy] = {'day': 0, 'month': 0}
+		totals[v.finishedBy]['day'] += 1
+	summary_rows=[]
+	for clinician in totals.keys():
+		summary_rows.append({'clinician':clinician, 'num_patients_day':totals[clinician]['day'],'num_patients_month': totals[clinician]['month']})
+	return dump_table( field_names, headers, summary_rows )
+	
+	
 @login_required
 def legacy_patient_daily(request):
 	"""
