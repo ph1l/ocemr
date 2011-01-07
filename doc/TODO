@@ -11,7 +11,7 @@
 	-Patient Info
 		- Edit Scheduled Visits
 		- Delete Sceduled Visits
-		- Edit Village Name
+		X Edit Village Name
 		X Can't edit age when actual birthdate used.
 		X- Need to be able to specify reason detail when scheduling walk-ins
 	-Med Queue

@@ -70,8 +70,10 @@ class EditPatientVillageForm(forms.Form):
 	def clean_village(self):
 		data = self.cleaned_data['village']
 		from models import Village
-		new_data = Village.objects.get(name=data)
-		return new_data
+		v, is_new = Village.objects.get_or_create(name=data)
+		if is_new:
+			v.save()
+		return v
 
 
 
