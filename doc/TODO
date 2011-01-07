@@ -5,9 +5,15 @@
 		X Add Reports to main menu
 		- Show Outstanding Balances
 		- Legacy Monthly Report
-
+		- 
 	-Patient Queue
 		X Scroll to other days in the patient queue
+	-Patient Info
+		!- Can't edit age when actual birthdate used.
+		!- Need to be able to specify reason detail when scheduling walk-ins
+		- Edit Scheduled Visits
+		- Delete Sceduled Visits
+		- Edit Village Name
 	-Med Queue
 		- 
 	-Record
