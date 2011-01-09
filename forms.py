@@ -81,7 +81,6 @@ class NewScheduledVisitForm(forms.ModelForm):
 	from models import Patient
 	from models import Visit
         scheduledDate = EuDateFormField(required=False,widget=widgets.CalendarWidget)
-        scheduledTime = forms.CharField(required=False,widget=forms.HiddenInput)
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
 	scheduledBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
 	status = forms.CharField(widget=forms.HiddenInput)
@@ -93,12 +92,12 @@ class NewScheduledVisitForm(forms.ModelForm):
 		self.fields['scheduledBy'].initial=user.id
 		self.fields['patient'].initial=p.id
 		self.fields['status'].initial='SCHE'
-		self.fields['scheduledTime'].initial="09:00"
 		
 
         class Meta:
                 model = get_model('ocemr','Visit')
                 exclude = [ 'followupTo',
+				'seenDateTme'
 				'claimedDateTime', 'claimedBy',
 				'finishedDateTime', 'finishedBy',
 				'resolvedDateTime', 'resolvedBy',
@@ -115,7 +114,6 @@ class NewScheduledVisitForm(forms.ModelForm):
 class EditScheduledVisitForm(forms.Form):
 	scheduledBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
         scheduledDate = EuDateFormField()
-        scheduledTime = forms.CharField()
         reasonDetail = forms.CharField(widget=forms.Textarea)
 
 	def __init__(self, v, user, *args, **kwargs):
@@ -123,7 +121,6 @@ class EditScheduledVisitForm(forms.Form):
 		super(EditScheduledVisitForm, self).__init__(*args, **kwargs)
 		#raise(" | ".join(dir(self.fields['createdBy'])))
 		self.fields['scheduledBy'].initial=user.id
-		self.fields['scheduledTime'].initial=v.scheduledTime
 		self.fields['scheduledDate'].initial=v.scheduledDate
 		self.fields['reasonDetail'].initial=v.reasonDetail
 
@@ -140,9 +137,9 @@ class NewWalkinVisitForm(forms.ModelForm):
 	from models import Patient
 	from models import Visit
         scheduledDate = forms.DateField(widget=forms.HiddenInput)
-        scheduledTime = forms.CharField(widget=forms.HiddenInput)
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
 	scheduledBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+        seenDateTime = forms.DateTimeField(widget=forms.HiddenInput)
 	status = forms.CharField(widget=forms.HiddenInput)
 	reason = forms.CharField(widget=forms.HiddenInput)
 
@@ -155,9 +152,8 @@ class NewWalkinVisitForm(forms.ModelForm):
 		self.fields['status'].initial='WAIT'
 		self.fields['reason'].initial='NEW'
 		from datetime import datetime
-		#self.fields['scheduledTime'].initial="09:00"
-		self.fields['scheduledTime'].initial=datetime.now().time()
 		self.fields['scheduledDate'].initial=datetime.today().date()
+		self.fields['seenDateTime'].initial=datetime.now()
 		
 
         class Meta:

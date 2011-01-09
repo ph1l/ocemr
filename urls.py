@@ -65,6 +65,8 @@ urlpatterns += patterns('ocemr.views.patient',
 )
 urlpatterns += patterns('ocemr.views.visit',
     (r'^visit/(?P<id>\d+)/$', 'visit'),
+    (r'^visit/(?P<id>\d+)/seen/$', 'visit_seen'),
+    (r'^visit/(?P<id>\d+)/unseen/$', 'visit_unseen'),
     (r'^visit/(?P<id>\d+)/claim/$', 'visit_claim'),
     (r'^visit/(?P<id>\d+)/unclaim/$', 'visit_unclaim'),
     (r'^visit/(?P<id>\d+)/finish/$', 'visit_finish'),

@@ -124,6 +124,32 @@ def visit_unfinish(request,id):
 	return render_to_response('close_window.html', {})
 
 @login_required
+def visit_seen(request,id):
+	"""
+	"""
+	from ocemr.models import Visit
+
+	v = Visit.objects.get(pk=id)
+	if v.status == 'SCHE':
+		v.status = 'WAIT'
+	from datetime import datetime
+	v.seenDateTime = datetime.now()
+	v.save()
+	return render_to_response('close_window.html', {})
+
+@login_required
+def visit_unseen(request,id):
+	"""
+	"""
+	from ocemr.models import Visit
+
+	v = Visit.objects.get(pk=id)
+	if v.status == 'WAIT':
+		v.status = 'SCHE'
+	v.save()
+	return render_to_response('close_window.html', {})
+
+@login_required
 def visit_past(request,id):
 	"""
 	Visit 

@@ -58,7 +58,7 @@
 <TR><TH>Reason<TH>Detail</TR>
 {% for v in visits %}
 <TR>
-   <TD>{{ v.scheduledDate|date:"d-m-Y" }} {{ v.scheduledTime|time:"H:i"}}
+   <TD>{{ v.scheduledDate|date:"d-m-Y" }}
    <TD>{{ v.scheduledBy }}
 
 	{% ifequal v.status "MISS" %}

@@ -1,4 +1,3 @@
-
 ##########################################################################
 #
 #    This file is part of OCEMR.
@@ -20,6 +19,7 @@
 #########################################################################
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
@@ -39,16 +39,19 @@ def patient_queue(request,dayoffset=0):
 	from datetime import datetime, timedelta
 	d_today = datetime.today()+timedelta(dayoffset)
 	d_missed = d_today-timedelta(7)
-	d_upcoming = d_today+timedelta(7)
+	d_upcoming = d_today+timedelta(1)
 
 	from ocemr.models import Visit
 
-	unresolved_q = (Q(scheduledDate__gte=(d_today-timedelta(7)).date) & Q(scheduledDate__lte=d_today.date)) & ( Q(status='SCHE') | Q(status='WAIT') | Q(status='INPR') )
-	resolved_q =  (Q(scheduledDate__gt=(d_today-timedelta(1)).date) & Q(scheduledDate__lt=(d_today+timedelta(1)).date)) & ( Q(status='MISS') | Q(status='CHOT') | Q(status='RESO') )
+	active_q = Q(status='WAIT') | Q(status='INPR')
+	scheduled_q = Q(scheduledDate__lte=d_upcoming.date) & Q(status='SCHE')
+	resolved_q =  Q(scheduledDate=d_today.date) & ( Q(status='MISS') | Q(status='CHOT') | Q(status='RESO') )
 	
-	visits = Visit.objects.filter(unresolved_q).order_by('scheduledDate', 'scheduledTime', 'id')
-	r_visits = Visit.objects.filter(resolved_q).order_by('-scheduledDate', '-scheduledTime', 'id')
+	visits = Visit.objects.filter(active_q).order_by('seenDateTime')
+	s_visits = Visit.objects.filter(scheduled_q).order_by('scheduledDate', 'id')
+	r_visits = Visit.objects.filter(resolved_q).order_by('finishedDateTime')
 	num_active = len(visits)
+	num_scheduled = len(s_visits)
 	num_inactive = len(r_visits)
 
 	return render_to_response(
@@ -282,7 +285,6 @@ def edit_visit(request, id):
 		form = EditScheduledVisitForm(v,request.user, request.POST) # A form bound to the POST data
 		if form.is_valid(): # All validation rules pass
 			v.scheduledBy = form.cleaned_data['scheduledBy']
-			v.scheduledTime = form.cleaned_data['scheduledTime']
 			v.scheduledDate = form.cleaned_data['scheduledDate']
 			v.reasonDetail = form.cleaned_data['reasonDetail']
 			v.save()
