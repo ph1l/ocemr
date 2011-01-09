@@ -12,8 +12,8 @@
 	-Chart
 		- Edit entered prescriptions before patient is finished
 	-Patient Info
-		1)- Make seperate section for scheduled patients.
 		2)- Show Account $tatu$ / collect fees per visit.
+		XX- Make seperate section for scheduled patients.
 		X Edit reasonDetail for Visits
 		X Delete Sceduled Visits
 		X Edit Village Name
