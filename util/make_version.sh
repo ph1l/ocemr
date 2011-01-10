@@ -21,4 +21,4 @@
 #########################################################################
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
-echo "OCEMR_VERSION=\"v0.2-`git branch | grep ^\* | cut -b3-`\""
+echo "OCEMR_VERSION=\"`git tag -l | tail -1`-`git branch | grep ^\* | cut -b3-`\""
