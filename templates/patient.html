@@ -32,6 +32,14 @@
 </TD>
     <TD>{{p.village}}</TD>
 </TR>
+<TR><TD>Account Balance</TD>
+{% if p.isNegative %}
+    <TD STYLE="color: RED;">
+{% else %}
+    <TD>
+{% endif %}
+         {{p.get_account_balance}}</TD>
+</TR>
 <TR>
     <TD COLSPAN=2>Record Created by {{p.createdBy}} on {{p.createdDateTime|date:"d-m H:i"}}</TD>
 </TR>
@@ -54,7 +62,7 @@
 </TD></TR></TABLE>
 <TABLE>Past &amp; Current Visits
 (<A HREF="#" onClick='window.open("/patient/schedule_walkin_visit/{{p.id}}/","Add Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Schedule Walk-up Visit Now!</a>):
-<TR><TH>Scheduled<TH>by<TH>Status<TH>Seen<TH>Claimed<TH>Finished<TH>Resolved<TH>Actions</TR>
+<TR><TH>Scheduled<TH>by<TH>Status<TH>Seen<TH>Claimed<TH>Finished<TH>Resolved<TH>Cost<TH>Collected<TH>Actions</TR>
 <TR><TH>Reason<TH>Detail</TR>
 {% for v in visits %}
 <TR>
@@ -80,6 +88,28 @@
    by {{ v.finishedBy }}
    <TD>{{ v.resolvedDateTime|date:"d-m H:i" }}
    by {{ v.resolvedBy }}
+<TD>{{v.cost}}(<A HREF=# onClick='window.open("/visit/{{v.id}}/bill_amount/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)</TD>
+<TD>
+{% ifequal v.get_med_status 1 %}
+		-
+{% else %}
+	{% if v.has_collected %}
+		{% if v.has_collected_multiple %}
+			{% for cl in v.get_cashlog %}
+				{{cl.amount}}<br>
+			{% endfor %}
+		<HR>
+		Total =
+		{% endif %}
+		{{ v.collected }}	
+		(<A HREF=# onClick='window.open("/visit/{{v.id}}/collect/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</A>)
+	{% else %}
+		-
+		(<A HREF=# onClick='window.open("/visit/{{v.id}}/collect/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</A>)
+	{% endif %}
+		
+{% endifequal %}
+</TD>
    <TD><A HREF=/visit/{{v.id}}>View Chart</A> |
 {% ifequal v.status 'WAIT' %}
    <A HREF="#" onClick='window.open("/patient/edit_visit/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Details</a> |

@@ -165,7 +165,7 @@ def patient(request,id):
 
 	p = Patient.objects.get(pk=id)
 	upcoming_visits = Visit.objects.filter(patient=p).filter(status='SCHE').order_by('scheduledDate')
-	visits = Visit.objects.filter(patient=p).exclude(status='SCHE').order_by('scheduledDate')
+	visits = Visit.objects.filter(patient=p).exclude(status='SCHE').order_by('-seenDateTime')
 	return render_to_response('patient.html', {
 		'p':p,
 		'visits': visits,

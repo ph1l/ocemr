@@ -85,6 +85,18 @@ class Patient(models.Model):
 	def get_allergies(self):
 		from models import Allergy
 		return Allergy.objects.filter(patient=self)
+	def get_account_balance(self):
+		from models import Visit, CashLog
+		bal=0
+		for v in Visit.objects.filter(patient=self):
+			bal = bal - v.cost
+		for c in CashLog.objects.filter(patient=self):
+			bal = bal + c.amount
+		return bal
+	def isNegative(self):
+		if self.get_account_balance() < 0:
+			return True
+		return False
 
 class Visit(models.Model):
 	VISIT_REASON_CHOICES = (
