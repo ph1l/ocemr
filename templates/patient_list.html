@@ -6,13 +6,14 @@
 {% block content %}
 {% if patients %}
 <TABLE>
-<TR><TH>Id</TH><TH>Name</TH><TH>Actions</TH></TR>
+<TR><TH>Id</TH><TH>Patient</TH><TH># Visits</TH><TH>Actions</TH></TR>
 {% for p in patients %}
 <TR>
 	<TD>{{p.id}}</TD>
 	<TD>
-		{{p.fullName}}</a>
+		{{p}}</a>
 	</TD>
+	<TD>{{ p.numVisits }}
 	<TD><a href=/patient/{{p.id}}/>view</a></TD>
 {% endfor %}
 </TABLE>

@@ -74,8 +74,14 @@ class Patient(models.Model):
 			return '%s %s %s' % (self.familyName, self.givenName, self.middleName)
 		else:
 			return '%s %s' % (self.familyName, self.givenName)
+	def _get_num_visits(self):
+		from models import Visit
+		visits = Visit.objects.filter(patient=self)
+		return len(visits)
+
 	fullName = property(_get_full_name)
 	age = property(_get_age)
+	numVisits = property(_get_num_visits)
 	def get_allergies(self):
 		from models import Allergy
 		return Allergy.objects.filter(patient=self)
