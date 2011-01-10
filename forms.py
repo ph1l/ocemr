@@ -153,7 +153,7 @@ class NewWalkinVisitForm(forms.ModelForm):
 		self.fields['reason'].initial='NEW'
 		from datetime import datetime
 		self.fields['scheduledDate'].initial=datetime.today().date()
-		self.fields['seenDateTime'].initial=datetime.now()
+		self.fields['seenDateTime'].initial=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 		
 
         class Meta:
