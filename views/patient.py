@@ -298,6 +298,25 @@ def edit_visit(request, id):
 	})
 
 @login_required
+def edit_visit_seen(request, id):
+	from ocemr.models import Visit
+
+	v = Visit.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditVisitSeenForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			v.seenDateTime = "%s %s"%( form.cleaned_data['seenDate'], form.cleaned_data['seenTime'] )
+			v.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditVisitSeenForm(initial={'seenDate':v.seenDateTime.strftime("%d-%m-%Y"), 'seenTime': v.seenDateTime.strftime("%H:%M:%S")})
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Visit seen time',
+		'form_action': '/patient/edit_visit_seen/%s/'%(id),
+		'form': form,
+	})
+
+@login_required
 def edit_visit_reason(request, id):
 	from ocemr.models import Visit
 

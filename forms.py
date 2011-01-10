@@ -124,6 +124,11 @@ class EditScheduledVisitForm(forms.Form):
 		self.fields['scheduledDate'].initial=v.scheduledDate
 		self.fields['reasonDetail'].initial=v.reasonDetail
 
+class EditVisitSeenForm(forms.Form):
+        seenDate = EuDateFormField()
+        seenTime = forms.TimeField()
+
+
 class EditVisitReasonForm(forms.Form):
         reasonDetail = forms.CharField(widget=forms.Textarea)
 
