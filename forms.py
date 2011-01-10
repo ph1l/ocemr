@@ -473,6 +473,10 @@ class EditBillAmountForm(forms.Form):
 class SelectDateForm(forms.Form):
 	date = EuDateFormField(required=False,widget=widgets.CalendarWidget)
 
+class SelectDateRangeForm(forms.Form):
+	date_start = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+	date_end = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+
 class EditMedForm(forms.Form):
         type = forms.CharField(
 			widget=widgets.JQueryAutoContains(

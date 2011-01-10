@@ -24,7 +24,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.db.models import get_model, Q
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def dump_table(field_names,headers,data_rows):
 	"""
@@ -302,4 +302,62 @@ def legacy_patient_daily(request):
 					'referral': '',
 				})
 	return dump_csv( "patient-daily-%s.csv"%(date_in.strftime("%Y%m%d")), field_names, headers, summary_rows )
+
+
+@login_required
+def cashflow(request):
+	"""
+	"""
+	
+	from ocemr.forms import SelectDateRangeForm
+	form_valid=0
+        if request.method == 'POST':
+                form = SelectDateRangeForm(request.POST)
+                if form.is_valid():
+                        date_start_in = form.cleaned_data['date_start']
+                        date_end_in = form.cleaned_data['date_end']
+			form_valid=1
+        else:
+                form = SelectDateRangeForm()
+	if not form_valid:
+	        return render_to_response('popup_form.html', {
+	                'title': 'Enter Date Range For Report',
+	                'form_action': '/reports/cashflow/',
+	                'form': form,
+	        })
+
+	
+	field_names=[
+		'date',
+		'totbill',
+		'totcoll',
+		'diff',
+		]
+	headers={
+		'date': 'Date',
+		'totbill': 'Total Billed',
+		'totcoll': 'Total Collected',
+		'diff': 'Total Difference',
+		}
+	summary_rows=[]
+	from ocemr.models import Visit, CashLog
+	curdate = date_start_in
+	total_billed = 0
+	total_collected = 0
+	while curdate <= date_end_in:
+		billed=0
+		collected=0
+		dt_start = datetime(curdate.year,curdate.month,curdate.day,0,0,0)
+		dt_end = datetime(curdate.year,curdate.month,curdate.day,23,59,59)
+		for v in Visit.objects.filter(finishedDateTime__gte=dt_start,finishedDateTime__lte=dt_end):
+			billed += v.cost
+		for c in CashLog.objects.filter(addedDateTime__gte=dt_start,addedDateTime__lte=dt_end):
+			collected += c.amount
+		summary_rows.append({'date':curdate,'totbill':billed,'totcoll':collected,'diff':billed-collected})
+		total_billed += billed
+		total_collected +=  collected
+		curdate = curdate + timedelta(1)
+	summary_rows.append({'date':'Total','totbill':total_billed, 'totcoll':total_collected,'diff':total_billed-total_collected})
+
+	return dump_csv( "cashflow-%s-%s.csv"%(date_start_in.strftime("%Y%m%d"), date_end_in.strftime("%Y%m%d")), field_names, headers, summary_rows )
 
