@@ -13,6 +13,7 @@
 		XX- Edit entered prescriptions before patient is finished
 	-Patient Info
 		2)- Show Account $tatu$ / collect fees per visit.
+		X - add a way to edit queue placement (via the seenDateTime)
 		XX- Make seperate section for scheduled patients.
 		X Edit reasonDetail for Visits
 		X Delete Sceduled Visits
