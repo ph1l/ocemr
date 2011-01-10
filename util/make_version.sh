@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 ##########################################################################
 #
@@ -21,4 +21,12 @@
 #########################################################################
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
-echo "OCEMR_VERSION=\"`git tag -l | tail -1`-`git branch | grep ^\* | cut -b3-`\""
+b=`git branch | grep ^\* | cut -b3-`
+t=`git tag -l | tail -1`
+
+if [ "${b}" == "master" ]; then
+	echo "OCEMR_VERSION=\"${t}\""
+else
+	echo "OCEMR_VERSION=\"${t}-${b}\""
+fi
+
