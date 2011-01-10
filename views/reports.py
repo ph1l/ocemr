@@ -143,7 +143,7 @@ def clinician_daily(request):
 	for clinician in totals.keys():
 		summary_rows.append({'clinician':clinician, 'num_patients_day':totals[clinician]['day'],'num_patients_month': totals[clinician]['month']})
 	return dump_table( field_names, headers, summary_rows )
-	
+
 @login_required
 def legacy_diagnosis_daily(request):
 	"""
@@ -200,10 +200,6 @@ def legacy_diagnosis_daily(request):
 		summary_rows.append({'diag': key, 'tally': s[key]})
 	return dump_csv( "diagnosis-daily-%s.csv"%(date_in.strftime("%Y%m%d")), field_names, headers, summary_rows )
 		
-		
-	
-
-
 @login_required
 def legacy_patient_daily(request):
 	"""
@@ -361,3 +357,54 @@ def cashflow(request):
 
 	return dump_csv( "cashflow-%s-%s.csv"%(date_start_in.strftime("%Y%m%d"), date_end_in.strftime("%Y%m%d")), field_names, headers, summary_rows )
 
+
+@login_required
+def accounts_outstanding(request):
+	"""
+	"""
+
+	from ocemr.forms import SelectDateRangeForm
+	form_valid=0
+        if request.method == 'POST':
+                form = SelectDateRangeForm(request.POST)
+                if form.is_valid():
+                        date_start_in = form.cleaned_data['date_start']
+                        date_end_in = form.cleaned_data['date_end']
+			form_valid=1
+        else:
+                form = SelectDateRangeForm()
+	if not form_valid:
+	        return render_to_response('popup_form.html', {
+	                'title': 'Enter Date Range For Report',
+	                'form_action': '/reports/accounts_outstanding/',
+	                'form': form,
+	        })
+
+
+	from ocemr.models import Patient, Visit, CashLog
+
+	field_names=[
+		'patient',
+		'billed',
+		'collected',
+		'owed',
+		]
+	headers={
+		'patient': 'Patient',
+		'billed': 'Total Billed',
+		'collected': 'Total Collected',
+		'owed': 'Amount Owed',
+		}
+	dt_start = datetime(date_start_in.year,date_start_in.month,date_start_in.day,0,0,0)
+	dt_end = datetime(date_end_in.year,date_end_in.month,date_end_in.day,23,59,59)
+	summary_rows=[]
+	for p in Patient.objects.all(  ):
+		billed=0
+		collected=0
+		for v in Visit.objects.filter(patient=p,finishedDateTime__gte=dt_start,finishedDateTime__lte=dt_end):
+			billed += v.cost
+			for c in CashLog.objects.filter(visit=v):
+				collected += c.amount
+		if collected < billed:
+			summary_rows.append({'patient': p, 'billed': billed, 'collected':collected, 'owed':billed-collected})
+	return dump_csv( "outstanding_accounts-%s-%s.csv"%(date_start_in.strftime("%Y%m%d"), date_end_in.strftime("%Y%m%d")),field_names, headers, summary_rows )
