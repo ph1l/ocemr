@@ -468,3 +468,18 @@ class EditBillAmountForm(forms.Form):
 class SelectDateForm(forms.Form):
 	date = EuDateFormField(required=False,widget=widgets.CalendarWidget)
 
+class EditMedForm(forms.Form):
+        type = forms.CharField(
+			widget=widgets.JQueryAutoContains(
+				'/autosearch_title/ocemr/MedType/'
+				)
+			)
+	dosage = forms.CharField()
+	dispenseAmount = forms.CharField(required=False)
+		
+	def clean_type(self):
+		data = self.cleaned_data['type']
+		from models import MedType
+		d = MedType.objects.get(title=data)
+		return d
+

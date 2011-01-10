@@ -490,6 +490,7 @@ def visit_meds_new(request,id,did):
                 'form': form,
         })
 
+
 @login_required
 def visit_refe(request,id):
 	"""

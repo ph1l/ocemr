@@ -10,7 +10,7 @@
 	-Patient Queue
 		X Scroll to other days in the patient queue
 	-Chart
-		- Edit entered prescriptions before patient is finished
+		XX- Edit entered prescriptions before patient is finished
 	-Patient Info
 		2)- Show Account $tatu$ / collect fees per visit.
 		XX- Make seperate section for scheduled patients.

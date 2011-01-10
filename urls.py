@@ -128,6 +128,7 @@ urlpatterns += patterns('ocemr.views.med',
     (r'^med/(?P<id>\d+)/cancel/$', 'med_cancel'),
     (r'^med/(?P<id>\d+)/undo_cancel/$', 'med_undo_cancel'),
     (r'^med/(?P<id>\d+)/notate/$', 'med_notate'),
+    (r'^med/(?P<id>\d+)/edit/$', 'med_edit'),
 )
 urlpatterns += patterns('ocemr.views.reports',
     (r'^reports/$', 'index'),

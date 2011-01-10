@@ -29,6 +29,7 @@
 </TD>
 		<TD>
 		{% ifequal m.status "ORD" %}
+		<A HREF=# onClick='window.open("/med/{{m.id}}/edit/","Edit Med","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Edit</A>
 		<A HREF=# onClick='window.open("/med/{{m.id}}/cancel/","Cancel","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Cancel</A>
 		{% endifequal %}
 		<A href="#" onClick='window.open("/med/{{m.id}}/notate/","Notate","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Note</A>

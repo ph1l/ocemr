@@ -153,3 +153,33 @@ def med_notate(request, id):
                 'form': form,
         })
 
+@login_required
+def med_edit(request,id):
+	"""
+	"""
+	from ocemr.models import Med
+	from ocemr.forms import EditMedForm
+	m = Med.objects.get(pk=id)
+	
+	if request.user != m.addedBy:
+		return render_to_response('popup_info.html', {
+			'title': 'Error',
+			'info': 'You cannot edit This Med, cancel it and re-add instead.',
+			})
+	if request.method == 'POST': 
+		form = EditMedForm(request.POST)
+		if form.is_valid():
+			m.type = form.cleaned_data['type']
+			m.dosage = form.cleaned_data['dosage']
+			if form.cleaned_data['dispenseAmount']:
+				m.dispenseAmount = form.cleaned_data['dispenseAmount']
+			m.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditMedForm(initial={'type': m.type.title, 'dosage': m.dosage, 'dispenseAmount':m.dispenseAmount})
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Med',
+		'form_action': '/med/%s/edit/'%(id),
+		'form': form,
+	})
+
