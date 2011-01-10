@@ -2,34 +2,24 @@
 	-General
 		- Force Popup to foreground?
 	-Reports
-		X Add Reports to main menu
 		- Daily/Weekly Cash Flow Report
 		- Show Outstanding Balances
 		- Legacy Monthly Report
 		- 
 	-Patient Queue
-		X Scroll to other days in the patient queue
 	-Chart
 		XX- Edit entered prescriptions before patient is finished
 	-Patient Info
-		2)- Show Account $tatu$ / collect fees per visit.
+		XX- Show Account $tatu$ / collect fees per visit.
 		X - add a way to edit queue placement (via the seenDateTime)
 		XX- Make seperate section for scheduled patients.
-		X Edit reasonDetail for Visits
-		X Delete Sceduled Visits
-		X Edit Village Name
-		X Can't edit age when actual birthdate used.
-		X- Need to be able to specify reason detail when scheduling walk-ins
 	-Med Queue
-		- 
 	-Record
-		X Add Clinician Tag to Record
 -Administration
-	X MySQL Replication Setup
-	X MySQL Replication Testing
 	? Printing Issues !!!
 	- Double Check OpenVPN Config and Certificates
 
 -Infrastructure
 	- Test Failure states of server
-	X Battery Backup ?
+	- Battery Backup Data Cable ( need to ship :-/ )
+
