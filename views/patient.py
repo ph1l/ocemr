@@ -49,7 +49,7 @@ def patient_queue(request,dayoffset=0):
 	
 	visits = Visit.objects.filter(active_q).order_by('seenDateTime')
 	s_visits = Visit.objects.filter(scheduled_q).order_by('scheduledDate', 'id')
-	r_visits = Visit.objects.filter(resolved_q).order_by('finishedDateTime')
+	r_visits = Visit.objects.filter(resolved_q).order_by('-finishedDateTime')
 	num_active = len(visits)
 	num_scheduled = len(s_visits)
 	num_inactive = len(r_visits)
