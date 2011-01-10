@@ -97,7 +97,7 @@ class NewScheduledVisitForm(forms.ModelForm):
         class Meta:
                 model = get_model('ocemr','Visit')
                 exclude = [ 'followupTo',
-				'seenDateTme'
+				'seenDateTime',
 				'claimedDateTime', 'claimedBy',
 				'finishedDateTime', 'finishedBy',
 				'resolvedDateTime', 'resolvedBy',
