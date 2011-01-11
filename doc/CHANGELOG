@@ -1,0 +1,5 @@
+v0.2.1 -
+	- fixed med queue to show visits "resolved" today but scheduled on
+	another date.
+v0.2.0 -
+	- Initial Release
