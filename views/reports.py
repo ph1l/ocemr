@@ -123,9 +123,19 @@ def clinician_daily(request):
 		'num_patients_day': 'Number of Patients per Day',
 		'num_patients_month': 'Number of Patients per Month',
 		}
-	d_today = date_in
-	q_this_month = (Q(scheduledDate__month=d_today.month) & Q(scheduledDate__lt=d_today)) & (Q(status="CHOT") | Q(status="RESO"))
-	q_this_day = Q(scheduledDate=d_today) & (Q(status="CHOT") | Q(status="RESO"))
+	if date_in.month == 12:
+		next_month=1
+	else:
+		next_month=date_in.month+1
+	dt_month_start = datetime(date_in.year,date_in.month,1,0,0,0)
+	dt_month_end = datetime(date_in.year,next_month,1,0,0,0)
+	dt_start = datetime(date_in.year,date_in.month,date_in.day,0,0,0)
+	dt_end = datetime(date_in.year,date_in.month,date_in.day,23,59,59)
+	q_this_month = ( Q(finishedDateTime__gte=dt_month_start) &
+				Q(finishedDateTime__lt=dt_month_end ) &
+				Q(finishedDateTime__lt=dt_start)
+			) & (Q(status="CHOT") | Q(status="RESO"))
+	q_this_day = (Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end)) & (Q(status="CHOT") | Q(status="RESO"))
 	months_visits = Visit.objects.filter(q_this_month)
 	pt_monthly_index = len(months_visits)
 	days_visits = Visit.objects.filter(q_this_day)
@@ -260,9 +270,19 @@ def legacy_patient_daily(request):
 		'prescription': 'Prescription',
 		'referral': 'Referral',
 	}
-	d_today = date_in
-	q_this_month = (Q(scheduledDate__month=d_today.month) & Q(scheduledDate__lt=d_today)) & (Q(status="CHOT") | Q(status="RESO"))
-	q_this_day = Q(scheduledDate=d_today) & (Q(status="CHOT") | Q(status="RESO"))
+	if date_in.month == 12:
+		next_month=1
+	else:
+		next_month=date_in.month+1
+	dt_month_start = datetime(date_in.year,date_in.month,1,0,0,0)
+	dt_month_end = datetime(date_in.year,next_month,1,0,0,0)
+	dt_start = datetime(date_in.year,date_in.month,date_in.day,0,0,0)
+	dt_end = datetime(date_in.year,date_in.month,date_in.day,23,59,59)
+	q_this_month = ( Q(finishedDateTime__gte=dt_month_start) &
+				Q(finishedDateTime__lt=dt_month_end ) &
+				Q(finishedDateTime__lt=dt_start)
+			) & (Q(status="CHOT") | Q(status="RESO"))
+	q_this_day = ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end ) ) & (Q(status="CHOT") | Q(status="RESO"))
 	months_visits = Visit.objects.filter(q_this_month)
 	pt_monthly_index = len(months_visits)
 	days_visits = Visit.objects.filter(q_this_day)
