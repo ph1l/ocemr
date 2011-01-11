@@ -1,0 +1,20 @@
+v0.3.0 -
+	- CHANGE: diagnosis tally report to accept arbitrary date ranges.
+	- ADDED: patient merge to patient info page.
+	- FIXED: patient queue to show visits finished today but scheduled
+		another day.
+	- FIXED: when claiming a visit, we should grab the most recently
+		'finished' visit to look for active diagnoses.
+	- FIXED: legacy patient daily report should find visits "finished"
+		on the days in question not scheduled.
+	- CHANGE: Made Patient Search Easier. Only one name field that
+		now searches both given and family names. Also, you can
+		seperate search terms by whitespace.
+	- ADDED: added autofocus first form field on popup form window.
+	- ADDED: added autofocus to New Patient and Patient Search Pages.
+
+v0.2.1 -
+	- fixed med queue to show visits "resolved" today but scheduled on
+	another date.
+v0.2.0 -
+	- Initial Release

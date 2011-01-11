@@ -1,25 +1,11 @@
 -Software Design
 	-General
-		- Force Popup to foreground?
+		- Force Popup Windows to foreground?
+			( could also move to a DHTML window instead...)
 	-Reports
-		X Daily/Weekly Cash Flow Report
-		X Show Outstanding Balances
 		- Legacy Monthly Report
-		- 
 	-Patient Queue
 	-Chart
-		XX- Edit entered prescriptions before patient is finished
 	-Patient Info
-		XX- Show Account $tatu$ / collect fees per visit.
-		X - add a way to edit queue placement (via the seenDateTime)
-		XX- Make seperate section for scheduled patients.
 	-Med Queue
 	-Record
--Administration
-	? Printing Issues !!!
-	- Double Check OpenVPN Config and Certificates
-
--Infrastructure
-	- Test Failure states of server
-	- Battery Backup Data Cable ( need to ship :-/ )
-

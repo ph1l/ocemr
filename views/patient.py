@@ -41,11 +41,14 @@ def patient_queue(request,dayoffset=0):
 	d_missed = d_today-timedelta(7)
 	d_upcoming = d_today+timedelta(1)
 
+	dt_start = datetime(d_today.year,d_today.month,d_today.day,0,0,0)
+        dt_end = datetime(d_today.year,d_today.month,d_today.day,23,59,59)
+
 	from ocemr.models import Visit
 
 	active_q = Q(status='WAIT') | Q(status='INPR')
 	scheduled_q = Q(scheduledDate__lte=d_upcoming.date) & Q(status='SCHE')
-	resolved_q =  Q(scheduledDate=d_today.date) & ( Q(status='MISS') | Q(status='CHOT') | Q(status='RESO') )
+	resolved_q =  ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & ( Q(status='MISS') | Q(status='CHOT') | Q(status='RESO') )
 	
 	visits = Visit.objects.filter(active_q).order_by('seenDateTime')
 	s_visits = Visit.objects.filter(scheduled_q).order_by('scheduledDate', 'id')
@@ -179,8 +182,7 @@ def patient_search(request):
 	if request.method == 'POST': # If the form has been submitted...
 		form = PatientSearchForm(request.POST) # A form bound to the POST data
 		if form.is_valid(): # All validation rules pass
-			familyName = form.cleaned_data['familyName']
-			givenName = form.cleaned_data['givenName']
+			name = form.cleaned_data['name']
 			village = form.cleaned_data['village']
 			from django.db.models import Q
 			from ocemr.models import Patient
@@ -188,10 +190,21 @@ def patient_search(request):
 			patients = Patient.objects.all()
 			if village != "":
 				patients = patients.filter(village__name__icontains=village)
-			if familyName != "":
-				patients = patients.filter(familyName__icontains=familyName)
-			if givenName != "":
-				patients = patients.filter(givenName__icontains=givenName)
+			if name != "":
+				i = 0
+				for term in name.split():
+					if i:
+					  q_name = q_name & (
+					    Q( familyName__icontains=term ) |
+					    Q( givenName__icontains=term )
+					  )
+					else:
+					  q_name = (
+                                            Q( familyName__icontains=term ) |
+                                            Q( givenName__icontains=term )
+                                          )
+					i += 1
+				patients = patients.filter(q_name)
 			return render_to_response('patient_list.html', {
 				'patients':patients,
 			}, context_instance=RequestContext(request),)
@@ -335,3 +348,100 @@ def edit_visit_reason(request, id):
 		'form': form,
 	})
 
+@login_required
+def patient_merge(request, id):
+	from ocemr.models import *
+
+	p = Patient.objects.get(pk=int(id))
+	valid_form=False
+
+	if request.method == 'POST': # If the form has been submitted...
+		form = MergePatientForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			duplicateID = form.cleaned_data['duplicateID']
+			valid_form=True
+	else:
+		form = MergePatientForm() # An unbound form
+	if not valid_form:
+		return render_to_response('popup_form.html', {
+			'title': 'Merge Patient Records',
+			'form_action': '/patient/merge/%s/'%(id),
+			'form': form,
+		})
+	pdup = Patient.objects.get(pk=int(duplicateID))
+	out_txt="Merge %s: %s\n  into %s: %s\n\n"%(pdup.id, pdup, p.id, p)
+
+	visits=		Visit.objects.filter(patient=pdup)
+	vitals=		Vital.objects.filter(patient=pdup)
+	labs=		Lab.objects.filter(patient=pdup)
+	diagnoses=	Diagnosis.objects.filter(patient=pdup)
+	meds=		Med.objects.filter(patient=pdup)
+	referrals=	Referral.objects.filter(patient=pdup)
+	immunizations=	ImmunizationLog.objects.filter(patient=pdup)
+	allergies=	Allergy.objects.filter(patient=pdup)
+	cashlogs=	CashLog.objects.filter(patient=pdup)
+
+	for o in visits: out_txt += "  -> Visit: %s\n"%(o)
+	for o in vitals: out_txt += "  -> Vital: %s\n"%(o)
+	for o in labs: out_txt += "  -> Lab: %s\n"%(o)
+	for o in diagnoses: out_txt += "  -> Diagnosis: %s\n"%(o)
+	for o in meds: out_txt += "  -> Med: %s\n"%(o)
+	for o in referrals: out_txt += "  -> Referral: %s\n"%(o)
+	for o in immunizations: out_txt += "  -> Immunization: %s\n"%(o)
+	for o in allergies: out_txt += "  -> Allergy: %s\n"%(o)
+	for o in cashlogs: out_txt += "  -> CashLog: %s\n"%(o)
+
+	out_txt += "\n\nThere is NO UNDO function to reverse this change.\n"
+	out_txt += "Please be sure this is what you want before continuing...\n"
+	out_link = "<A HREF=/patient/merge/%d/%d/>Do the merge!</A> or "%(p.id,pdup.id)
+	return render_to_response('popup_info.html', {
+		'title': 'Schedule Patient Visit',
+		'info': out_txt,
+		'link_text': out_link,
+		})
+
+@login_required
+def patient_do_merge(request, id, dupid):
+	from ocemr.models import *
+
+	p = Patient.objects.get(pk=int(id))
+	pdup = Patient.objects.get(pk=int(dupid))
+
+
+	visits=		Visit.objects.filter(patient=pdup)
+	vitals=		Vital.objects.filter(patient=pdup)
+	labs=		Lab.objects.filter(patient=pdup)
+	diagnoses=	Diagnosis.objects.filter(patient=pdup)
+	meds=		Med.objects.filter(patient=pdup)
+	referrals=	Referral.objects.filter(patient=pdup)
+	immunizations=	ImmunizationLog.objects.filter(patient=pdup)
+	allergies=	Allergy.objects.filter(patient=pdup)
+	cashlogs=	CashLog.objects.filter(patient=pdup)
+
+	for o in visits:
+		o.patient=p
+		o.save()
+	for o in vitals:
+		o.patient=p
+		o.save()
+	for o in labs:
+		o.patient=p
+		o.save()
+	for o in diagnoses:
+		o.patient=p
+		o.save()
+	for o in meds:
+		o.patient=p
+		o.save()
+	for o in referrals:
+		o.patient=p
+		o.save()
+	for o in immunizations:
+		o.patient=p
+		o.save()
+	for o in allergies:
+		o.patient=p
+		o.save()
+	pdup.delete()
+
+	return HttpResponseRedirect('/close_window/')

@@ -2,11 +2,20 @@
 
 {% block extrahead %}
 {{ form.media }}
+
+<script language="javascript" type="text/javascript">
+function formfocus() {
+	var f=document.getElementById('popupForm');
+	f.elements[0].focus();
+}
+window.onload = formfocus;
+</script>
+
 {% endblock %}
 
 {% block content %}
 <SPAN>{{title}}</SPAN>
-<form action="{{ form_action }}" method="POST">
+<form ID=popupForm action="{{ form_action }}" method="POST">
 <TABLE>
 {{ form.as_table }}
 </TABLE>

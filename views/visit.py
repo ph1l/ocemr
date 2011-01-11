@@ -68,7 +68,7 @@ def visit_claim(request,id):
 	p = v.patient
 
 	try:
-		old_v = Visit.objects.filter(patient=p).filter(status='RESO').order_by('-scheduledDate')[0]
+		old_v = Visit.objects.filter(patient=p).filter(status='RESO').order_by('-finishedDateTime')[0]
 	except:
 		old_v = None
 	if old_v != None:

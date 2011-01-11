@@ -10,7 +10,7 @@
 <TABLE>
 <TR>
     <TD>Patient ID</TD>
-    <TD>{{p.id}}</TD>
+    <TD>{{p.id}} <a href="#" onClick='window.open("/patient/merge/{{p.id}}/","Merge Duplicate Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Merge Duplicate</a></TD>
 </TR>
 <TR>
     <TD>Name <a href="#" onClick='window.open("/patient/edit/name/{{p.id}}/","Edit Name","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
