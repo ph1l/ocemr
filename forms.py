@@ -492,3 +492,5 @@ class EditMedForm(forms.Form):
 		d = MedType.objects.get(title=data)
 		return d
 
+class MergePatientForm(forms.Form):
+	duplicateID = forms.IntegerField()

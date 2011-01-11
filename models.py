@@ -444,6 +444,8 @@ class Med(models.Model):
 		"""
 		from models import MedNote
 		return MedNote.objects.filter(med=self).order_by('-addedDateTime')
+	def __unicode__(self):
+		return "%s: %s"%(self.id, self.type.title)
 
 
 class MedNote(models.Model):
@@ -474,18 +476,24 @@ class Referral(models.Model):
 	reason = models.TextField(blank=True)
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	addedBy = models.ForeignKey(User)
+	def __unicode__(self):
+		return "%s: %s"%(self.id, self.to)
 
 class ImmunizationLog(models.Model):
 	patient = models.ForeignKey(Patient)
 	description = models.TextField(blank=True)
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	addedBy = models.ForeignKey(User)
+	def __unicode__(self):
+		return "%s: ImmunizationLog"%(self.id)
 
 class Allergy(models.Model):
 	patient = models.ForeignKey(Patient)
 	to = models.CharField(max_length=64)
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	addedBy = models.ForeignKey(User)
+	def __unicode__(self):
+		return "%s: %s"%(self.id, self.to)
 
 class CashLog(models.Model):
 	patient = models.ForeignKey(Patient)
@@ -493,4 +501,6 @@ class CashLog(models.Model):
 	amount = models.FloatField()
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	addedBy = models.ForeignKey(User)
+	def __unicode__(self):
+		return "%s: CashLog"%(self.id)
 
