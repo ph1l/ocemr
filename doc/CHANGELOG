@@ -1,3 +1,6 @@
+v0.3.1 -
+	- FIXED: don't allow printing of record until meds are finished.
+	- FIXED: add a way to print or view record from old visits.
 v0.3.0 -
 	- CHANGE: diagnosis tally report to accept arbitrary date ranges.
 	- ADDED: patient merge to patient info page.
