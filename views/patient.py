@@ -41,11 +41,14 @@ def patient_queue(request,dayoffset=0):
 	d_missed = d_today-timedelta(7)
 	d_upcoming = d_today+timedelta(1)
 
+	dt_start = datetime(d_today.year,d_today.month,d_today.day,0,0,0)
+        dt_end = datetime(d_today.year,d_today.month,d_today.day,23,59,59)
+
 	from ocemr.models import Visit
 
 	active_q = Q(status='WAIT') | Q(status='INPR')
 	scheduled_q = Q(scheduledDate__lte=d_upcoming.date) & Q(status='SCHE')
-	resolved_q =  Q(scheduledDate=d_today.date) & ( Q(status='MISS') | Q(status='CHOT') | Q(status='RESO') )
+	resolved_q =  ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & ( Q(status='MISS') | Q(status='CHOT') | Q(status='RESO') )
 	
 	visits = Visit.objects.filter(active_q).order_by('seenDateTime')
 	s_visits = Visit.objects.filter(scheduled_q).order_by('scheduledDate', 'id')
