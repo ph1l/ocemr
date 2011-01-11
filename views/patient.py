@@ -335,3 +335,98 @@ def edit_visit_reason(request, id):
 		'form': form,
 	})
 
+@login_required
+def patient_merge(request, id):
+	from ocemr.models import *
+
+	p = Patient.objects.get(pk=int(id))
+	valid_form=False
+
+	if request.method == 'POST': # If the form has been submitted...
+		form = MergePatientForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			duplicateID = form.cleaned_data['duplicateID']
+			valid_form=True
+	else:
+		form = MergePatientForm() # An unbound form
+	if not valid_form:
+		return render_to_response('popup_form.html', {
+			'title': 'Merge Patient Records',
+			'form_action': '/patient/merge/%s/'%(id),
+			'form': form,
+		})
+	pdup = Patient.objects.get(pk=int(duplicateID))
+	out_txt="Merge %s: %s\n  into %s: %s\n\n"%(pdup.id, pdup, p.id, p)
+
+	visits=		Visit.objects.filter(patient=pdup)
+	vitals=		Vital.objects.filter(patient=pdup)
+	labs=		Lab.objects.filter(patient=pdup)
+	diagnoses=	Diagnosis.objects.filter(patient=pdup)
+	meds=		Med.objects.filter(patient=pdup)
+	referrals=	Referral.objects.filter(patient=pdup)
+	immunizations=	ImmunizationLog.objects.filter(patient=pdup)
+	allergies=	Allergy.objects.filter(patient=pdup)
+	cashlogs=	CashLog.objects.filter(patient=pdup)
+
+	for o in visits: out_txt += "  -> Visit: %s\n"%(o)
+	for o in vitals: out_txt += "  -> Vital: %s\n"%(o)
+	for o in labs: out_txt += "  -> Lab: %s\n"%(o)
+	for o in diagnoses: out_txt += "  -> Diagnosis: %s\n"%(o)
+	for o in meds: out_txt += "  -> Med: %s\n"%(o)
+	for o in referrals: out_txt += "  -> Referral: %s\n"%(o)
+	for o in immunizations: out_txt += "  -> Immunization: %s\n"%(o)
+	for o in allergies: out_txt += "  -> Allergy: %s\n"%(o)
+	for o in cashlogs: out_txt += "  -> CashLog: %s\n"%(o)
+
+	out_link = "\n\n<A HREF=/patient/merge/%d/%d/>Do the merge!</A> or "%(p.id,pdup.id)
+	return render_to_response('popup_info.html', {
+		'title': 'Schedule Patient Visit',
+		'info': out_txt,
+		'link_text': out_link,
+		})
+
+@login_required
+def patient_do_merge(request, id, dupid):
+	from ocemr.models import *
+
+	p = Patient.objects.get(pk=int(id))
+	pdup = Patient.objects.get(pk=int(dupid))
+
+
+	visits=		Visit.objects.filter(patient=pdup)
+	vitals=		Vital.objects.filter(patient=pdup)
+	labs=		Lab.objects.filter(patient=pdup)
+	diagnoses=	Diagnosis.objects.filter(patient=pdup)
+	meds=		Med.objects.filter(patient=pdup)
+	referrals=	Referral.objects.filter(patient=pdup)
+	immunizations=	ImmunizationLog.objects.filter(patient=pdup)
+	allergies=	Allergy.objects.filter(patient=pdup)
+	cashlogs=	CashLog.objects.filter(patient=pdup)
+
+	for o in visits:
+		o.patient=p
+		o.save()
+	for o in vitals:
+		o.patient=p
+		o.save()
+	for o in labs:
+		o.patient=p
+		o.save()
+	for o in diagnoses:
+		o.patient=p
+		o.save()
+	for o in meds:
+		o.patient=p
+		o.save()
+	for o in referrals:
+		o.patient=p
+		o.save()
+	for o in immunizations:
+		o.patient=p
+		o.save()
+	for o in allergies:
+		o.patient=p
+		o.save()
+	pdup.delete()
+
+	return HttpResponseRedirect('/close_window/')
