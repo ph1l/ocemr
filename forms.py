@@ -219,8 +219,7 @@ class NewPatientForm(forms.ModelForm):
 		return v
 
 class PatientSearchForm(forms.Form):
-	familyName = forms.CharField(label='Last Name', required=False)
-	givenName = forms.CharField(label='First Name', required=False)
+	name = forms.CharField(label='Name', required=False)
         village = forms.CharField(
 			widget=widgets.JQueryAutoComplete(
 				'/autocomplete_name/ocemr/Village/'
