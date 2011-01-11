@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Patient Search{% endblock %}
-{% block extrahead %} {{ form.media }} {%endblock%}
+{% block extrahead %}
+{{ form.media }}
+<script language="javascript" type="text/javascript">
+function formfocus() {
+        var f=document.getElementById('newPatientForm');
+        f.elements[0].focus();
+}
+window.onload = formfocus;
+</script>
+{%endblock%}
 {% block extraheader %}
         <A HREF=/patient_queue/>Patient Queue</A>(<A HREF=/patient/search/>search</a>,add)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>|<A HREF=/reports/>Reports</A>
 {%endblock%}
 
 {% block content %}
-<form action="/patient/new/" method="POST">
+<form ID="newPatientForm" action="/patient/new/" method="POST">
 <TABLE>
 {{ form.as_table }}
 </TABLE>
