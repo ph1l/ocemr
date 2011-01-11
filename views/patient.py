@@ -391,7 +391,9 @@ def patient_merge(request, id):
 	for o in allergies: out_txt += "  -> Allergy: %s\n"%(o)
 	for o in cashlogs: out_txt += "  -> CashLog: %s\n"%(o)
 
-	out_link = "\n\n<A HREF=/patient/merge/%d/%d/>Do the merge!</A> or "%(p.id,pdup.id)
+	out_txt += "\n\nThere is NO UNDO function to reverse this change.\n"
+	out_txt += "Please be sure this is what you want before continuing...\n"
+	out_link = "<A HREF=/patient/merge/%d/%d/>Do the merge!</A> or "%(p.id,pdup.id)
 	return render_to_response('popup_info.html', {
 		'title': 'Schedule Patient Visit',
 		'info': out_txt,
