@@ -117,6 +117,10 @@
 {% else %}
    <A HREF="#" onClick='window.open("/patient/edit_visit_reason/{{v.id}}/","Edit Visit Reason","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Reason</a>
 {% endifequal %}
+{% ifequal v.status 'RESO' %}
+		| <A HREF=# onClick='window.open("/visit/{{v.id}}/record/print/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Print-Rec</A>
+		| <A HREF=# onClick='window.open("/visit/{{v.id}}/record/view/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>View-Rec</A>
+{% endifequal %}
 </TR>
 <TR>
    <TD>{{ v.reason }}
