@@ -145,25 +145,38 @@ def clinician_daily(request):
 	return dump_table( field_names, headers, summary_rows )
 
 @login_required
-def legacy_diagnosis_daily(request):
+def diagnosis_tally(request):
 	"""
 	"""
-	from ocemr.forms import SelectDateForm
-
+	
+	from ocemr.forms import SelectDateRangeForm
 	form_valid=0
         if request.method == 'POST':
-                form = SelectDateForm(request.POST)
+                form = SelectDateRangeForm(request.POST)
                 if form.is_valid():
-                        date_in = form.cleaned_data['date']
+                        date_start_in = form.cleaned_data['date_start']
+			if form.cleaned_data['date_end']==None:
+                        	date_end_in = form.cleaned_data['date_start']
+			else:
+                        	date_end_in = form.cleaned_data['date_end']
 			form_valid=1
         else:
-                form = SelectDateForm()
+                form = SelectDateRangeForm()
 	if not form_valid:
 	        return render_to_response('popup_form.html', {
-	                'title': 'Enter Date For Report',
-	                'form_action': '/reports/legacy/diagnosis/daily/',
+	                'title': 'Enter Date Range For Report',
+	                'form_action': '/reports/diagnosis/tally/',
 	                'form': form,
 	        })
+	dt_start = datetime(
+		date_start_in.year,date_start_in.month,date_start_in.day,
+		0,0,0
+		)
+	dt_end = datetime(
+		date_end_in.year,date_end_in.month,date_end_in.day,
+		23,59,59
+		)
+	#(Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end))
 
 	field_names=[
 		'diag',
@@ -174,8 +187,7 @@ def legacy_diagnosis_daily(request):
 	#	'tally': 'Tally',
 	#	}
 	from ocemr.models import Visit, Diagnosis
-	d_today = date_in
-	q_this_day = Q(scheduledDate=d_today) & (Q(status="CHOT") | Q(status="RESO"))
+	q_this_day = ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & (Q(status="CHOT") | Q(status="RESO"))
 	days_visits = Visit.objects.filter(q_this_day)
 	q_dignosis_active = (Q(status="NEW") | Q(status="FOL"))
 	s={}
@@ -192,13 +204,16 @@ def legacy_diagnosis_daily(request):
 	sorted_keys.reverse()
 
 	summary_rows=[]
-	summary_rows.append({'diag':'Date:', 'tally': "%s-%s-%s"%(d_today.day,d_today.month,d_today.year )} )
+	summary_rows.append({'diag':'Dates:', 'tally': "%s-%s-%s -> %s-%s-%s"%(
+		dt_start.day, dt_start.month, dt_start.year,
+		dt_end.day, dt_end.month, dt_end.year,
+		 )} )
 	summary_rows.append({'diag':'Total Patients:', 'tally':num_visits})
 	summary_rows.append({'diag':'', 'tally':''})
 	summary_rows.append({'diag':'Diagnosis', 'tally':'Tally'})
 	for key in sorted_keys:
 		summary_rows.append({'diag': key, 'tally': s[key]})
-	return dump_csv( "diagnosis-daily-%s.csv"%(date_in.strftime("%Y%m%d")), field_names, headers, summary_rows )
+	return dump_csv( "diagnosis-tally-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
 		
 @login_required
 def legacy_patient_daily(request):
@@ -311,7 +326,10 @@ def cashflow(request):
                 form = SelectDateRangeForm(request.POST)
                 if form.is_valid():
                         date_start_in = form.cleaned_data['date_start']
-                        date_end_in = form.cleaned_data['date_end']
+			if form.cleaned_data['date_end']==None:
+                        	date_end_in = form.cleaned_data['date_start']
+			else:
+                        	date_end_in = form.cleaned_data['date_end']
 			form_valid=1
         else:
                 form = SelectDateRangeForm()
@@ -369,7 +387,10 @@ def accounts_outstanding(request):
                 form = SelectDateRangeForm(request.POST)
                 if form.is_valid():
                         date_start_in = form.cleaned_data['date_start']
-                        date_end_in = form.cleaned_data['date_end']
+			if form.cleaned_data['date_end']==None:
+                        	date_end_in = form.cleaned_data['date_start']
+			else:
+                        	date_end_in = form.cleaned_data['date_end']
 			form_valid=1
         else:
                 form = SelectDateRangeForm()
