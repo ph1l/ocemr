@@ -182,8 +182,7 @@ def patient_search(request):
 	if request.method == 'POST': # If the form has been submitted...
 		form = PatientSearchForm(request.POST) # A form bound to the POST data
 		if form.is_valid(): # All validation rules pass
-			familyName = form.cleaned_data['familyName']
-			givenName = form.cleaned_data['givenName']
+			name = form.cleaned_data['name']
 			village = form.cleaned_data['village']
 			from django.db.models import Q
 			from ocemr.models import Patient
@@ -191,10 +190,21 @@ def patient_search(request):
 			patients = Patient.objects.all()
 			if village != "":
 				patients = patients.filter(village__name__icontains=village)
-			if familyName != "":
-				patients = patients.filter(familyName__icontains=familyName)
-			if givenName != "":
-				patients = patients.filter(givenName__icontains=givenName)
+			if name != "":
+				i = 0
+				for term in name.split():
+					if i:
+					  q_name = q_name & (
+					    Q( familyName__icontains=term ) |
+					    Q( givenName__icontains=term )
+					  )
+					else:
+					  q_name = (
+                                            Q( familyName__icontains=term ) |
+                                            Q( givenName__icontains=term )
+                                          )
+					i += 1
+				patients = patients.filter(q_name)
 			return render_to_response('patient_list.html', {
 				'patients':patients,
 			}, context_instance=RequestContext(request),)
