@@ -33,9 +33,11 @@ def med_queue(request):
 	"""
 	from datetime import datetime, timedelta
         d_today = datetime.today().date()
+        dt_start = datetime(d_today.year,d_today.month,d_today.day,0,0,0)
+        dt_end = datetime(d_today.year,d_today.month,d_today.day,23,59,59)
 
 	q_active = Q(status='CHOT')
-	q_inactive = Q( scheduledDate=d_today ) & Q(status='RESO')
+	q_inactive = ( Q( resolvedDateTime__gte=dt_start ) & Q( resolvedDateTime__lte=dt_end ) ) & Q(status='RESO')
 
 	from ocemr.models import Visit
 	visits_active = Visit.objects.filter(q_active).order_by('finishedDateTime')
