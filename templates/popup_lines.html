@@ -1,0 +1,10 @@
+{% extends "base_popup.html" %}
+
+{% block content %}
+{{lines|safe}}
+<BR>
+<BR>
+{{ link_text|safe }} | | 
+<a href="#" onClick='opener.window.location.reload();self.close();return false;'>Close</a>
+
+{% endblock %}
