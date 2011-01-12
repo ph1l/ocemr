@@ -1,3 +1,5 @@
+v0.3.2 -
+	- CHANGE: admin site to make management easier...
 v0.3.1 -
 	- FIXED: don't allow printing of record until meds are finished.
 	- FIXED: add a way to print or view record from old visits.
