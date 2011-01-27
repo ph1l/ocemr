@@ -25,11 +25,13 @@
 b=`git branch | grep ^\* | cut -b3-`
 t=`git tag -l | tail -1`
 
-if [ "${b}" == "master" ]; then
-    OCEMR_VERSION="${t}"
+if [ "${b}" != "master" ]; then
+    OCEMR_VERSION="${b}-`date +%Y%m%d%H%M`"
 else
-    OCEMR_VERSION="${t}-${b}"
+    OCEMR_VERSION="${t}"
 fi
+
+./util/make_version.sh > version.py
 
 git archive master --prefix=ocemr-${OCEMR_VERSION}/ | bzip2 > ../ocemr-${OCEMR_VERSION}.tar.bz2
 

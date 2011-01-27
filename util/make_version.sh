@@ -24,9 +24,9 @@
 b=`git branch | grep ^\* | cut -b3-`
 t=`git tag -l | tail -1`
 
-if [ "${b}" == "master" ]; then
-	echo "OCEMR_VERSION=\"${t}\""
+if [ "${b}" != "master" ]; then
+	echo "OCEMR_VERSION=\"${b}-`date +%Y%m%d%H%M`\""
 else
-	echo "OCEMR_VERSION=\"${t}-${b}\""
+	echo "OCEMR_VERSION=\"${t}\""
 fi
 
