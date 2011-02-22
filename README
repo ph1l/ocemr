@@ -1,7 +1,20 @@
 OCEMR - Open Clinic Electronic Medical Records 
-----------------------------------------------
+==============================================
 
-	by Philip Freeman <philip.freeman@gmail.com>
--
+Summary
+-------
 
+  OCEMR is a web based electronic medical records system designed for the
+clinic environment. It is currently in use in the Engeye Health Clinic located
+in Ddegeya, Uganda (near Masaka, UG.) When looking into setting up an EMR for
+this donation based clinic, all the open-source solutions seemed too heavily
+feature-laden to really work for our situation, so, we built our own. Designed
+for small clinics in rural parts of the world, this web-based EMR is light and
+fast.
+
+Project Details
+---------------
+
+ * Home Page: http://kremlor.net/projects/ocemr/
+ * Author: Philip Freeman <philip.freeman@gmail.com>
 
