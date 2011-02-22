@@ -1,10 +1,43 @@
-\documentclass{book}
+\documentclass[dvipdfm]{book}
+
+% % Package: geometry (formating PDF for kindle)
+% \usepackage[
+%     paperwidth=9cm, paperheight=12cm,
+%     top=1cm, left=1cm, right=1cm, bottom=1.5cm,
+%     includefoot
+% ]{geometry}
+
+% Package: hyperref (should be last package)
+\usepackage{hyperref}
+\hypersetup{
+    bookmarks=true,
+    pdftitle={OCEMR User Manual},
+    pdfauthor={Carly J. Gielarowski},
+    pdfproducer={Philip J. Freeman},
+    pdfkeywords={ocemr} {manual},
+    colorlinks=true,
+}
+
+
 \title{OCEMR User Manual}
-\author{Carly J. Gielarowski}
-\date{2011-01-12}
+\author{
+    Carly J. Gielarowski\\
+    $<$\href{mailto:joy.carly@gmail.com}{joy.carly@gmail.com}$>$
+  \and
+    Philip J. Freeman\\
+    $<$\href{mailto:philip.freeman@gmail.com}{philip.freeman@gmail.com}$>$
+}
+\date{}
 \begin{document}
 \maketitle
 \tableofcontents
-\part{Getting Started}
-\input{user_manual-ch1}
+\chapter{Getting Started}
+\input{user_manual-getting_started}
+\chapter{The User Interface}
+\input{user_manual-user_interface}
+\chapter{Administration}
+\input{user_manual-administration}
+\appendix
+\chapter{Hot Keys}
+\input{user_manual-hot_keys}
 \end{document}

@@ -1,0 +1,50 @@
+This Chapter will explain in detail how to manage the users for your OCEMR
+system. However, before we get into the details of doing that, we need to
+go over a few very important things.
+
+\section{Precautions}
+
+Managing users will be done through the application’s admin interface.
+The admin interface can be extremely powerful and helpful, but also
+dangerous. Please be careful while using it and follow the instructions
+outlined here. Contact your system administrator or help desk person if
+you have any questions.
+
+\subsection{Relational Database Warning}
+
+  OCEMR has, at it’s heart, a relational database that stores information
+in an efficient and streamlined manner. When one piece of information in
+the database refers to another, like when a Diagnosis is added for a Patient,
+rather than store a copy of the patient’s name, the database store a reference
+to that patient record. In most cases this is extremely helpful. Like if we
+realize two visit’s in that patient’s name is spelled wrong. We edit the
+patient’s name once and everywhere that record is referenced after that the
+new name will appear.
+
+  However, this can have drastic complications. Say, for instance, we delete
+the patient we were talking about in the previous example. That patient is
+referenced in all sorts of records throughout the system. All the notes,
+symptoms, medication, diagnoses that were added refer back to that patient
+record. Without the patient record, all those other records are
+useless\footnote{ in computer term they are ‘orphans’ because their
+‘parents’ have disappeared } and will be deleted along with it.
+
+  In the case of the patient record, this makes sense, but consider that
+most of the records in the system link back to a user. Thus if you delete
+a user, everything record in the system that that user added would also be
+deleted. \textbf{BOTTOM LINE IS}:
+
+\textbf{NEVER DELETE A USER FROM THE SYSTEM!} (Just disable the user instead.)
+
+\section{Navigating to the Admin Interface}
+
+The admin interface is not straight forward to get to. There is
+currently\footnote{ v0.4.0 plans are to display a link for users
+that have access in an upcoming release. } no link from the main
+interface. You need to modify the link in your browser.
+
+\begin{enumerate}
+\item Log into the system.
+\item in the Address Bar of your browser you will see something like: \url{http://ocemr.server.com/patient_queue/}.
+\item change it to: \url{http://ocemr.server.com/admin/}
+\end{enumerate}
