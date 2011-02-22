@@ -1,7 +1,21 @@
-# Django settings for ocemr project.
+#
+# OCEMR - settings.py
+#
+
+#
+# DEBUG -
+#       set debug mode on?
+#
+#
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+#
+# ADMINS-
+#       set name and email addresses of administrators
+#
+#
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -9,12 +23,41 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = '/tmp/ocemr.db'             # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+#
+# APP_PATH -
+#       Location the software is installed.
+#
+#
+
+APP_PATH="/home/user/ocemr"
+
+#
+# DATABASE_ENGINE -
+#       'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'
+#
+#
+
+DATABASE_ENGINE = 'sqlite3'
+
+#
+# DATABASE_NAME -
+#       database name OR path to database file if using sqlite3.
+#
+# DATABASE_NAME = 'ocemr'
+# DATABASE_NAME = '/home/user/ocemr.db'
+#
+
+DATABASE_NAME = '/home/user/ocemr.db'
+
+#
+# DATABASE_* -
+#       other database connection options (Not used with sqlite3.)
+#
+#
+DATABASE_USER = ''
+DATABASE_PASSWORD = ''
+DATABASE_HOST = ''             # Set to empty string for localhost.
+DATABASE_PORT = ''             # Set to empty string for default.
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -48,6 +91,9 @@ MEDIA_URL = ''
 ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 # Make this unique, and don't share it with anybody.
+#
+#  python -c 'import random; print "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)])'
+#
 SECRET_KEY = '3hsqn3d=zerhs33dn-drs6^5ptexq@+_7y0k8$4nw1e^3g%2(n'
 
 # List of callables that know how to import templates from various sources.
@@ -90,10 +136,6 @@ INSTALLED_APPS = (
     'ocemr',
 )
 
-APP_PATH="/home/user/ocemr"
-
 import version
 OCEMR_VERSION=version.OCEMR_VERSION
-
-TIME_ZONE='Africa/Kampala'
 
