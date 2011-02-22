@@ -346,11 +346,11 @@ def edit_visit_reason(request, id):
 		'title': 'Edit Visit Reason',
 		'form_action': '/patient/edit_visit_reason/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_merge(request, id):
-	from ocemr.models import *
+	from ocemr.models import Patient, Visit, Vital, Lab, Diagnosis, Med, Referral, ImmunizationLog, Allergy, CashLog
 
 	p = Patient.objects.get(pk=int(id))
 	valid_form=False
@@ -402,7 +402,7 @@ def patient_merge(request, id):
 
 @login_required
 def patient_do_merge(request, id, dupid):
-	from ocemr.models import *
+	from ocemr.models import Patient, Visit, Vital, Lab, Diagnosis, Med, Referral, ImmunizationLog, Allergy, CashLog
 
 	p = Patient.objects.get(pk=int(id))
 	pdup = Patient.objects.get(pk=int(dupid))
