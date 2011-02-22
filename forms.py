@@ -476,6 +476,12 @@ class SelectDateRangeForm(forms.Form):
 	date_start = EuDateFormField(required=False,widget=widgets.CalendarWidget)
 	date_end = EuDateFormField(required=False,widget=widgets.CalendarWidget)
 
+class DiagnosisTallyForm(forms.Form):
+	date_start = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+	date_end = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+	age_min = forms.IntegerField(required=False)
+	age_max = forms.IntegerField(required=False)
+
 class EditMedForm(forms.Form):
         type = forms.CharField(
 			widget=widgets.JQueryAutoContains(

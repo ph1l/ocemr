@@ -158,20 +158,21 @@ def clinician_daily(request):
 def diagnosis_tally(request):
 	"""
 	"""
-	
-	from ocemr.forms import SelectDateRangeForm
+	from ocemr.forms import DiagnosisTallyForm
 	form_valid=0
         if request.method == 'POST':
-                form = SelectDateRangeForm(request.POST)
+                form = DiagnosisTallyForm(request.POST)
                 if form.is_valid():
                         date_start_in = form.cleaned_data['date_start']
 			if form.cleaned_data['date_end']==None:
                         	date_end_in = form.cleaned_data['date_start']
 			else:
                         	date_end_in = form.cleaned_data['date_end']
+			age_min = form.cleaned_data['age_min']
+			age_max = form.cleaned_data['age_max']
 			form_valid=1
         else:
-                form = SelectDateRangeForm()
+                form = DiagnosisTallyForm()
 	if not form_valid:
 	        return render_to_response('popup_form.html', {
 	                'title': 'Enter Date Range For Report',
@@ -199,6 +200,15 @@ def diagnosis_tally(request):
 	from ocemr.models import Visit, Diagnosis
 	q_this_day = ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & (Q(status="CHOT") | Q(status="RESO"))
 	days_visits = Visit.objects.filter(q_this_day)
+	currentYear = datetime.now().year
+	if age_min != None:
+		maxYear = currentYear-age_min
+		q_age_range = Q(patient__birthYear__lte=maxYear)
+		days_visits = days_visits.filter(q_age_range)
+	if age_max != None:
+		minYear = currentYear-age_max
+		q_age_range = Q(patient__birthYear__gte=minYear)
+		days_visits = days_visits.filter(q_age_range)
 	q_dignosis_active = (Q(status="NEW") | Q(status="FOL"))
 	s={}
 	num_visits=0
