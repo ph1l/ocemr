@@ -149,6 +149,7 @@ class CalendarWidget(forms.TextInput):
 			'/js/PopupWindow.js',
 		)
 	def render(self, name, value, attrs=None):
+		from django.utils import formats
 		output = []
 		output.append(
 			"""<SCRIPT LANGUAGE="JavaScript" ID="jscal_%(NAME)s">
@@ -159,11 +160,16 @@ class CalendarWidget(forms.TextInput):
 				'NAME': name,
 			})
 		output.append(super(CalendarWidget, self).render(name, value, attrs))
+		date_format = formats.get_format('DATE_INPUT_FORMATS')[0]
+		js_date_format = date_format.replace('%d','dd').replace('%m','MM').replace('%Y','yyyy').replace('%y','yy')
 		output.append(
 			"""<a href="#"
-				onClick='cal_%(NAME)s.select(document.forms[0].id_%(NAME)s,"%(NAME)s","dd/MM/yyyy"); return false;'
+				onClick='cal_%(NAME)s.select(document.forms[0].id_%(NAME)s,"%(NAME)s","%(DATE_FORMAT)s"); return false;'
 			 name="%(NAME)s" id="%(NAME)s">Show Calendar</a>
 			""" % \
-				{'NAME': name,})
+				{
+					'NAME': name,
+					'DATE_FORMAT': js_date_format,
+				})
 
 		return mark_safe(u''.join(output))

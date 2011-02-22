@@ -34,7 +34,6 @@ from django.db import models
 import datetime
 
 from django.contrib.auth.models import User
-from mydbfields import EuDateField
 
 
 class Village(models.Model):
@@ -54,7 +53,7 @@ class Patient(models.Model):
 	middleName = models.CharField("Middle Name",max_length=128, blank=True)
 	gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
 	birthYear = models.IntegerField("Year of Birth",help_text="Year of Birth or Age")
-	birthDate = EuDateField(blank=True, null=True, help_text="If Available, Not Required")
+	birthDate = models.DateField(blank=True, null=True, help_text="If Available, Not Required")
 	village = models.ForeignKey(Village)
 	createdDateTime = models.DateTimeField(default=datetime.datetime.now)
 	createdBy = models.ForeignKey(User)
@@ -112,7 +111,7 @@ class Visit(models.Model):
 		('MISS',  'Missed'),
 	)
 	patient = models.ForeignKey(Patient)
-	scheduledDate = EuDateField('Date scheduled')
+	scheduledDate = models.DateField('Date scheduled')
 	scheduledBy = models.ForeignKey(User, related_name="visit_scheduled_by")
 	status = models.CharField(max_length=4, choices=VISIT_STATUS_CHOICES, default='SCHE')
 	reason = models.CharField(max_length=3, choices=VISIT_REASON_CHOICES, default='NEW')
