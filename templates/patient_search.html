@@ -14,7 +14,7 @@ window.onload = formfocus;
         <A HREF=/patient_queue/>Patient Queue</A>(search,<a href=/patient/new>add</a>)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>|<A HREF=/reports/>Reports</A>
 {%endblock%}
 {% block content %}
-<form ID=searchForm action="/patient/search/" method="POST">
+<form ID=searchForm action="/patient/search/" method="POST">{% csrf_token %}
 <TABLE>
 {{ form.as_table }}
 </TABLE>

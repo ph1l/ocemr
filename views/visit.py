@@ -200,7 +200,7 @@ def visit_subj_new(request,id, symptomtypeid):
 		'title': 'Add a Symptom: %s'%(st.title),
 		'form_action': '/visit/%d/subj/new/%d/'%(vid,stid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_subj_edit(request,id, visitsymptomid):
@@ -222,7 +222,7 @@ def visit_subj_edit(request,id, visitsymptomid):
 		'title': 'Edit Symptom Notes: %s'%(vs.type.title),
 		'form_action': '/visit/%s/subj/edit/%s/'%(id,visitsymptomid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_subj_delete(request,id, visitsymptomid):
@@ -245,7 +245,7 @@ def visit_subj_delete(request,id, visitsymptomid):
 		'title': 'Delete Symptom: %s'%(o.type.title),
 		'form_action': '/visit/%s/subj/delete/%s/'%(id,visitsymptomid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 	
 
@@ -291,7 +291,7 @@ def visit_obje_vital_new(request,id, vitaltypeid):
 		'title': 'Add a Vital: %s'%(vt),
 		'form_action': '/visit/%d/obje/vital/new/%d/'%(vid,vtid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_obje_vital_delete(request,id, oid):
@@ -314,7 +314,7 @@ def visit_obje_vital_delete(request,id, oid):
 		'title': 'Delete Vital: %s'%(o),
 		'form_action': '/visit/%s/obje/vital/delete/%s/'%(id,oid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 	
 @login_required
@@ -339,7 +339,7 @@ def visit_obje_examNote_new(request,id, examnotetypeid):
 		'title': 'Add an Exam Note: %s'%(ent.title),
 		'form_action': '/visit/%d/obje/examNote/new/%d/'%(vid,entid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_obje_examNote_edit(request,id, examnoteid):
@@ -361,7 +361,7 @@ def visit_obje_examNote_edit(request,id, examnoteid):
 		'title': 'Edit Exam Note: %s'%(en.type.title),
 		'form_action': '/visit/%s/obje/examNote/edit/%s/'%(id,examnoteid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 
 @login_required
@@ -430,7 +430,7 @@ def visit_plan_diag_new(request,id):
                 'title': 'Add a Diagnosis for %s'%(p),
                 'form_action': '/visit/%d/plan/diag/new/'%(v.id),
                 'form': form,
-        })
+        },context_instance=RequestContext(request))
 
 @login_required
 def visit_plan_diag_new_bytype(request, id, dtid):
@@ -488,7 +488,7 @@ def visit_meds_new(request,id,did):
                 'title': 'Add a Med for %s - %s'%(d.patient,d.type.title),
                 'form_action': '/visit/%d/meds/new/%d/'%(d.visit.id,did),
                 'form': form,
-        })
+        },context_instance=RequestContext(request))
 
 
 @login_required
@@ -526,7 +526,7 @@ def visit_refe_new(request,id):
 		'title': 'Add a Referral',
 		'form_action': '/visit/%d/refe/new/'%(vid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_refe_edit(request,id, refid):
@@ -549,7 +549,7 @@ def visit_refe_edit(request,id, refid):
 		'title': 'Edit Referral: %s'%(r),
 		'form_action': '/visit/%s/refe/edit/%s/'%(id,refid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 
 @login_required
@@ -587,7 +587,7 @@ def visit_immu_new(request,id):
 		'title': 'Add an Immunization Log',
 		'form_action': '/visit/%d/immu/new/'%(vid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 
 @login_required
@@ -622,7 +622,7 @@ def visit_allergy_new(request,id):
 		'title': 'Add an Allergy',
 		'form_action': '/visit/%d/allergy/new/'%(vid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_allergy_delete(request,id, oid):
@@ -645,7 +645,7 @@ def visit_allergy_delete(request,id, oid):
 		'title': 'Delete Allergy: %s'%(o.to),
 		'form_action': '/visit/%s/allergy/delete/%s/'%(id,oid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_collect(request,id):
@@ -667,7 +667,7 @@ def visit_collect(request,id):
 		'title': 'Collect',
 		'form_action': '/visit/%d/collect/'%(vid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 	
 
 @login_required
@@ -691,7 +691,7 @@ def visit_bill_amount(request,id):
 		'title': 'Edit Bill Amount',
 		'form_action': '/visit/%d/bill_amount/'%(vid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 	
 
 @login_required

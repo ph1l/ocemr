@@ -116,7 +116,7 @@ def lab_notate(request, id):
 		'title': 'Add an Lab Note: %s'%(l.type.title),
 		'form_action': '/lab/%d/notate/'%(l.id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def lab_complete(request, id):
@@ -139,4 +139,4 @@ def lab_complete(request, id):
 		'title': 'Complete Lab: %s'%(l),
 		'form_action': '/lab/%s/complete/'%(l.id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
