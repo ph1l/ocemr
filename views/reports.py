@@ -111,7 +111,7 @@ def clinician_daily(request):
 	                'title': 'Enter Date For Report',
 	                'form_action': '/reports/clinician/daily/',
 	                'form': form,
-	        })
+	        },context_instance=RequestContext(request))
 	from ocemr.models import Visit, Diagnosis, Med, Referral
 	field_names=[
 		'clinician',
@@ -178,7 +178,7 @@ def diagnosis_tally(request):
 	                'title': 'Enter Date Range For Report',
 	                'form_action': '/reports/diagnosis/tally/',
 	                'form': form,
-	        })
+	        },context_instance=RequestContext(request))
 	dt_start = datetime(
 		date_start_in.year,date_start_in.month,date_start_in.day,
 		0,0,0
@@ -254,7 +254,7 @@ def legacy_patient_daily(request):
 	                'title': 'Enter Date For Report',
 	                'form_action': '/reports/legacy/patient/daily/',
 	                'form': form,
-	        })
+	        },context_instance=RequestContext(request))
 
 
 	from ocemr.models import Visit, Diagnosis, Med, Referral
@@ -368,7 +368,7 @@ def cashflow(request):
 	                'title': 'Enter Date Range For Report',
 	                'form_action': '/reports/cashflow/',
 	                'form': form,
-	        })
+	        },context_instance=RequestContext(request))
 
 	
 	field_names=[
@@ -429,7 +429,7 @@ def accounts_outstanding(request):
 	                'title': 'Enter Date Range For Report',
 	                'form_action': '/reports/accounts_outstanding/',
 	                'form': form,
-	        })
+	        },context_instance=RequestContext(request))
 
 
 	from ocemr.models import Patient, Visit, CashLog

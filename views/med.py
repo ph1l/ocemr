@@ -153,7 +153,7 @@ def med_notate(request, id):
                 'title': 'Add a Med Note: %s'%(m.type.title),
                 'form_action': '/med/%d/notate/'%(m.id),
                 'form': form,
-        })
+        },context_instance=RequestContext(request))
 
 @login_required
 def med_edit(request,id):
@@ -183,5 +183,5 @@ def med_edit(request,id):
 		'title': 'Edit Med',
 		'form_action': '/med/%s/edit/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 

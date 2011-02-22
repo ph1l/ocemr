@@ -24,7 +24,6 @@ from django import forms
 from django.db.models import get_model
 
 from django.contrib.auth.models import User
-from mydbfields import EuDateFormField
 
 
 import widgets
@@ -46,7 +45,7 @@ class EditPatientNameForm(forms.Form):
 
 class EditPatientAgeForm(forms.Form):
 	birthYear = forms.IntegerField(required=False)
-	birthDate = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+	birthDate = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	def clean_birthYear(self):
 		import datetime
 		MAX_AGE=160
@@ -80,7 +79,7 @@ class EditPatientVillageForm(forms.Form):
 class NewScheduledVisitForm(forms.ModelForm):
 	from models import Patient
 	from models import Visit
-        scheduledDate = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+        scheduledDate = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
 	scheduledBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
 	status = forms.CharField(widget=forms.HiddenInput)
@@ -113,7 +112,7 @@ class NewScheduledVisitForm(forms.ModelForm):
 
 class EditScheduledVisitForm(forms.Form):
 	scheduledBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-        scheduledDate = EuDateFormField()
+        scheduledDate = forms.DateField()
         reasonDetail = forms.CharField(widget=forms.Textarea)
 
 	def __init__(self, v, user, *args, **kwargs):
@@ -125,7 +124,7 @@ class EditScheduledVisitForm(forms.Form):
 		self.fields['reasonDetail'].initial=v.reasonDetail
 
 class EditVisitSeenForm(forms.Form):
-        seenDate = EuDateFormField()
+        seenDate = forms.DateField()
         seenTime = forms.TimeField()
 
 
@@ -178,7 +177,7 @@ class NewWalkinVisitForm(forms.ModelForm):
 		return data
 
 class NewPatientForm(forms.ModelForm):
-        birthDate = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+        birthDate = forms.DateField(required=False,widget=widgets.CalendarWidget)
         village = forms.CharField(
 			widget=widgets.JQueryAutoComplete(
 				'/autocomplete_name/ocemr/Village/'
@@ -470,15 +469,15 @@ class EditBillAmountForm(forms.Form):
 		self.fields['amount'].initial = a
 
 class SelectDateForm(forms.Form):
-	date = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+	date = forms.DateField(required=False,widget=widgets.CalendarWidget)
 
 class SelectDateRangeForm(forms.Form):
-	date_start = EuDateFormField(required=False,widget=widgets.CalendarWidget)
-	date_end = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+	date_start = forms.DateField(required=False,widget=widgets.CalendarWidget)
+	date_end = forms.DateField(required=False,widget=widgets.CalendarWidget)
 
 class DiagnosisTallyForm(forms.Form):
-	date_start = EuDateFormField(required=False,widget=widgets.CalendarWidget)
-	date_end = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+	date_start = forms.DateField(required=False,widget=widgets.CalendarWidget)
+	date_end = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	age_min = forms.IntegerField(required=False)
 	age_max = forms.IntegerField(required=False)
 

@@ -93,7 +93,8 @@ def diag_edit_notes(request, id):
 		'title': 'Edit Diagnosis Notes: %s'%(d.type.title),
 		'form_action': '/diag/%d/edit/notes/'%(d.id),
 		'form': form,
-	})
+		} ,context_instance=RequestContext(request)
+	)
 
 @login_required
 def diag_delete(request,id):
@@ -116,5 +117,5 @@ def diag_delete(request,id):
                 'title': 'Delete Diagnosis: %s'%(o),
                 'form_action': '/diag/%s/delete/'%(id),
                 'form': form,
-        })
+        },context_instance=RequestContext(request))
 

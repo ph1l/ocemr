@@ -11,7 +11,18 @@
 <div id="container">
   <DIV ID="titlebar">
     <DIV ID="titlebarLeft"><A HREF=/patient_queue/>OCEMR</A> {% get_version_tag %}</DIV>
-    <DIV ID="titlebarRight">{% if user.is_authenticated %}{{ user.username }} - <A HREF=/accounts/logout/>Logout</A>{% endif %}</DIV>
+    <DIV ID="titlebarRight">{% if user.is_authenticated %}{{ user.username }} -
+<form action="/i18n/setlang/" method="post">
+{% csrf_token %}
+<input name="next" type="hidden" value="{{request.path}}" />
+<select name="language">
+{% for lang in LANGUAGES %}
+<option value="{{ lang.0 }}"{% ifequal LANGUAGE_CODE lang.0 %} SELECTED{% endifequal %}>{{ lang.1 }}</option>
+{% endfor %}
+</select>
+<input type="submit" value="Go" />
+</form>
+- <A HREF=/accounts/logout/>Logout</A>{% endif %}</DIV>
   </DIV> <!-- titlebar -->
   <DIV ID="header">
     <DIV ID="headerLeft">{% now "F j Y" %}</DIV>

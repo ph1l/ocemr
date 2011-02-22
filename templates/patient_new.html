@@ -15,7 +15,7 @@ window.onload = formfocus;
 {%endblock%}
 
 {% block content %}
-<form ID="newPatientForm" action="/patient/new/" method="POST">
+<form ID="newPatientForm" action="/patient/new/" method="POST">{% csrf_token %}
 <TABLE>
 {{ form.as_table }}
 </TABLE>

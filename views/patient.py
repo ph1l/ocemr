@@ -98,7 +98,7 @@ def patient_edit_name(request, id):
 		'title': 'Edit Patient Name',
 		'form_action': '/patient/edit/name/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_edit_age(request, id):
@@ -118,7 +118,7 @@ def patient_edit_age(request, id):
 		'title': 'Edit Patient Age',
 		'form_action': '/patient/edit/age/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_edit_village(request, id):
@@ -137,7 +137,7 @@ def patient_edit_village(request, id):
 		'title': 'Edit Patient Village',
 		'form_action': '/patient/edit/village/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_edit_note(request, id):
@@ -156,7 +156,7 @@ def patient_edit_note(request, id):
 		'title': 'Edit Patient Note',
 		'form_action': '/patient/edit/note/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 
 @login_required
@@ -235,7 +235,7 @@ def schedule_new_visit(request, id):
 		'title': 'Scedule Patient Visit',
 		'form_action': '/patient/schedule_new_visit/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def schedule_walkin_visit(request, id):
@@ -257,7 +257,7 @@ def schedule_walkin_visit(request, id):
 		'title': 'Schedule Patient Visit',
 		'form_action': '/patient/schedule_walkin_visit/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def delete_visit(request, id):
@@ -287,7 +287,7 @@ def delete_visit(request, id):
                 'title': 'Delete Visit: %s'%(o),
                 'form_action': '/patient/delete_visit/%s/'%(id),
                 'form': form,
-        })
+        },context_instance=RequestContext(request))
 
 @login_required
 def edit_visit(request, id):
@@ -308,7 +308,7 @@ def edit_visit(request, id):
 		'title': 'Edit Visit',
 		'form_action': '/patient/edit_visit/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def edit_visit_seen(request, id):
@@ -327,7 +327,7 @@ def edit_visit_seen(request, id):
 		'title': 'Edit Visit seen time',
 		'form_action': '/patient/edit_visit_seen/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def edit_visit_reason(request, id):
@@ -346,11 +346,11 @@ def edit_visit_reason(request, id):
 		'title': 'Edit Visit Reason',
 		'form_action': '/patient/edit_visit_reason/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_merge(request, id):
-	from ocemr.models import *
+	from ocemr.models import Patient, Visit, Vital, Lab, Diagnosis, Med, Referral, ImmunizationLog, Allergy, CashLog
 
 	p = Patient.objects.get(pk=int(id))
 	valid_form=False
@@ -367,7 +367,7 @@ def patient_merge(request, id):
 			'title': 'Merge Patient Records',
 			'form_action': '/patient/merge/%s/'%(id),
 			'form': form,
-		})
+		},context_instance=RequestContext(request))
 	pdup = Patient.objects.get(pk=int(duplicateID))
 	out_txt="Merge %s: %s\n  into %s: %s\n\n"%(pdup.id, pdup, p.id, p)
 
@@ -402,7 +402,7 @@ def patient_merge(request, id):
 
 @login_required
 def patient_do_merge(request, id, dupid):
-	from ocemr.models import *
+	from ocemr.models import Patient, Visit, Vital, Lab, Diagnosis, Med, Referral, ImmunizationLog, Allergy, CashLog
 
 	p = Patient.objects.get(pk=int(id))
 	pdup = Patient.objects.get(pk=int(dupid))
