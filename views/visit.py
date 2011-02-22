@@ -728,8 +728,6 @@ def visit_record(request, id, type):
 	"""
 
 	from ocemr.models import Visit
-	from subprocess import Popen, PIPE
-	from ocemr.settings import PRINTER_NAME
 
 	v = Visit.objects.get(pk=id)
 
@@ -759,10 +757,11 @@ def visit_record(request, id, type):
 	text_out = head_text + summ_text + upco_text
 
 	if type == "print":
-		p = Popen(
-			['enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman12', '--header=', '--media=A4'],
-			stdin=PIPE, stdout=PIPE, close_fds=True
-			)
+		from subprocess import Popen, PIPE
+		from ocemr.settings import PRINTER_NAME, PAPER_SIZE
+		cmd = " ".join( ('enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman12', '--header=', '--media='+PAPER_SIZE) )
+		p = Popen(cmd, shell=True, bufsize=0,
+			stdin=PIPE, stdout=PIPE, close_fds=True)
 		(child_stdin, child_stdout) = (p.stdin, p.stdout)
 		child_stdin.write(text_out)
 		out,err=p.communicate()

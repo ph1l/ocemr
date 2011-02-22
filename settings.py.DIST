@@ -59,6 +59,21 @@ DATABASE_PASSWORD = ''
 DATABASE_HOST = ''             # Set to empty string for localhost.
 DATABASE_PORT = ''             # Set to empty string for default.
 
+
+#
+# OCEMR PRINTER SETTINGS
+#
+# PRINTER_NAME -
+#       Local CUPS printer name for printing records
+#
+# PAPER_SIZE -
+#       Paper Size. 'letter' or 'A4'
+#
+
+PRINTER_NAME = "P1102w"
+PAPER_SIZE = "A4"
+
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
