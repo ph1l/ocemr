@@ -3,15 +3,6 @@
 #
 
 #
-# PRINTER_NAME -
-#       Set the cups printer name of a local printer for printing 
-#       medical records.
-#
-#
-
-PRINTER_NAME = None
-
-#
 # DEBUG -
 #       set debug mode on?
 #
