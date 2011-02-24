@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 {% block title %}System Reports{% endblock %}
 
-{% block extraheader %}
-        <A HREF=/patient_queue/>Patient Queue</A>(<A HREF=/patient/search/>search</a>,<a href=/patient/new>add</a>)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>|<A HREF=/reports/>Reports</A>
-{% endblock %}
-
 {% block content %}
 <UL>
 <LI><A HREF="#" onClick='window.open("/reports/legacy/patient/daily","Get Legacy Daily Report","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Legacy Daily Patient Report</A>

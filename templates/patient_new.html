@@ -10,9 +10,6 @@ function formfocus() {
 window.onload = formfocus;
 </script>
 {%endblock%}
-{% block extraheader %}
-        <A HREF=/patient_queue/>Patient Queue</A>(<A HREF=/patient/search/>search</a>,add)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>|<A HREF=/reports/>Reports</A>
-{%endblock%}
 
 {% block content %}
 <form ID="newPatientForm" action="/patient/new/" method="POST">{% csrf_token %}
