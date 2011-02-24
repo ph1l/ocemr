@@ -2,5 +2,7 @@ v0.4.0 -
         - Updated code to run on python 2.6 and DJANGO 1.2.3
         - Cleaned up and documented default config file (settings.py)
         - New Config Options: PRINTER_NAME, PAPER_SIZE
-	- Created a user_prefs page. (can set language,...)
-	- 
+	- Removed hack for european dates / using language support instead
+	- Created a user_prefs page. (can set language)
+	- Added link to /admin site for 'staff' users
+	- Reformatted user manual in latex.
