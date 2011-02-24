@@ -142,6 +142,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'ocemr.urls'
+FORMAT_MODULE_PATH='ocemr.formats'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".

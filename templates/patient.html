@@ -19,7 +19,7 @@
 {% if p.birthDate %}
 <TR>
     <TD>Birthdate (Age)<A href="#" onClick='window.open("/patient/edit/age/{{p.id}}/","Edit Age","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
-    <TD>{{p.birthDate|date:"d-m-Y"}} ({{p.age}})</TD>
+    <TD>{{p.birthDate|date:"DATE_FORMAT"}} ({{p.age}})</TD>
 {% else %}
 <TR>
     <TD>Approx. Age <A href="#" onClick='window.open("/patient/edit/age/{{p.id}}/","Edit Age","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
@@ -41,7 +41,7 @@
          {{p.get_account_balance}}</TD>
 </TR>
 <TR>
-    <TD COLSPAN=2>Record Created by {{p.createdBy}} on {{p.createdDateTime|date:"d-m H:i"}}</TD>
+    <TD COLSPAN=2>Record Created by {{p.createdBy}} on {{p.createdDateTime|date:"DATETIME_FORMAT"}}</TD>
 </TR>
 </TABLE>
 </TD><TD VALIGN=TOP>
@@ -50,7 +50,7 @@
 {% for v in upcoming_visits %}
 <TR>
   <TD><A HREF=/visit/{{v.id}}>{{ v.id }}</A>
-  <TD>{{ v.scheduledDate|date:"d-m-Y" }} by {{ v.scheduledBy }}
+  <TD>{{ v.scheduledDate|date:"DATE_FORMAT" }} by {{ v.scheduledBy }}
   <TD>{{ v.displayStatus }}
    <TD>{{ v.reason }}
    <TD>{{ v.reasonDetail }} 
@@ -66,7 +66,7 @@
 <TR><TH>Reason<TH>Detail</TR>
 {% for v in visits %}
 <TR>
-   <TD>{{ v.scheduledDate|date:"d-m-Y" }}
+   <TD>{{ v.scheduledDate|date:"DATE_FORMAT" }}
    <TD>{{ v.scheduledBy }}
 
 	{% ifequal v.status "MISS" %}
@@ -81,12 +81,12 @@
 	{% endifequal %}
 	{% endifequal %}
 {{v.displayStatus}} </TD>
-   <TD>{{ v.seenDateTime|date:"d-m H:i" }}
-   <TD>{{ v.claimedDateTime|date:"d-m H:i" }}
+   <TD>{{ v.seenDateTime|date:"DATETIME_FORMAT" }}
+   <TD>{{ v.claimedDateTime|date:"DATETIME_FORMAT" }}
    by {{ v.claimedBy }}
-   <TD>{{ v.finishedDateTime|date:"d-m H:i" }}
+   <TD>{{ v.finishedDateTime|date:"DATETIME_FORMAT" }}
    by {{ v.finishedBy }}
-   <TD>{{ v.resolvedDateTime|date:"d-m H:i" }}
+   <TD>{{ v.resolvedDateTime|date:"DATETIME_FORMAT" }}
    by {{ v.resolvedBy }}
 <TD>{{v.cost}}(<A HREF=# onClick='window.open("/visit/{{v.id}}/bill_amount/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)</TD>
 <TD>
