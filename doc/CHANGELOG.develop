@@ -3,6 +3,8 @@ v0.4.0 -
         - Cleaned up and documented default config file (settings.py)
         - New Config Options: PRINTER_NAME, PAPER_SIZE
 	- Removed hack for european dates / using language support instead
+	- Height, Weight, and Temperature data now require units when adding
+	- Height, Weight, and Temperature data no display in metric and std.
 	- Created a user_prefs page. (can set language)
 	- Added link to /admin site for 'staff' users
 	- Reformatted user manual in latex.
