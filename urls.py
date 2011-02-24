@@ -43,6 +43,7 @@ urlpatterns = patterns('',
 urlpatterns += patterns('ocemr.views.util',
 
     (r'^$', 'index'),
+    (r'^user_prefs/$', 'user_prefs'),
     (r'^autocomplete_name/(?P<inapp>.+)/(?P<inmodel>.+)/$', 'autocomplete_name'),
     (r'^autosearch_title/(?P<inapp>.+)/(?P<inmodel>.+)/$', 'autosearch_title'),
     (r'^blank/$','blank'),

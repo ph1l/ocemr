@@ -12,24 +12,19 @@
   <DIV ID="titlebar">
     <DIV ID="titlebarLeft"><A HREF=/patient_queue/>OCEMR</A> {% get_version_tag %}</DIV>
     <DIV ID="titlebarRight">{% if user.is_authenticated %}{{ user.username }} -
-<form action="/i18n/setlang/" method="post">
-{% csrf_token %}
-<input name="next" type="hidden" value="{{request.path}}" />
-<select name="language">
-{% for lang in LANGUAGES %}
-<option value="{{ lang.0 }}"{% ifequal LANGUAGE_CODE lang.0 %} SELECTED{% endifequal %}>{{ lang.1 }}</option>
-{% endfor %}
-</select>
-<input type="submit" value="Go" />
-</form>
+LANG: <A HREF=/user_pref/>{{LANGUAGE_CODE}}</A>
 - <A HREF=/accounts/logout/>Logout</A>{% endif %}</DIV>
   </DIV> <!-- titlebar -->
   <DIV ID="header">
     <DIV ID="headerLeft">{% now "F j Y" %}</DIV>
     <DIV ID="headerRight">{% now "H:i" %}</DIV>
   </div> <!-- header -->
-  <DIV ID="extraHeader">
-    {% block extraheader %}{% endblock %}
+  <DIV ID="extraHeader">{% block extraheader %}
+    <A HREF=/patient_queue/>Patient Queue</a>(<A HREF=/patient/search/>search</a>,<a href=/patient/new>add</a>)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>|<A HREF=/reports/>Reports</A>|<A HREF=/user_prefs/>User Prefs</A>
+{% if request.user.is_staff %}
+|<A HREF=/admin/>Admin</A>
+{% endif %}
+{% endblock %}
   </DIV> <!-- extraHeader -->
   <DIV ID="content">
     {% block content %}{% endblock %}
