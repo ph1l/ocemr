@@ -1,4 +1,5 @@
 {% extends "base_visit.html" %}
+{% load display_vitals %}
 {% block visitExtrahead %}
 <link href="/css/visit_obje.css" rel="stylesheet" />
 {% endblock %}
@@ -13,7 +14,7 @@ Add Vital:
 <TABLE>
 <TR><TH>Time<TH>Type<TH>Data<TH></TR>
 {% for V in vitals %}
-<TR><TD>{{V.observedDateTime|date:"d-m H:i"}}<TD>{{V.type}}<TD>{{V.data}}
+<TR><TD>{{V.observedDateTime|date:"d-m H:i"}}<TD>{{V.type}}<TD>{% display_vital V.data V.type.title %}
 <TD><A HREF="#" onClick='window.open("/visit/{{v.id}}/obje/vital/delete/{{V.id}}/","Delete Vital","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>del</A>
 </TR>
 {% endfor %}

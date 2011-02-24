@@ -276,18 +276,36 @@ class NewVitalForm(forms.ModelForm):
                 exclude = [ 'observedDateTime', 'data']
 
 	def clean_data_in(self):
-		data = self.cleaned_data['data_in']
+		data = str(self.cleaned_data['data_in'])
 		#raise forms.ValidationError("DATA:%s"%(data))
 		from models import VitalType
 		vt = self.cleaned_data['type']
 		if vt.title == "Temp":
+			if data.strip()[-1].lower() == 'f':
+				d = (float(data.strip()[0:-1])-32.0)*(5.0/9.0)
+			elif data.strip()[-1].lower() == 'c':
+				d = float(data.strip()[0:-1])
+			else:
+				raise forms.ValidationError("Please include a unit (c or f).")
+		elif vt.title == "Weight":
+			if data.strip()[-2].lower() == 'l':
+				d = float(data.strip()[0:-2])/2.205
+			elif data.strip()[-2].lower() == 'k':
+				d = float(data.strip()[0:-2])
+			else:
+				raise forms.ValidationError("Please include a unit (kg or lb).")
+		elif vt.title == "Height":
+			if data.strip()[-2].lower() == 'i':
+				d = float(data.strip()[0:-2])*2.54
+			elif data.strip()[-2].lower() == 'c':
+				d = float(data.strip()[0:-2])
+			else:
+				raise forms.ValidationError("Please include a unit (cm or in).")
+		else:
 			try:
-				d = float(data)
-			except ValueError:
-				if data.strip()[-1].lower() == 'f':
-					d = round((float(data.strip()[0:-1])-32.0)*(5.0/9.0),2)
-				else:
-					raise forms.ValidationError("Can only convert F to C.")
+				d = float(data.strip())
+			except:
+				raise forms.ValidationError("Please enter a number only.")
 		self.instance.data=d
 		return d
 
