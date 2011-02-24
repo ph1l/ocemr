@@ -13,7 +13,7 @@
   <DIV ID="titlebar">
     <DIV ID="titlebarLeft"><A HREF=/patient_queue/>OCEMR</A> {% get_version_tag %}</DIV>
     <DIV ID="titlebarRight">{% if user.is_authenticated %}{{ user.username }} -
-LANG: <A HREF=/user_pref/>{{LANGUAGE_CODE}}</A>
+LANG: <A HREF=/user_prefs/>{{LANGUAGE_CODE}}</A>
 - <A HREF=/accounts/logout/>Logout</A>{% endif %}</DIV>
   </DIV> <!-- titlebar -->
   <DIV ID="header">
