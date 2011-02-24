@@ -1,4 +1,5 @@
 {% load version %}
+{% load main_menu %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -19,10 +20,20 @@ LANG: <A HREF=/user_pref/>{{LANGUAGE_CODE}}</A>
     <DIV ID="headerLeft">{% now "F j Y" %}</DIV>
     <DIV ID="headerRight">{% now "H:i" %}</DIV>
   </div> <!-- header -->
-  <DIV ID="extraHeader">{% block extraheader %}
-    <A HREF=/patient_queue/>Patient Queue</a>(<A HREF=/patient/search/>search</a>,<a href=/patient/new>add</a>)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>|<A HREF=/reports/>Reports</A>|<A HREF=/user_prefs/>User Prefs</A>
+  <DIV ID="extraHeader">
+
+{% block extraheader %}
+	{% menu_item /patient_queue/ "Patient Queue" request.path_info %}
+	(
+	{% menu_item /patient/search/ "search" request.path_info %},
+	{% menu_item /patient/new/ "add" request.path_info %}
+	)
+	| {% menu_item /lab_queue/ "Lab Queue" request.path_info %}
+	| {% menu_item /med_queue/ "Med Queue" request.path_info %}
+	| {% menu_item /reports/ "Reports" request.path_info %}
+	| {% menu_item /user_prefs/ "User Prefs" request.path_info %}
 {% if request.user.is_staff %}
-|<A HREF=/admin/>Admin</A>
+| <A HREF=/admin/>Admin</A>
 {% endif %}
 {% endblock %}
   </DIV> <!-- extraHeader -->
