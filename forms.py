@@ -262,6 +262,7 @@ class NewVitalForm(forms.ModelForm):
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
 	visit = forms.ModelChoiceField(queryset=Visit.objects.all(),widget=forms.HiddenInput)
 	observedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+	data_in = forms.CharField()
 	def __init__(self, v, vt, user, *args, **kwargs):
 		
 		super(NewVitalForm, self).__init__(*args, **kwargs)
@@ -272,7 +273,24 @@ class NewVitalForm(forms.ModelForm):
 
 	class Meta:
 		model = get_model('ocemr','Vital')
-                exclude = [ 'observedDateTime']
+                exclude = [ 'observedDateTime', 'data']
+
+	def clean_data_in(self):
+		data = self.cleaned_data['data_in']
+		#raise forms.ValidationError("DATA:%s"%(data))
+		from models import VitalType
+		vt = self.cleaned_data['type']
+		if vt.title == "Temp":
+			try:
+				d = float(data)
+			except ValueError:
+				if data.strip()[-1].lower() == 'f':
+					d = round((float(data.strip()[0:-1])-32.0)*(5.0/9.0),2)
+				else:
+					raise forms.ValidationError("Can only convert F to C.")
+		self.instance.data=d
+		return d
+
 
 class NewExamNoteForm(forms.ModelForm):
 	from models import Visit, ExamNoteType, Patient
