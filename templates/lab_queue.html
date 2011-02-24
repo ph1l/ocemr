@@ -16,7 +16,7 @@
 <TR><TH></TH><TH COLSPAN=6>Notes</TH></TR>
 {% for l in labs_active %}
 <TR>
-<TD>{{l.orderedDateTime|date:"d-m H:i"}}</TD>
+<TD>{{l.orderedDateTime|date:"DATETIME_FORMAT"}}</TD>
 <TD><A HREF=/patient/{{l.patient.id}}/>{{ l.patient }}</A></TD>
 <TD>{{ l.type }}</TD>
 <TD>{{l.orderedBy}}
@@ -64,7 +64,7 @@
 	<TD COLSPAN=5>
           {% for n in l.get_notes %}
             <DIV ID=labNote>
-                {{n.addedDateTime|date:"d-m H:i"}} |
+                {{n.addedDateTime|date:"DATETIME_FORMAT"}} |
                 {{n.addedBy}} |
                 "{{n.note}}"
 
@@ -83,7 +83,7 @@ Resolved:
 <TR><TH></TH><TH COLSPAN=6>Notes</TH></TR>
 {% for l in labs_inactive %}
 <TR>
-<TD>{{l.orderedDateTime|date:"d-m H:i"}}</TD>
+<TD>{{l.orderedDateTime|date:"DATETIME_FORMAT"}}</TD>
 <TD><A HREF=/patient/{{l.patient.id}}/>{{ l.patient }}</A></TD>
 <TD>{{ l.type }}</TD>
 <TD>{{l.orderedBy}}
@@ -113,7 +113,7 @@ Resolved:
 	<TD COLSPAN=5>
           {% for n in l.get_notes %}
             <DIV ID=labNote>
-                {{n.addedDateTime|date:"d-m H:i"}} |
+                {{n.addedDateTime|date:"DATETIME_FORMAT"}} |
                 {{n.addedBy}} |
                 "{{n.note}}"
 

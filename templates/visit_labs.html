@@ -20,7 +20,7 @@ Order a Lab:
 	<TD>
 	    {% for ln in L.get_notes %}
 	    <DIV ID=labNote>
-		"{{ln.note}}" by {{ln.addedBy}} @{{ln.addedDateTime|date:"d-m H:i"}}
+		"{{ln.note}}" by {{ln.addedBy}} @{{ln.addedDateTime|date:"DATETIME_FORMAT"}}
 	    </DIV>
 	    {% endfor %}
 	<TD>{{L.result}}

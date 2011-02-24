@@ -3,7 +3,7 @@
 
 {% for pv in v.get_past_visits %}
 
-<h2>{{pv.scheduledDate|date:"d-m-Y"}}</h2>
+<h2>{{pv.scheduledDate|date:"DATE_FORMAT"}}</h2>
 <PRE>
 {{pv.get_summary_text}}
 </PRE>

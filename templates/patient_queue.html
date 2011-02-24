@@ -15,7 +15,7 @@
 Showing Data For:
 (
 <A HREF=/patient_queue/{{dayoffset_prev}}/>&#60;prev</A>
-{{d_today|date:"d-m-Y"}}
+{{d_today|date:"DATE_FORMAT"}}
 <A HREF=/patient_queue/{{dayoffset_next}}/>next&#62;</A>
 )
 </DIV>
@@ -27,7 +27,7 @@ Showing Data For:
 <TR><TH>Seen</TH><TH>Patient Id</TH><TH>Status</TH><TH>Claimed</TH><TH>Labs</TH><TH>Actions</TH></TR>
 {% for v in visits %}
 <TR>
-<TD>{{v.seenDateTime|date:"d-m H:i"}}</TD>
+<TD>{{v.seenDateTime|date:"DATETIME_FORMAT"}}</TD>
 <TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
 	{% ifequal v.status "MISS" %}
 		<TD STYLE='background-color:#FF5555;'>
@@ -79,7 +79,7 @@ Showing Data For:
 <TR><TH>Scheduled</TH><TH>Patient Id</TH><TH>Actions</TH></TR>
 {% for v in s_visits %}
 <TR>
-<TD>{{v.scheduledDate|date:"d-m-Y"}}</TD>
+<TD>{{v.scheduledDate|date:"DATE_FORMAT"}}</TD>
 <TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
 <TD><A HREF=# onClick='window.open("/visit/{{v.id}}/seen/","Seen Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Seen</A>
 	| <A HREF=# onClick='window.open("/visit/{{v.id}}/finish/","Patient Missed","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>No-Show</A>
@@ -95,7 +95,7 @@ Showing Data For:
 <TR><TH>Finished</TH><TH>Patient Id</TH><TH>Status</TH><TH>Finished By</TH><TH>Meds</TH><TH>Actions</TH></TR>
 {% for v in r_visits %}
 <TR>
-<TD>{{v.finishedDateTime|date:"d-m H:i"}}</TD>
+<TD>{{v.finishedDateTime|date:"DATETIME_FORMAT"}}</TD>
 <TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
 	{% ifequal v.status "MISS" %}
 		<TD STYLE='background-color:#FF5555;'>

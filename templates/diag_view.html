@@ -12,7 +12,7 @@
   <DIV ID=diagnosisNotes>
   {% for diag in diags %}
   <DIV ID=diagnosisNote>
-    {{diag.diagnosedDateTime|date:"d-m H:i"}} - {{diag.displayStatus}} - {{diag.diagnosedBy}}<BR>
+    {{diag.diagnosedDateTime|date:"DATETIME_FORMAT"}} - {{diag.displayStatus}} - {{diag.diagnosedBy}}<BR>
     "{{diag.notes}}"
   </DIV>
   {% endfor %}

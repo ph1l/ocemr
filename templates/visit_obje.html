@@ -14,7 +14,7 @@ Add Vital:
 <TABLE>
 <TR><TH>Time<TH>Type<TH>Data<TH></TR>
 {% for V in vitals %}
-<TR><TD>{{V.observedDateTime|date:"d-m H:i"}}<TD>{{V.type}}<TD>{% display_vital V.data V.type.title %}
+<TR><TD>{{V.observedDateTime|date:"DATETIME_FORMAT"}}<TD>{{V.type}}<TD>{% display_vital V.data V.type.title %}
 <TD><A HREF="#" onClick='window.open("/visit/{{v.id}}/obje/vital/delete/{{V.id}}/","Delete Vital","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>del</A>
 </TR>
 {% endfor %}
@@ -30,7 +30,7 @@ Add Exam Note:
 {% for EN in examNotes %}
 <DIV ID=examNote>
 <SPAN ID=examNoteType>{{EN.type}}</SPAN>(<A HREF="#" onClick='window.open("/visit/{{v.id}}/obje/examNote/edit/{{EN.id}}/","Edit Exam Note","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)
-<SPAN ID=examNoteByline>by {{EN.addedBy}} on {{EN.addedDateTime|date:"d-m H:i"}}</SPAN><BR>
+<SPAN ID=examNoteByline>by {{EN.addedBy}} on {{EN.addedDateTime|date:"DATETIME_FORMAT"}}</SPAN><BR>
 <TEXTAREA style="width: 95%;" DISABLED>{{EN.note}}</TEXTAREA><BR>
 </DIV> <!-- examNote -->
 {% endfor %}
