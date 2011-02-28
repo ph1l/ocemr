@@ -4,17 +4,31 @@
 {% endblock %}
 {% block visitContent %}
 <DIV ID=vitals>
-Add Vital:
-<UL class="SubMenu">
-{% for VT in vitalTypes %}
-<LI class="SubMenuItem"><A class="SubMenuItem" HREF="#" onClick='window.open("/visit/{{v.id}}/obje/vital/new/{{VT.id}}/","New Vital","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>{{VT.title}}</A></LI>
-{% endfor %}
-</UL>
+<A HREF="#" onClick='window.open("/visit/{{v.id}}/obje/vitals/new/","New Vitals","menubar=no,width=540,height=480,toolbar=no,scrollbars=yes");'>Add Vitals</A>
+{% comment %}
+  Add Vital:
+  <UL class="SubMenu">
+  {% for VT in vitalTypes %}
+  <LI class="SubMenuItem"><A class="SubMenuItem" HREF="#" onClick='window.open("/visit/{{v.id}}/obje/vital/new/{{VT.id}}/","New Vital","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>{{VT.title}}</A></LI>
+  {% endfor %}
+  </UL>
+  <TABLE>
+  <TR><TH>Time<TH>Type<TH>Data<TH></TR>
+  {% for V in vitals %}
+  <TR><TD>{{V.observedDateTime|date:"DATETIME_FORMAT"}}<TD>{{V.type}}<TD>{{V.get_display_data}}
+  <TD><A HREF="#" onClick='window.open("/visit/{{v.id}}/obje/vital/delete/{{V.id}}/","Delete Vital","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>del</A>
+  </TR>
+  {% endfor %}
+  </TABLE>
+{% endcomment %}
 <TABLE>
-<TR><TH>Time<TH>Type<TH>Data<TH></TR>
-{% for V in vitals %}
-<TR><TD>{{V.observedDateTime|date:"DATETIME_FORMAT"}}<TD>{{V.type}}<TD>{{V.get_display_data}}
-<TD><A HREF="#" onClick='window.open("/visit/{{v.id}}/obje/vital/delete/{{V.id}}/","Delete Vital","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>del</A>
+{% for vt, vital_list in vital_times %}
+<TR><TD>{{vt}}<TD>
+{% for V in vital_list %}
+{{V.type}}:
+{{V.get_display_data}}
+<A HREF="#" onClick='window.open("/visit/{{v.id}}/obje/vital/delete/{{V.id}}/","Delete Vital","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>del</A>,
+{% endfor %}
 </TR>
 {% endfor %}
 </TABLE>

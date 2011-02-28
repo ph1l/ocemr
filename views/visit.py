@@ -262,7 +262,12 @@ def visit_obje(request,id):
 	p = v.patient
 
 	vitalTypes = VitalType.objects.all()
-	vitals = Vital.objects.filter(visit=v)
+	vital_times_in = Vital.objects.filter(visit=v).values('observedDateTime').distinct()
+	vital_times = []
+	for vt in vital_times_in:
+		vitals = Vital.objects.filter(visit=v, observedDateTime=vt['observedDateTime'])
+		vital_times.append( [ vt['observedDateTime'], vitals ] )
+	#vitals = Vital.objects.filter(visit=v)
 
 	examNoteTypes = ExamNoteType.objects.all()
 	examNotes = ExamNote.objects.filter(visit=v)
@@ -270,29 +275,125 @@ def visit_obje(request,id):
 	return render_to_response('visit_obje.html', locals(),context_instance=RequestContext(request))
 
 @login_required
-def visit_obje_vital_new(request,id, vitaltypeid):
+def visit_obje_vitals_new(request,id):
 	"""
 	"""
-	from ocemr.models import VitalType, Visit
-	from ocemr.forms import NewVitalForm
+	from ocemr.models import Vital, VitalType, Visit
+	from ocemr.forms import NewVitalsForm
 	vid=int(id)
-	vtid=int(vitaltypeid)
 	v=Visit.objects.get(pk=vid)
-	vt=VitalType.objects.get(pk=vtid)
 
 	if request.method == 'POST': # If the form has been submitted...
-		form = NewVitalForm(v, vt, request.user, request.POST) # A form bound to the POST data
+		form = NewVitalsForm(v, request.user, request.POST) # A form bound to the POST data
 		if form.is_valid(): # All validation rules pass
-			o = form.save()
+			#form.cleaned_data['']
+			p = form.cleaned_data['patient']
+			vis = form.cleaned_data['visit']
+			dt = form.cleaned_data['observedDateTime']
+			u = form.cleaned_data['observedBy']
+			# Temp
+			data = form.cleaned_data['temp_in']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='Temp')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['bloodPressureSystolic']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='BP - Systolic')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['bloodPressureDiastolic']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='BP - Diastolic')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['heartRate']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='HR')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['respiratoryRate']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='RR')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['height_in']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='Height')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['weight_in']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='Weight')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
 			return HttpResponseRedirect('/close_window/')
 	else:
-		form = NewVitalForm(v, vt, request.user) # An unbound form
+		form = NewVitalsForm(v, request.user) # An unbound form
 	return render_to_response('popup_form.html', {
-		'title': 'Add a Vital: %s'%(vt),
-		'form_action': '/visit/%d/obje/vital/new/%d/'%(vid,vtid),
+		'title': 'Add Vitals',
+		'form_action': '/visit/%d/obje/vitals/new/'%(vid),
 		'form': form,
 	},context_instance=RequestContext(request))
 
+#@login_required
+#def visit_obje_vital_new(request,id, vitaltypeid):
+#	"""
+#	"""
+#	from ocemr.models import VitalType, Visit
+#	from ocemr.forms import NewVitalForm
+#	vid=int(id)
+#	vtid=int(vitaltypeid)
+#	v=Visit.objects.get(pk=vid)
+#	vt=VitalType.objects.get(pk=vtid)
+#
+#	if request.method == 'POST': # If the form has been submitted...
+#		form = NewVitalForm(v, vt, request.user, request.POST) # A form bound to the POST data
+#		if form.is_valid(): # All validation rules pass
+#			o = form.save()
+#			return HttpResponseRedirect('/close_window/')
+#	else:
+#		form = NewVitalForm(v, vt, request.user) # An unbound form
+#	return render_to_response('popup_form.html', {
+#		'title': 'Add a Vital: %s'%(vt),
+#		'form_action': '/visit/%d/obje/vital/new/%d/'%(vid,vtid),
+#		'form': form,
+#	},context_instance=RequestContext(request))
+#
 @login_required
 def visit_obje_vital_delete(request,id, oid):
 	"""

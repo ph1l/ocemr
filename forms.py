@@ -256,45 +256,74 @@ class ConfirmDeleteForm(forms.Form):
 		required=False
 	)
 
-class NewVitalForm(forms.ModelForm):
-	from models import Visit, VitalType, Patient
-	type = forms.ModelChoiceField(queryset=VitalType.objects.all(),widget=forms.HiddenInput)
+class NewVitalsForm(forms.Form):
+	from models import Visit, Patient
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
 	visit = forms.ModelChoiceField(queryset=Visit.objects.all(),widget=forms.HiddenInput)
 	observedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-	data_in = forms.CharField()
-	def __init__(self, v, vt, user, *args, **kwargs):
+	observedDateTime = forms.DateTimeField(widget=forms.HiddenInput,required=False)
+
+	temp_in = forms.CharField(
+		label="Temp",
+		help_text="in celcius or fahrenheit. (valid examples \"98.7f\" or \"37 c\".)",
+		required=False
+		)
+	bloodPressureSystolic = forms.IntegerField(
+		label="BP-Systolic",
+		help_text="in hhmg.",
+required=False
+		)
+	bloodPressureDiastolic = forms.IntegerField(
+		label="BP-Diastolic",
+		help_text="in hhmg.",
+		required=False
+		)
+	heartRate = forms.IntegerField(
+		label="Heart Rate",
+		help_text="in beats per minute.",
+		required=False
+		)
+	respiratoryRate = forms.IntegerField(
+		label="Respiratory Rate",
+		help_text="in breaths per minute.",
+		required=False
+		)
+	height_in = forms.CharField(
+		label="Height",
+		help_text="in centimeters or inches. (valid examples \"177 cm\" or \"70.25in\".)",
+		required=False
+		)
+	weight_in = forms.CharField(
+		label="Weight",
+		help_text="in kilograms or pounds. (valid examples \"77.5 kg\" or \"150lb\".)",
+		required=False
+		)
+
+	def __init__(self, v, user, *args, **kwargs):
 		
-		super(NewVitalForm, self).__init__(*args, **kwargs)
-		self.fields['type'].initial=vt.id
+		super(NewVitalsForm, self).__init__(*args, **kwargs)
 		self.fields['visit'].initial=v.id
 		self.fields['patient'].initial=v.patient.id
 		self.fields['observedBy'].initial=user.id
 
-	class Meta:
-		model = get_model('ocemr','Vital')
-                exclude = [ 'observedDateTime', 'data']
-
-	def clean_data_in(self):
-		data = str(self.cleaned_data['data_in'])
-		#raise forms.ValidationError("DATA:%s"%(data))
-		from models import VitalType
-		vt = self.cleaned_data['type']
-		if vt.title == "Temp":
+	def clean_observedDateTime(self):
+		from datetime import datetime
+		return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+	def clean_temp_in(self):
+		data = str(self.cleaned_data['temp_in'])
+		if len(data) > 0:
 			if data.strip()[-1].lower() == 'f':
 				d = (float(data.strip()[0:-1])-32.0)*(5.0/9.0)
 			elif data.strip()[-1].lower() == 'c':
 				d = float(data.strip()[0:-1])
 			else:
 				raise forms.ValidationError("Please include a unit (c or f).")
-		elif vt.title == "Weight":
-			if data.strip()[-2].lower() == 'l':
-				d = float(data.strip()[0:-2])/2.205
-			elif data.strip()[-2].lower() == 'k':
-				d = float(data.strip()[0:-2])
-			else:
-				raise forms.ValidationError("Please include a unit (kg or lb).")
-		elif vt.title == "Height":
+		else:
+			return ""
+		return d
+	def clean_height_in(self):
+		data = str(self.cleaned_data['height_in'])
+		if len(data) > 0:
 			if data.strip()[-2].lower() == 'i':
 				d = float(data.strip()[0:-2])*2.54
 			elif data.strip()[-2].lower() == 'c':
@@ -302,14 +331,75 @@ class NewVitalForm(forms.ModelForm):
 			else:
 				raise forms.ValidationError("Please include a unit (cm or in).")
 		else:
-			try:
-				d = float(data.strip())
-			except:
-				raise forms.ValidationError("Please enter a number only.")
-		self.instance.data=d
+			return ""
+		return d
+	def clean_weight_in(self):
+		data = str(self.cleaned_data['weight_in'])
+		if len(data) > 0:
+			if data.strip()[-2].lower() == 'l':
+				d = float(data.strip()[0:-2])/2.205
+			elif data.strip()[-2].lower() == 'k':
+				d = float(data.strip()[0:-2])
+			else:
+				raise forms.ValidationError("Please include a unit (kg or lb).")
+		else:
+			return ""
 		return d
 
-
+#class NewVitalForm(forms.ModelForm):
+#	from models import Visit, VitalType, Patient
+#	type = forms.ModelChoiceField(queryset=VitalType.objects.all(),widget=forms.HiddenInput)
+#	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
+#	visit = forms.ModelChoiceField(queryset=Visit.objects.all(),widget=forms.HiddenInput)
+#	observedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+#	data_in = forms.CharField()
+#	def __init__(self, v, vt, user, *args, **kwargs):
+#		
+#		super(NewVitalForm, self).__init__(*args, **kwargs)
+#		self.fields['type'].initial=vt.id
+#		self.fields['visit'].initial=v.id
+#		self.fields['patient'].initial=v.patient.id
+#		self.fields['observedBy'].initial=user.id
+#
+#	class Meta:
+#		model = get_model('ocemr','Vital')
+#                exclude = [ 'observedDateTime', 'data']
+#
+#	def clean_data_in(self):
+#		data = str(self.cleaned_data['data_in'])
+#		#raise forms.ValidationError("DATA:%s"%(data))
+#		from models import VitalType
+#		vt = self.cleaned_data['type']
+#		if vt.title == "Temp":
+#			if data.strip()[-1].lower() == 'f':
+#				d = (float(data.strip()[0:-1])-32.0)*(5.0/9.0)
+#			elif data.strip()[-1].lower() == 'c':
+#				d = float(data.strip()[0:-1])
+#			else:
+#				raise forms.ValidationError("Please include a unit (c or f).")
+#		elif vt.title == "Weight":
+#			if data.strip()[-2].lower() == 'l':
+#				d = float(data.strip()[0:-2])/2.205
+#			elif data.strip()[-2].lower() == 'k':
+#				d = float(data.strip()[0:-2])
+#			else:
+#				raise forms.ValidationError("Please include a unit (kg or lb).")
+#		elif vt.title == "Height":
+#			if data.strip()[-2].lower() == 'i':
+#				d = float(data.strip()[0:-2])*2.54
+#			elif data.strip()[-2].lower() == 'c':
+#				d = float(data.strip()[0:-2])
+#			else:
+#				raise forms.ValidationError("Please include a unit (cm or in).")
+#		else:
+#			try:
+#				d = float(data.strip())
+#			except:
+#				raise forms.ValidationError("Please enter a number only.")
+#		self.instance.data=d
+#		return d
+#
+#
 class NewExamNoteForm(forms.ModelForm):
 	from models import Visit, ExamNoteType, Patient
 	type = forms.ModelChoiceField(queryset=ExamNoteType.objects.all(),widget=forms.HiddenInput)

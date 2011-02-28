@@ -4,6 +4,7 @@ v0.4.0 -
         - New Config Options: PRINTER_NAME, PAPER_SIZE
 	- Removed hack for european dates / using language support instead
 	- Convert Dates to display based on current locale
+	- Vitals get added from one large form instead of individual forms
 	- Height, Weight, and Temperature data now require units when adding
 	- Height, Weight, and Temperature data no display in metric and std.
 	- Created a user_prefs page. (can set language)
