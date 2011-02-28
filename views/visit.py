@@ -739,6 +739,10 @@ def visit_record(request, id, type):
 """
 	head_text += "\tPatient: %s\tVisit# %05d\tDate: %02d-%02d-%02d\n"%(v.patient,v.id,
 		v.scheduledDate.day, v.scheduledDate.month, v.scheduledDate.year)
+	allergy_list = []
+	for a in v.patient.get_allergies():
+		 allergy_list.append(a.to)
+	head_text += "\t\tAllergies: %s\n"%(", ".join(allergy_list))
 	summ_text = v.get_summary_text()
 	next_visits = Visit.objects.filter(patient=v.patient,scheduledDate__gt=v.scheduledDate)
 	upco_text=""
