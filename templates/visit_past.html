@@ -1,14 +1,48 @@
 {% extends "base_visit.html" %}
+{% block visitExtrahead %}
+<link href="/css/visit_past.css" rel="stylesheet" />
+{% endblock %}
 {% block visitContent %}
-
+<DIV ID=pastVisits>
+<TABLE>
+  <TR>
+    <TH>Scheduled
+    <TH>Seen
+    <TH>Claimed
+    <TH>Finished
+    <TH>Resolved
+    <TH>Status
+  </TR>
+  <TR>
+  <TD COLSPAN=6>
+  </TR>
 {% for pv in v.get_past_visits %}
-
-<h2>{{pv.scheduledDate|date:"DATE_FORMAT"}}</h2>
+  <TR>
+    <TH>{{pv.scheduledDate|date:"DATE_FORMAT"}}</TH>
+    <TH>{{pv.seenDateTime|date:"DATETIME_FORMAT"}}</TH>
+    <TH>{{pv.claimedDateTime|date:"DATETIME_FORMAT"}} by {{pv.claimedBy}}</TH>
+    <TH>{{pv.finishedDateTime|date:"DATETIME_FORMAT"}} by {{pv.finishedBy}}</TH>
+    <TH>{{pv.resolvedDateTime|date:"DATETIME_FORMAT"}} by {{pv.resolvedBy}}</TH>
+	{% ifequal pv.status "MISS" %}
+		<TH STYLE='background-color:#FF5555;'>
+	{% else %} {% ifequal pv.status "RESO" %}
+		<TH STYLE='background-color:#55FF55;'>
+	{% else %}
+		<TH STYLE='background-color:#FFFF55;'>
+	{% endifequal %}
+	{% endifequal %}
+{{pv.displayStatus}} </TH>
+  </TR>
+  <TR>
+    <TD COLSPAN=6>
 <PRE>
-{{pv.get_summary_text}}
-</PRE>
+{{pv.reason}} -- {{pv.reasonDetail}}
 
+{{pv.get_summary_text}}</PRE>
+    </TD>
+  </TR>
 {% endfor %}
-
+</TABLE>
+</DIV>
 {% endblock %}
 

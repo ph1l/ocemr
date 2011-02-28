@@ -8,6 +8,7 @@ v0.4.0 -
 	- Height, Weight, and Temperature data no display in metric and std.
 	- Created a user_prefs page. (can set language)
 	- Added link to /admin site for 'staff' users
-	- Make Allergies display in red on chart
+	- Redesigned Past Visits Page
+	- Made Allergies display in red on chart
 	- Add Allergies list to Visit Record
 	- Reformatted user manual in latex.
