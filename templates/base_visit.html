@@ -9,7 +9,9 @@
 {% block content %}
 <DIV ID="allergies">Allergies (<A HREF="#" onClick='window.open("/visit/{{v.id}}/allergy/new/","New Allergy","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</a>):
 {% for a in p.get_allergies %}
+<SPAN ID="allergy">
 {{a.to}}<A HREF="#" onClick='window.open("/visit/{{v.id}}/allergy/delete/{{a.id}}/","Delete Allergy","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>-</a> &nbsp;
+</SPAN>
 {% endfor  %}
 </DIV>
 <DIV ID="problemList">
