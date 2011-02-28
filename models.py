@@ -283,7 +283,7 @@ class Visit(models.Model):
 		vitals = Vital.objects.filter(visit=self)
 		out_txt += "O:"
 		for vital in vitals:
-			out_txt += " %s: %s" %(vital.type.title, vital.data)
+			out_txt += " %s: %s" %(vital.type.title, vital.get_display_data())
 		out_txt += "\n"
 		examNotes = ExamNote.objects.filter(visit=self)
 		for examNote in examNotes:
@@ -328,9 +328,20 @@ class Vital(models.Model):
 	observedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	observedBy = models.ForeignKey(User)
 	data = models.FloatField()
+
 	def __unicode__(self):
 		return "%f%s"%(self.data,self.type.unit)
-	
+
+	def get_display_data(self):
+		if self.type.title == "Temp":
+			return "%.2fc (%.1ff)"%(self.data, round( ((self.data*9/5)+32), 2) )
+		elif self.type.title == "Weight":
+			return "%.2fkg (%.1flb)"%(self.data, round( self.data*2.205,2))
+		elif self.type.title == "Height":
+			return "%.1fcm (%.2fin)"%(self.data, round( self.data/2.54,2))
+		else:
+			return "%.2f"%(self.data)
+
 class LabType(models.Model):
 	title = models.CharField(max_length=128)
 	def __unicode__(self):
