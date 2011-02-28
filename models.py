@@ -319,7 +319,7 @@ class VitalType(models.Model):
 	minValue = models.FloatField(default=-1024)
 	maxValue = models.FloatField(default=1024)
 	def __unicode__(self):
-		return "%s (%s)"%(self.title,self.unit)
+		return "%s"%(self.title)
 
 class Vital(models.Model):
 	type = models.ForeignKey(VitalType)
