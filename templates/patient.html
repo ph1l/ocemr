@@ -40,6 +40,7 @@
 <TR>
     <TD COLSPAN=2>Record Created by {{p.createdBy}} on {{p.createdDateTime|date:"DATETIME_FORMAT"}}</TD>
 </TR>
+<TR><TD COLSPAN=2><A HREF="#" onClick='window.open("/graphs/vitals/{{p.id}}/","Vitals Graphs","menubar=no,width=780,height=540,toolbar=no,scrollbars=yes");'>Show Historical Vitals Graphs</A></TD></TR>
 </TABLE>
 </TD><TD VALIGN=TOP>
 <TABLE>Scheduled Visits(<A HREF="#" onClick='window.open("/patient/schedule_new_visit/{{p.id}}/","Add Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Schedule Future Visit</a>):

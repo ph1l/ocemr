@@ -144,3 +144,12 @@ urlpatterns += patterns('ocemr.views.reports',
     (r'^reports/cashflow/$', 'cashflow'),
     (r'^reports/accounts_outstanding/$', 'accounts_outstanding'),
 )
+
+urlpatterns += patterns('ocemr.views.graphs',
+    (r'^graphs/test_matplotlib/$', 'test_matplotlib'),
+    (r'^graphs/vitals/(?P<id>\d+)/bp.png$', 'vitals_bp'),
+    (r'^graphs/vitals/(?P<id>\d+)/temp.png$', 'vitals_temp'),
+    (r'^graphs/vitals/(?P<id>\d+)/hrrr.png$', 'vitals_hrrr'),
+    (r'^graphs/vitals/(?P<id>\d+)/bmi.png$', 'vitals_bmi'),
+    (r'^graphs/vitals/(?P<id>\d+)/$', 'vitals_graphs_index'),
+)

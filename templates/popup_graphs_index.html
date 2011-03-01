@@ -1,0 +1,10 @@
+{% extends "base_popup.html" %}
+
+{% block content %}
+<a href="#" onClick='opener.window.location.reload();self.close();return false;'>Close</a>
+<IMG SRC=/graphs/vitals/{{id}}/bp.png>
+<IMG SRC=/graphs/vitals/{{id}}/temp.png>
+<IMG SRC=/graphs/vitals/{{id}}/bmi.png>
+<IMG SRC=/graphs/vitals/{{id}}/hrrr.png>
+<a href="#" onClick='opener.window.location.reload();self.close();return false;'>Close</a>
+{% endblock %}
