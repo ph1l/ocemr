@@ -30,11 +30,11 @@ from django.utils.simplejson import JSONEncoder
 class JQueryAutoComplete(forms.TextInput):
 	class Media:
 		js = (
-			'/js/jquery-1.4.2.js',
-			'/js/jquery.autocomplete.js',
+			'/media/ocemr/js/jquery-1.4.2.js',
+			'/media/ocemr/js/jquery.autocomplete.js',
 		)
 		css = {
-			'all': ('/css/jquery.autocomplete.css',),
+			'all': ('/media/ocemr/css/jquery.autocomplete.css',),
 		}
 	def __init__(self, source, options={}, attrs={}):
 		"""source can be a list containing the autocomplete values or a
@@ -84,11 +84,11 @@ class JQueryAutoComplete(forms.TextInput):
 class JQueryAutoContains(forms.TextInput):
 	class Media:
 		js = (
-			'/js/jquery-1.4.2.js',
-			'/js/jquery.autocomplete.js',
+			'/media/ocemr/js/jquery-1.4.2.js',
+			'/media/ocemr/js/jquery.autocomplete.js',
 		)
 		css = {
-			'all': ('/css/jquery.autocomplete.css',),
+			'all': ('/media/ocemr/css/jquery.autocomplete.css',),
 		}
 	def __init__(self, source, options={}, attrs={}):
 		"""source can be a list containing the autocomplete values or a
@@ -143,10 +143,10 @@ class CalendarWidget(forms.TextInput):
 	"""
 	class Media:
 		js = (
-			'/js/CalendarPopup.js',
-			'/js/AnchorPosition.js',
-			'/js/date.js',
-			'/js/PopupWindow.js',
+			'/media/ocemr/js/CalendarPopup.js',
+			'/media/ocemr/js/AnchorPosition.js',
+			'/media/ocemr/js/date.js',
+			'/media/ocemr/js/PopupWindow.js',
 		)
 	def render(self, name, value, attrs=None):
 		from django.utils import formats
