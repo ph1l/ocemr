@@ -14,4 +14,6 @@ v0.4.0 -
 	- Redesigned Past Visits Page
 	- Made Allergies display in red on chart
 	- Add Allergies list to Visit Record
+	- Added Clinician Tally Report.
+	- Updated Tally Reports to provide CSV, direct display, or pie graphs.
 	- Reformatted user manual in latex.

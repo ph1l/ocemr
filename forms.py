@@ -601,11 +601,27 @@ class SelectDateRangeForm(forms.Form):
 	date_start = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	date_end = forms.DateField(required=False,widget=widgets.CalendarWidget)
 
-class DiagnosisTallyForm(forms.Form):
+class ClinicianTallyReportForm(forms.Form):
+	date_start = forms.DateField(required=False,widget=widgets.CalendarWidget)
+	date_end = forms.DateField(required=False,widget=widgets.CalendarWidget)
+	dump_type = forms.ChoiceField(choices=(
+				('TABLE', 'display'),
+				('CSV', 'csv'),
+				('G_PIE', 'Pie Graph'),
+			)
+		)
+
+class DiagnosisTallyReportForm(forms.Form):
 	date_start = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	date_end = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	age_min = forms.IntegerField(required=False)
 	age_max = forms.IntegerField(required=False)
+	dump_type = forms.ChoiceField(choices=(
+				('TABLE', 'display'),
+				('CSV', 'csv'),
+				('G_PIE', 'Pie Graph'),
+			)
+		)
 
 class EditMedForm(forms.Form):
         type = forms.CharField(
