@@ -12,6 +12,12 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 #
+# Session Security
+#
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+#
 # ADMINS-
 #       set name and email addresses of administrators
 #
