@@ -6,7 +6,13 @@ Preparing the Environment
 
  -  Install Prerequisites:
 
-    $ sudo apt-get install python-django python-sqlite
+    $ sudo apt-get install python-django python-sqlite python-matplotlib 
+
+ -  Install a Database:
+
+    $ sudo apt-get install python-sqlite 
+
+    $ sudo apt-get install python-mysqldb mysql-server mysql-client
 
  -  Git a copy of the software:
 
@@ -55,8 +61,8 @@ Setting up the Database
     Superuser created successfully.
     ...
 
-Running the Server
-------------------
+Running the Testing Server
+---------------------------
 
  -  Run the server 
 
@@ -69,4 +75,24 @@ Running the Server
     Quit the server with CONTROL-C.
 
  -  Goto http://127.0.0.1:8000/ in your browser.
+
+Running under Apace
+-------------------
+
+ -  Add the following to your /etc/apache2/sites-available/default
+
+    <Location "/">
+      SetHandler python-program
+      PythonHandler django.core.handlers.modpython
+      SetEnv DJANGO_SETTINGS_MODULE ocemr.settings
+      #SetEnv MATPLOTLIBDATA "/usr/share/matplotlib/"
+      SetEnv HOME "/tmp"
+      PythonDebug On
+      PythonPath "['/home/test/apps'] + sys.path"
+    </Location>
+
+    <Location "/media">
+      SetHandler None
+    </Location>
+
 
