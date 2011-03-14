@@ -10,11 +10,12 @@
 		- remove patients who dont show up at the end of the day.
 		- remove the 'scheduled' section from the patient queue.
 
--Software Design
-	-General
+- Software Design
+	- Read-Only Live Mirror Support ???
+	- User Interface
 		- Force Popup Windows to foreground?
 			( could also move to a DHTML window instead...)
-	-Reports
+	- Reporting
 		- Legacy Monthly Report
 			( This still required? )
-		- 
+		- repeated symptom report?
