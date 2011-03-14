@@ -1,3 +1,15 @@
+-Functionality Requests
+	-Patient Demographics:
+		-edit the sex of our patients
+			(in case we make a mistake while registering them)
+		-collect contact information?
+			- phone number
+			- email address
+			- other?
+	-Patient Queue
+		- remove patients who dont show up at the end of the day.
+		- remove the 'scheduled' section from the patient queue.
+
 -Software Design
 	-General
 		- Force Popup Windows to foreground?
@@ -5,3 +17,4 @@
 	-Reports
 		- Legacy Monthly Report
 			( This still required? )
+		- 
