@@ -13,6 +13,10 @@
     <TD>Name <a href="#" onClick='window.open("/patient/edit/name/{{p.id}}/","Edit Name","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
     <TD>{{p.fullName}}</TD>
 </TR>
+<TR>
+    <TD>Gender <a href="#" onClick='window.open("/patient/edit/gender/{{p.id}}/","Edit Gender","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
+    <TD>{{p.gender}}</TD>
+</TR>
 {% if p.birthDate %}
 <TR>
     <TD>Birthdate (Age)<A href="#" onClick='window.open("/patient/edit/age/{{p.id}}/","Edit Age","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>

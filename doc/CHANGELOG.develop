@@ -9,6 +9,7 @@ v0.4.0 -
 	- Height, Weight, and Temperature data now require units when adding
 	- Height, Weight, and Temperature data no display in metric and std.
 	- Historical Graphing for patient vital statistics
+	- Can edit patient's gender from demographics page
 	- Created a user_prefs page. (can set language)
 	- Added link to /admin site for 'staff' users
 	- Redesigned Past Visits Page

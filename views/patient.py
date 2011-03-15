@@ -101,6 +101,25 @@ def patient_edit_name(request, id):
 	},context_instance=RequestContext(request))
 
 @login_required
+def patient_edit_gender(request, id):
+	from ocemr.models import Patient
+
+	p = Patient.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditPatientGenderForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			p.gender = form.cleaned_data['gender']
+			p.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditPatientGenderForm(initial={'gender': p.gender}) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Patient Gender',
+		'form_action': '/patient/edit/gender/%s/'%(id),
+		'form': form,
+	},context_instance=RequestContext(request))
+
+@login_required
 def patient_edit_age(request, id):
 	from ocemr.models import Patient
 
