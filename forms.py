@@ -43,6 +43,10 @@ class EditPatientNameForm(forms.Form):
 	givenName = forms.CharField(label='First Name')
 	middleName = forms.CharField(label='Middle Name',required=False)
 
+class EditPatientGenderForm(forms.Form):
+	from models import Patient
+	gender = forms.ChoiceField(label='Gender',choices=Patient.GENDER_CHOICES)
+
 class EditPatientAgeForm(forms.Form):
 	birthYear = forms.IntegerField(required=False)
 	birthDate = forms.DateField(required=False,widget=widgets.CalendarWidget)
