@@ -48,8 +48,17 @@ def patient_queue(request,dayoffset=0):
 
 	active_q = Q(status='WAIT') | Q(status='INPR')
 	scheduled_q = Q(scheduledDate__lte=d_upcoming.date) & Q(status='SCHE')
+	missed_q = Q(scheduledDate__lte=d_missed.date) & Q(status='SCHE')
 	resolved_q =  ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & ( Q(status='MISS') | Q(status='CHOT') | Q(status='RESO') )
 	
+	# Cleanup missed visits
+	for mv in Visit.objects.filter(missed_q):
+		mv.status = 'MISS'
+		# finished by noone
+		#mv.finishedBy = request.user
+		mv.finishedDateTime = datetime.now()
+		mv.save()
+
 	visits = Visit.objects.filter(active_q).order_by('seenDateTime')
 	s_visits = Visit.objects.filter(scheduled_q).order_by('scheduledDate', 'id')
 	r_visits = Visit.objects.filter(resolved_q).order_by('-finishedDateTime')
