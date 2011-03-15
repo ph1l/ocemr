@@ -57,6 +57,7 @@
    <TD>{{ v.reason }}
    <TD>{{ v.reasonDetail }} 
   <TD>
+<A HREF=# onClick='window.open("/visit/{{v.id}}/seen/","Seen Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Seen</A> |
 <A HREF="#" onClick='window.open("/patient/edit_visit/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit</a> |
 <A HREF="#" onClick='window.open("/patient/delete_visit/{{v.id}}/","Delete Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Delete</a>
 {% endfor %}
@@ -115,7 +116,8 @@
    <TD><A HREF=/visit/{{v.id}}>View Chart</A> |
 {% ifequal v.status 'WAIT' %}
    <A HREF="#" onClick='window.open("/patient/edit_visit/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Details</a> |
-   <A HREF="#" onClick='window.open("/patient/edit_visit_seen/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Seen Time</a>
+   <A HREF="#" onClick='window.open("/patient/edit_visit_seen/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Seen Time</a> |
+<A HREF=# onClick='window.open("/visit/{{v.id}}/unseen/","Undo Seen","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Seen</A>
 {% else %}
    <A HREF="#" onClick='window.open("/patient/edit_visit_reason/{{v.id}}/","Edit Visit Reason","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Reason</a>
 {% endifequal %}
