@@ -39,7 +39,7 @@
   <BR>
   (<A HREF="#" onClick='window.open("/diag/{{d.id}}/edit/notes/","Edit Diagnosis Notes","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit notes</A> | <A HREF="#" onClick='window.open("/diag/{{d.id}}/history/","View Diagnosis History","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>view history</A>)
   <BR>
-  <SPAN ID=diagnosisByline>by {{d.diagnosedBy}} on {{d.diagnosedDateTime|date:"DATETIME_FORMAT"}}</SPAN>
+  <SPAN ID=diagnosisByline>by {{d.diagnosedBy}} on {{d.diagnosedDateTime|date:"SHORT_DATETIME_FORMAT"}}</SPAN>
   </DIV> <!-- ID=diagnosisActive -->
 
 {% endfor %}

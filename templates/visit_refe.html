@@ -8,7 +8,7 @@
 <DIV ID=referral>
 <SPAN ID=referralType>{{r.to}} (<A HREF="#" onClick='window.open("/visit/{{v.id}}/refe/edit/{{r.id}}","Edit Referral","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)</SPAN><BR>
 <SPAN ID=referralReason>{{r.reason}}</TEXTAREA><BR>
-<SPAN ID=referralByline>by {{r.addedBy}} on {{r.addedDateTime|date:"DATETIME_FORMAT"}}</SPAN>
+<SPAN ID=referralByline>by {{r.addedBy}} on {{r.addedDateTime|date:"SHORT_DATETIME_FORMAT"}}</SPAN>
 </DIV> <!-- referral -->
 {% endfor %}
 

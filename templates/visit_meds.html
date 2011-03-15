@@ -36,7 +36,7 @@
 		<TR><TD COLSPAN=4>
 		{% for n in m.get_notes %}
 		    <DIV ID=medNote>
-	                "{{n.note}}" by {{n.addedBy}} @{{n.addedDateTime|date:"DATETIME_FORMAT"}}
+	                "{{n.note}}" by {{n.addedBy}} @{{n.addedDateTime|date:"SHORT_DATETIME_FORMAT"}}
 	            </DIV>
 
 		{% endfor %}

@@ -18,11 +18,11 @@
   </TR>
 {% for pv in v.get_past_visits %}
   <TR>
-    <TH>{{pv.scheduledDate|date:"DATE_FORMAT"}}</TH>
-    <TH>{{pv.seenDateTime|date:"DATETIME_FORMAT"}}</TH>
-    <TH>{{pv.claimedDateTime|date:"DATETIME_FORMAT"}} by {{pv.claimedBy}}</TH>
-    <TH>{{pv.finishedDateTime|date:"DATETIME_FORMAT"}} by {{pv.finishedBy}}</TH>
-    <TH>{{pv.resolvedDateTime|date:"DATETIME_FORMAT"}} by {{pv.resolvedBy}}</TH>
+    <TH>{{pv.scheduledDate|date:"SHORT_DATE_FORMAT"}}</TH>
+    <TH>{{pv.seenDateTime|date:"SHORT_DATETIME_FORMAT"}}</TH>
+    <TH>{{pv.claimedDateTime|date:"SHORT_DATETIME_FORMAT"}} by {{pv.claimedBy}}</TH>
+    <TH>{{pv.finishedDateTime|date:"SHORT_DATETIME_FORMAT"}} by {{pv.finishedBy}}</TH>
+    <TH>{{pv.resolvedDateTime|date:"SHORT_DATETIME_FORMAT"}} by {{pv.resolvedBy}}</TH>
 	{% ifequal pv.status "MISS" %}
 		<TH STYLE='background-color:#FF5555;'>
 	{% else %} {% ifequal pv.status "RESO" %}

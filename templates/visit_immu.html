@@ -7,7 +7,7 @@
 {% for il in immunizationLogs %}
 <DIV ID=immunizationLogs>
 <TEXTAREA DISABLED>{{il.description}}</TEXTAREA><BR>
-<SPAN ID=immunizationLogsByline>by {{il.addedBy}} on {{il.addedDateTime|date:"DATETIME_FORMAT"}}</SPAN>
+<SPAN ID=immunizationLogsByline>by {{il.addedBy}} on {{il.addedDateTime|date:"SHORT_DATETIME_FORMAT"}}</SPAN>
 </DIV> <!-- immunizationLogs -->
 {% endfor %}
 

@@ -20,7 +20,7 @@
 {% if p.birthDate %}
 <TR>
     <TD>Birthdate (Age)<A href="#" onClick='window.open("/patient/edit/age/{{p.id}}/","Edit Age","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
-    <TD>{{p.birthDate|date:"DATE_FORMAT"}} ({{p.age}})</TD>
+    <TD>{{p.birthDate|date:"SHORT_DATE_FORMAT"}} ({{p.age}})</TD>
 {% else %}
 <TR>
     <TD>Approx. Age <A href="#" onClick='window.open("/patient/edit/age/{{p.id}}/","Edit Age","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
@@ -42,7 +42,7 @@
          {{p.get_account_balance}}</TD>
 </TR>
 <TR>
-    <TD COLSPAN=2>Record Created by {{p.createdBy}} on {{p.createdDateTime|date:"DATETIME_FORMAT"}}</TD>
+    <TD COLSPAN=2>Record Created by {{p.createdBy}} on {{p.createdDateTime|date:"SHORT_DATETIME_FORMAT"}}</TD>
 </TR>
 <TR><TD COLSPAN=2><A HREF="#" onClick='window.open("/graphs/vitals/{{p.id}}/","Vitals Graphs","menubar=no,width=780,height=540,toolbar=no,scrollbars=yes");'>Show Historical Vitals Graphs</A></TD></TR>
 </TABLE>
@@ -52,7 +52,7 @@
 {% for v in upcoming_visits %}
 <TR>
   <TD><A HREF=/visit/{{v.id}}>{{ v.id }}</A>
-  <TD>{{ v.scheduledDate|date:"DATE_FORMAT" }} by {{ v.scheduledBy }}
+  <TD>{{ v.scheduledDate|date:"SHORT_DATE_FORMAT" }} by {{ v.scheduledBy }}
   <TD>{{ v.displayStatus }}
    <TD>{{ v.reason }}
    <TD>{{ v.reasonDetail }} 
@@ -69,7 +69,7 @@
 <TR><TH>Reason<TH>Detail</TR>
 {% for v in visits %}
 <TR>
-   <TD>{{ v.scheduledDate|date:"DATE_FORMAT" }}
+   <TD>{{ v.scheduledDate|date:"SHORT_DATE_FORMAT" }}
    <TD>{{ v.scheduledBy }}
 
 	{% ifequal v.status "MISS" %}
@@ -87,12 +87,12 @@
 	{% endifequal %}
 	{% endifequal %}
 {{v.displayStatus}} </TD>
-   <TD>{{ v.seenDateTime|date:"DATETIME_FORMAT" }}
-   <TD>{{ v.claimedDateTime|date:"DATETIME_FORMAT" }}
+   <TD>{{ v.seenDateTime|date:"SHORT_DATETIME_FORMAT" }}
+   <TD>{{ v.claimedDateTime|date:"SHORT_DATETIME_FORMAT" }}
    by {{ v.claimedBy }}
-   <TD>{{ v.finishedDateTime|date:"DATETIME_FORMAT" }}
+   <TD>{{ v.finishedDateTime|date:"SHORT_DATETIME_FORMAT" }}
    by {{ v.finishedBy }}
-   <TD>{{ v.resolvedDateTime|date:"DATETIME_FORMAT" }}
+   <TD>{{ v.resolvedDateTime|date:"SHORT_DATETIME_FORMAT" }}
    by {{ v.resolvedBy }}
 <TD>{{v.cost}}(<A HREF=# onClick='window.open("/visit/{{v.id}}/bill_amount/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)</TD>
 <TD>
