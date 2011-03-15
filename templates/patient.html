@@ -33,6 +33,18 @@
 </TD>
     <TD>{{p.village}}</TD>
 </TR>
+<TR>
+	<TD>Phone
+		<a href="#" onClick='window.open("/patient/edit/phone/{{p.id}}/","Edit ","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a>
+	</TD>
+	<TD>{{p.phone}}</TD>
+</TR>
+<TR>
+	<TD>e-mail
+		<a href="#" onClick='window.open("/patient/edit/email/{{p.id}}/","Edit ","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a>
+	</TD>
+	<TD>{{p.email}}</TD>
+</TR>
 <TR><TD>Account Balance</TD>
 {% if p.isNegative %}
     <TD STYLE="color: RED;">
