@@ -73,22 +73,6 @@ Showing Data For:
 
 
 
-{% if s_visits %}
-<DIV STYLE="font-size: 1.2em;">Scheduled({{num_scheduled}}):</DIV>
-<TABLE>
-<TR><TH>Scheduled</TH><TH>Patient Id</TH><TH>Actions</TH></TR>
-{% for v in s_visits %}
-<TR>
-<TD>{{v.scheduledDate|date:"DATE_FORMAT"}}</TD>
-<TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
-<TD><A HREF=# onClick='window.open("/visit/{{v.id}}/seen/","Seen Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Seen</A>
-	| <A HREF=# onClick='window.open("/visit/{{v.id}}/finish/","Patient Missed","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>No-Show</A>
-</TR>
-{% endfor %}
-</TABLE>
-{% endif %}
-
-
 {% if r_visits %}
 <DIV STYLE="font-size: 1.2em;">Inactive({{num_inactive}}):</DIV>
 <TABLE>
