@@ -1,0 +1,2 @@
+sqlite> ALTER TABLE ocemr_patient add column "phone" varchar(32) NOT NULL default ""; ALTER TABLE ocemr_patient add column "email" varchar(75) NOT NULL default "";
+

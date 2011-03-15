@@ -58,6 +58,8 @@ class Patient(models.Model):
 	createdDateTime = models.DateTimeField(default=datetime.datetime.now)
 	createdBy = models.ForeignKey(User)
 	scratchNote = models.TextField(blank=True)
+	phone = models.CharField(max_length=32, blank=True)
+	email = models.EmailField(blank=True)
 	def __unicode__(self):
 		return '%s (%s-%d) %s' % (self.fullName, self.gender, self.age, self.village.name)
 	def _get_age(self):
