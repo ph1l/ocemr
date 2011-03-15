@@ -7,8 +7,8 @@
 			- email address
 			- other?
 	-Patient Queue
-		- remove patients who dont show up at the end of the day.
-		- remove the 'scheduled' section from the patient queue.
+		X remove patients who dont show up at the end of the day.
+		X remove the 'scheduled' section from the patient queue.
 
 - Software Design
 	- Read-Only Live Mirror Support ???
