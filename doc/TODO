@@ -1,8 +1,8 @@
 -Functionality Requests
 	-Patient Demographics:
-		-edit the sex of our patients
+		- edit the sex of our patients
 			(in case we make a mistake while registering them)
-		-collect contact information?
+		- collect contact information?
 			- phone number
 			- email address
 			- other?
@@ -19,3 +19,4 @@
 		- Legacy Monthly Report
 			( This still required? )
 		- repeated symptom report?
+		- BMI graph for <20 yo's
