@@ -76,10 +76,13 @@
 		<TD STYLE='background-color:#FF5555;'>
 	{% else %} {% ifequal v.status "INPR" %}
 		<TD STYLE='background-color:#77FF77;'>
+	{% else %} {% ifequal v.status "CHOT" %}
+		<TD STYLE='background-color:#77FF77;'>
 	{% else %} {% ifequal v.status "WAIT" %}
 		<TD STYLE='background-color:#FFFF55;'>
 	{% else %}
 		<TD STYLE='background-color:#FFFFFF;'>
+	{% endifequal %}
 	{% endifequal %}
 	{% endifequal %}
 	{% endifequal %}
@@ -113,17 +116,32 @@
 		
 {% endifequal %}
 </TD>
-   <TD><A HREF=/visit/{{v.id}}>View Chart</A> |
-{% ifequal v.status 'WAIT' %}
-   <A HREF="#" onClick='window.open("/patient/edit_visit/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Details</a> |
-   <A HREF="#" onClick='window.open("/patient/edit_visit_seen/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Seen Time</a> |
-<A HREF=# onClick='window.open("/visit/{{v.id}}/unseen/","Undo Seen","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Seen</A>
-{% else %}
-   <A HREF="#" onClick='window.open("/patient/edit_visit_reason/{{v.id}}/","Edit Visit Reason","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Reason</a>
+<TD>
+{% ifequal v.status 'MISS' %}
+	<A HREF=# onClick='window.open("/visit/{{v.id}}/unfinish/","Unfinish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Miss</A>
+{% else %}{% ifequal v.status 'WAIT' %}
+	<A HREF=/visit/{{v.id}}>View Chart</A>
+	|
+	<A HREF="#" onClick='window.open("/patient/edit_visit_reason/{{v.id}}/","Edit Visit Reason","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Reason</a>
+	|
+	<A HREF="#" onClick='window.open("/patient/edit_visit_seen/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Seen Time</a>
+{% else %} {% ifequal v.status 'INPR' %}
+	<A HREF=/visit/{{v.id}}>View Chart</A>
+	|
+	<A HREF="#" onClick='window.open("/patient/edit_visit_reason/{{v.id}}/","Edit Visit Reason","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Reason</a>
+{% else %} {% ifequal v.status 'CHOT' %}
+	<A HREF=/visit/{{v.id}}>View Chart</A>
+	|
+{% else %} {% ifequal v.status 'RESO' %}
+	<A HREF=/visit/{{v.id}}>View Chart</A>
+	|
+	<A HREF=# onClick='window.open("/visit/{{v.id}}/record/print/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Print-Rec</A>
+	|
+	<A HREF=# onClick='window.open("/visit/{{v.id}}/record/view/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>View-Rec</A>
 {% endifequal %}
-{% ifequal v.status 'RESO' %}
-		| <A HREF=# onClick='window.open("/visit/{{v.id}}/record/print/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Print-Rec</A>
-		| <A HREF=# onClick='window.open("/visit/{{v.id}}/record/view/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>View-Rec</A>
+{% endifequal %}
+{% endifequal %}
+{% endifequal %}
 {% endifequal %}
 </TR>
 <TR>
