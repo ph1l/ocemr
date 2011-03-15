@@ -33,28 +33,37 @@ from django.views.decorators.cache import cache_page
 def patient_queue(request,dayoffset=0):
 	"""
 	"""
+	from datetime import datetime, timedelta
+	from ocemr.models import Visit
+
+	d_today = datetime.today()
+
+	# Cleanup missed visits
+	d_missed = d_today-timedelta(7)
+	missed_q = Q(scheduledDate__lte=d_missed.date) & Q(status='SCHE')
+	for mv in Visit.objects.filter(missed_q):
+		mv.status = 'MISS'
+		# finished by noone
+		#mv.finishedBy = request.user
+		mv.finishedDateTime = datetime.now()
+		mv.save()
+
 	dayoffset = int(dayoffset)
 	dayoffset_prev = dayoffset-1
 	dayoffset_next = dayoffset+1
-	from datetime import datetime, timedelta
-	d_today = datetime.today()+timedelta(dayoffset)
-	d_missed = d_today-timedelta(7)
-	d_upcoming = d_today+timedelta(1)
+
+	# Update "today" to be whenever we're offset to
+	d_today += timedelta(dayoffset)
 
 	dt_start = datetime(d_today.year,d_today.month,d_today.day,0,0,0)
         dt_end = datetime(d_today.year,d_today.month,d_today.day,23,59,59)
 
-	from ocemr.models import Visit
-
 	active_q = Q(status='WAIT') | Q(status='INPR')
-	scheduled_q = Q(scheduledDate__lte=d_upcoming.date) & Q(status='SCHE')
-	resolved_q =  ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & ( Q(status='MISS') | Q(status='CHOT') | Q(status='RESO') )
-	
+	resolved_q =  ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & ( Q(status='CHOT') | Q(status='RESO') )
+
 	visits = Visit.objects.filter(active_q).order_by('seenDateTime')
-	s_visits = Visit.objects.filter(scheduled_q).order_by('scheduledDate', 'id')
 	r_visits = Visit.objects.filter(resolved_q).order_by('-finishedDateTime')
 	num_active = len(visits)
-	num_scheduled = len(s_visits)
 	num_inactive = len(r_visits)
 
 	return render_to_response(

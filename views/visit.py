@@ -117,6 +117,8 @@ def visit_unfinish(request,id):
 
 	v = Visit.objects.get(pk=id)
 	if v.status == 'MISS':
+		from datetime import datetime
+		v.seenDateTime = datetime.now()
 		v.status = 'WAIT'
 	else:
 		v.status = 'INPR'
