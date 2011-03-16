@@ -129,6 +129,44 @@ def patient_edit_gender(request, id):
 	},context_instance=RequestContext(request))
 
 @login_required
+def patient_edit_phone(request, id):
+	from ocemr.models import Patient
+
+	p = Patient.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditPatientPhoneForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			p.phone = form.cleaned_data['phone']
+			p.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditPatientPhoneForm(initial={'phone': p.phone}) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Patient Phone',
+		'form_action': '/patient/edit/phone/%s/'%(id),
+		'form': form,
+	},context_instance=RequestContext(request))
+
+@login_required
+def patient_edit_email(request, id):
+	from ocemr.models import Patient
+
+	p = Patient.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditPatientEmailForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			p.email = form.cleaned_data['email']
+			p.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditPatientEmailForm(initial={'email': p.email}) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Patient E-Mail',
+		'form_action': '/patient/edit/email/%s/'%(id),
+		'form': form,
+	},context_instance=RequestContext(request))
+
+@login_required
 def patient_edit_age(request, id):
 	from ocemr.models import Patient
 
