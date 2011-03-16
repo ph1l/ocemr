@@ -2,9 +2,9 @@
 	-Patient Demographics:
 		X edit the sex of our patients
 			(in case we make a mistake while registering them)
-		- collect contact information?
-			- phone number
-			- email address
+		X collect contact information?
+			X phone number
+			X email address
 			- other?
 	-Patient Queue
 		X remove patients who dont show up at the end of the day.

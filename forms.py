@@ -78,7 +78,11 @@ class EditPatientVillageForm(forms.Form):
 			v.save()
 		return v
 
+class EditPatientPhoneForm(forms.Form):
+	phone = forms.CharField(label='Phone')
 
+class EditPatientEmailForm(forms.Form):
+	email = forms.EmailField(label='e-mail')
 
 class NewScheduledVisitForm(forms.ModelForm):
 	from models import Patient

@@ -12,6 +12,7 @@ v0.4.0 -
 	- Removed 'Scheduled' section from patient_queue.
 	- Added 'Seen' to the scheduled visits on patient demographic page
 	- Can edit patient's gender from demographics page
+	- Added contact phone and email fields to Patient
 	- Created a user_prefs page. (can set language)
 	- Added link to /admin site for 'staff' users
 	- Redesigned Past Visits Page
