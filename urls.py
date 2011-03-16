@@ -153,6 +153,6 @@ urlpatterns += patterns('ocemr.views.graphs',
     (r'^graphs/vitals/(?P<id>\d+)/bp.png$', 'vitals_bp'),
     (r'^graphs/vitals/(?P<id>\d+)/temp.png$', 'vitals_temp'),
     (r'^graphs/vitals/(?P<id>\d+)/hrrr.png$', 'vitals_hrrr'),
-    (r'^graphs/vitals/(?P<id>\d+)/bmi.png$', 'vitals_bmi'),
+    (r'^graphs/vitals/(?P<id>\d+)/hw.png$', 'vitals_height_weight'),
     (r'^graphs/vitals/(?P<id>\d+)/$', 'vitals_graphs_index'),
 )

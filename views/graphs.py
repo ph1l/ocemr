@@ -68,25 +68,34 @@ def vitals_bp(request, id):
 		bpD_date_list.append(v.observedDateTime)
 		bpD_data_list.append(v.data)
 
-	import matplotlib.pyplot as plt
 	import matplotlib
+	matplotlib.use('Agg')
+	import matplotlib.pyplot as plt
 
-	fig = plt.figure(num=1,figsize=(10,4),dpi=75)
+	fig = plt.figure(figsize=(10,5),dpi=75)
+	fig.interactive = False
+	
 	plt.title('Blood Pressure History for %s'%(p))
 	plt.grid(True)
 	plt.axhspan(ymin=90, ymax=140, color='b',alpha=.2)
 	plt.axhspan(ymin=60, ymax=90, color='g',alpha=.2)
 	plt.axhline(y=120, color='b')
 	plt.axhline(y=80, color='g')
-	plt.plot(bpS_date_list, bpS_data_list, 'o-', color='r')
-	plt.plot(bpD_date_list, bpD_data_list, 'o-', color='m')
+	plt.plot(bpS_date_list, bpS_data_list, 'o-', color='r', label="systolic")
+	plt.plot(bpD_date_list, bpD_data_list, 'o-', color='m', label="diastolic")
 	plt.ylabel('mmHg')
+	plt.legend(loc=0)
 	fig.autofmt_xdate()
 
+	fig.text(0.15, 0.33, 'OCEMR',
+		fontsize=150, color='gray',
+		alpha=0.07)
+
+	plt.draw()
 	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
 	response = HttpResponse(content_type='image/png')
 	canvas.print_png(response)
-	matplotlib.pyplot.close(fig)
+	plt.close(fig)
 	return response
 
 
@@ -103,18 +112,26 @@ def vitals_temp(request, id):
 		temp_date_list.append(v.observedDateTime)
 		temp_data_list.append(v.data)
 
-	import matplotlib.pyplot as plt
 	import matplotlib
+	matplotlib.use('Agg')
+	import matplotlib.pyplot as plt
 
-	fig = plt.figure(num=1,figsize=(10,4),dpi=75)
+	fig = plt.figure(num=1,figsize=(10,5),dpi=75)
+	fig.interactive = False
 	plt.title('Temperature History for %s'%(p))
 	plt.grid(True)
 	plt.axhspan(ymin=36.3, ymax=37.3, color='g',alpha=.5)
 	plt.axhline(y=37, color='g')
-	plt.plot(temp_date_list,temp_data_list, 'o-', color='r')
+	plt.plot(temp_date_list,temp_data_list, 'o-', color='r', label="Temp")
 	plt.ylabel('degrees C')
+	plt.legend(loc=0)
 	fig.autofmt_xdate()
 
+	fig.text(0.15, 0.33, 'OCEMR',
+		fontsize=150, color='gray',
+		alpha=0.07)
+
+	plt.draw()
 	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
 	response = HttpResponse(content_type='image/png')
 	canvas.print_png(response)
@@ -142,20 +159,28 @@ def vitals_hrrr(request, id):
 		rr_date_list.append(v.observedDateTime)
 		rr_data_list.append(v.data)
 
-	import matplotlib.pyplot as plt
 	import matplotlib
+	matplotlib.use('Agg')
+	import matplotlib.pyplot as plt
 
-	fig = plt.figure(num=1,figsize=(10,4),dpi=75)
+	fig = plt.figure(num=1,figsize=(10,5),dpi=75)
+	fig.interactive = False
 	plt.title('Heart / Resp Rate History for %s'%(p))
 	plt.grid(True)
 	plt.axhspan(ymin=60, ymax=80, color='b',alpha=.33)
 	plt.axhspan(ymin=10, ymax=20, color='g',alpha=.33)
 	plt.axhline(y=12, color='g')
-	plt.plot(hr_date_list,hr_data_list, 'o-', color='r')
-	plt.plot(rr_date_list,rr_data_list, 'o-', color='m')
+	plt.plot(hr_date_list,hr_data_list, 'o-', color='r',label="Heart")
+	plt.plot(rr_date_list,rr_data_list, 'o-', color='m',label="Resp")
 	plt.ylabel('rate (bpm)')
+	l = plt.legend(loc=0)
 	fig.autofmt_xdate()
 
+	fig.text(0.15, 0.33, 'OCEMR',
+		fontsize=150, color='gray',
+		alpha=0.07)
+
+	plt.draw()
 	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
 	response = HttpResponse(content_type='image/png')
 	canvas.print_png(response)
@@ -163,7 +188,7 @@ def vitals_hrrr(request, id):
 	return response
 
 
-def vitals_bmi(request, id):
+def vitals_height_weight(request, id):
 	"""
 	"""
 	from ocemr.models import Patient, VitalType, Vital
@@ -183,18 +208,26 @@ def vitals_bmi(request, id):
 		weight_date_list.append(v.observedDateTime)
 		weight_data_list.append(v.data)
 
-	import matplotlib.pyplot as plt
 	import matplotlib
+	matplotlib.use('Agg')
+	import matplotlib.pyplot as plt
 
-	fig = plt.figure(num=1,figsize=(10,4),dpi=75)
+	fig = plt.figure(num=1,figsize=(10,5),dpi=75)
+	fig.interactive = False
 	plt.title('Height / Weight History for %s'%(p))
 	plt.grid(True)
 	#plt.axhspan(ymin=36.75, ymax=37.25, color='g',alpha=.5)
-	plt.plot(height_date_list,height_data_list, 'o-', color='r')
-	plt.plot(weight_date_list,weight_data_list, 'o-', color='m')
+	plt.plot(height_date_list,height_data_list, 'o-', color='r',label="Height")
+	plt.plot(weight_date_list,weight_data_list, 'o-', color='m',label="Weight")
 	plt.ylabel('cm, kg')
+	plt.legend(loc=0)
 	fig.autofmt_xdate()
 
+	fig.text(0.15, 0.33, 'OCEMR',
+		fontsize=150, color='gray',
+		alpha=0.07)
+
+	plt.draw()
 	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
 	response = HttpResponse(content_type='image/png')
 	canvas.print_png(response)
