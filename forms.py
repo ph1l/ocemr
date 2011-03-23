@@ -609,7 +609,7 @@ class SelectDateRangeForm(forms.Form):
 	date_start = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	date_end = forms.DateField(required=False,widget=widgets.CalendarWidget)
 
-class ClinicianTallyReportForm(forms.Form):
+class TallyReportForm(forms.Form):
 	date_start = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	date_end = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	dump_type = forms.ChoiceField(choices=(

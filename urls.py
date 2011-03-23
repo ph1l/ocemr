@@ -144,6 +144,8 @@ urlpatterns += patterns('ocemr.views.reports',
     (r'^reports/legacy/patient/daily/$', 'legacy_patient_daily'),
     (r'^reports/diagnosis/tally/$', 'diagnosis_tally'),
     (r'^reports/clinician/tally/$', 'clinician_tally'),
+    (r'^reports/lab/tally/$', 'lab_tally'),
+    (r'^reports/med/tally/$', 'med_tally'),
     (r'^reports/cashflow/$', 'cashflow'),
     (r'^reports/accounts_outstanding/$', 'accounts_outstanding'),
 )
