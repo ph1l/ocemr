@@ -11,12 +11,17 @@
 		X remove the 'scheduled' section from the patient queue.
 
 - Software Design
-	- Read-Only Live Mirror Support ???
-	- User Interface
-		- Force Popup Windows to foreground?
-			( could also move to a DHTML window instead...)
+	- Read-Only Live Mirror Support
+		- Need to look into this after release
 	- Reporting
 		- Legacy Monthly Report
 			( This still required? )
-		- repeated symptom report?
+		- Repeated symptom report?
 		- BMI graph for <20 yo's
+- Overall Infrastructure (Future Stuff!)
+	- User Interface
+		- Force Popup Windows to foreground?
+			( could also move to a DHTML window instead...)
+	- Overhaul Payment System
+	- Linking multiple systems?
+	
