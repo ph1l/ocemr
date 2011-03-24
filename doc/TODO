@@ -1,27 +1,15 @@
--Functionality Requests
-	-Patient Demographics:
-		X edit the sex of our patients
-			(in case we make a mistake while registering them)
-		X collect contact information?
-			X phone number
-			X email address
-			- other?
-	-Patient Queue
-		X remove patients who dont show up at the end of the day.
-		X remove the 'scheduled' section from the patient queue.
+TODO
+----
 
-- Software Design
-	- Read-Only Live Mirror Support
-		- Need to look into this after release
+- Future Stuff
 	- Reporting
-		- Legacy Monthly Report
-			( This still required? )
-		- Repeated symptom report?
+		- Repeated symptom report
 		- BMI graph for <20 yo's
-- Overall Infrastructure (Future Stuff!)
-	- User Interface
-		- Force Popup Windows to foreground?
-			( could also move to a DHTML window instead...)
-	- Overhaul Payment System
-	- Linking multiple systems?
+	- Software Design
+		- Read-Only Live Mirror Support
+		- Overhaul Payment System
+
+- More Distant Future Stuff
+	- Software Design
+		- Linking multiple databases across installations
 	
