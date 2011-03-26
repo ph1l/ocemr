@@ -24,16 +24,18 @@ the patient we were talking about in the previous example. That patient is
 referenced in all sorts of records throughout the system. All the notes,
 symptoms, medication, diagnoses that were added refer back to that patient
 record. Without the patient record, all those other records are
-useless\footnote{ in computer term they are ‘orphans’ because their
-‘parents’ have disappeared } and will be deleted along with it.
+useless\footnote{in computer term they are ‘orphans’ because their
+‘parents’ have disappeared} and will be deleted along with it.
 
 \subsection{Navigating to the Admin Interface}
 
 The admin interface is easy to find. When you have sufficient rights
-to the interface, a link will appear in the main menu bar title \em{Admin}.
+to the interface, a link will appear in the main menu bar title \textbf{Admin}.
 Just click it to enter the admin site.
 
-  The admin interface looks like this: <SCREENSHOT>
+  The admin interface looks like this:
+
+\includegraphics[keepaspectratio=true,width=\textwidth]{images/user_manual-administration/admin.png.eps}
 
 \section{User Management}
 
@@ -49,7 +51,7 @@ Just click it to enter the admin site.
 \item Username
 
 Select a username that is easy to remember for the user and also allows
-everyone using the system to know who that name represents. \em{Usernames
+everyone using the system to know who that name represents. \textbf{Usernames
 should be all lowercase}.
 
 \item Password
@@ -74,16 +76,27 @@ to send login details or documentation.
 
 \subsubsection{Adding the User}
 \begin{enumerate}
-\item Click on \em{+Add} on the Main Admin page
+\item Click on \textbf{+Add} on the Main Admin page
+
+\includegraphics[keepaspectratio=true,width=\textwidth]{images/user_manual-administration/users-add_user.png.eps}
+
 \item Enter the Username and Password, then click on Save.
+
+\includegraphics[keepaspectratio=true,width=\textwidth]{images/user_manual-administration/users-add_user_2.png.eps}
+
 \item Next, Add the First Name, Last Name, and Email Address. Do NOT
 Change any of the Permissions\footnote{Only Administrators need Staff status
 and nobody should be given Superuser status. This will protect the
 system from accidental data corruption.}!
-\item Scroll down to the bottom of the screen and click on \em{Save}.
+
+\includegraphics[keepaspectratio=true,width=\textwidth]{images/user_manual-administration/users-add_user_3.png.eps}
+
+\item Scroll down to the bottom of the screen and click on \textbf{Save}.
 \end{enumerate}
 
 You will see the new user in the list.
+
+\includegraphics[keepaspectratio=true,width=\textwidth]{images/user_manual-administration/users-add_user_4.png.eps}
 
 \subsection{Changing Passwords}
 
@@ -92,10 +105,16 @@ passwords\footnote{This is slated for an upcoming release}, so as an
 administrator for the system you may have to reset their password.
 
 \begin{enumerate}
-\item Click on \em{Change} from the Main Admin Page
+\item Click on \textbf{Change} from the Main Admin Page
 \item Select the User you want to edit by clicking on the username.
-\item Select \em{change password form}.
-\item Enter the new password twice, and click \em{Change Password}.
+
+\includegraphics[keepaspectratio=true,width=\textwidth]{images/user_manual-administration/users-select.png.eps}
+
+\item Select \textbf{change password form}.
+
+\includegraphics[keepaspectratio=true,width=\textwidth]{images/user_manual-administration/users-change_password.png.eps}
+
+\item Enter the new password twice, and click \textbf{Change Password}.
 \end{enumerate}
 
 \subsection{Disabling Users}
@@ -103,9 +122,12 @@ administrator for the system you may have to reset their password.
   TODO: Explain when and why you should disable accounts.
 
 \begin{enumerate}
-\item Click on \em{Change} from the Main Admin Page
+\item Click on \textbf{Change} from the Main Admin Page
 \item Select the User you want to edit by clicking on the username
-\item Uncheck the \em{Active} box under permissions.
-\item Scroll down to the bottom of the page and click \em{Save}.
+
+\includegraphics[keepaspectratio=true,width=\textwidth]{images/user_manual-administration/users-select.png.eps}
+
+\item Uncheck the \textbf{Active} box under permissions.
+\item Scroll down to the bottom of the page and click \textbf{Save}.
 \end{enumerate}
 
