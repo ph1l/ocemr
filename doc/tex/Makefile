@@ -145,7 +145,7 @@ ps	: $(PSF)
 pdf	: $(PDF) 
 
 # TODO: This probably needs fixing
-html	: @$(DEP) $(EPSPICS)
+html	: $(DEP) $(EPSPICS)
 	  @$(L2H) $(SRC)
 
 
