@@ -88,8 +88,6 @@ def dump_csv(filename,field_names,headers,data_rows):
 def dump_graph_pie(title,labels,data):
         """
         """
-        import pylab
-        import matplotlib
 
 
 	#
@@ -110,11 +108,17 @@ def dump_graph_pie(title,labels,data):
 		labels.append('Other ( < 2% )')
 		data.append(other)
 
-        #fig = pylab.figure(figsize=(6,6))
-        fig = pylab.figure()
-        pylab.pie(data, labels=labels, autopct='%1.1f%%', shadow=True)
-        pylab.title(title, bbox={'facecolor':'0.8', 'pad':5})
+        import matplotlib
+        matplotlib.use('Agg')
+        import matplotlib.pyplot as plt
 
+	fig = plt.figure(figsize=(10,10),dpi=75)
+	fig.interactive = False
+
+        plt.pie(data, labels=labels, autopct='%1.1f%%', shadow=True)
+        plt.title(title, bbox={'facecolor':'0.8', 'pad':5})
+
+        plt.draw()
         canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
         response = HttpResponse(content_type='image/png')
         canvas.print_png(response)
