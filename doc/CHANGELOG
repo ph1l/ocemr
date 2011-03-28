@@ -1,3 +1,27 @@
+v0.4.0 -
+        - Updated code to run on python 2.6 and DJANGO 1.2.3
+        - Cleaned up and documented default config file (settings.py)
+        - New Config Options: PRINTER_NAME, PAPER_SIZE
+	- Enabled SESSION_EXPIRE_AT_BROWSER_CLOSE in default config file
+	- Removed hack for european dates / using language support instead
+	- Convert Dates to display based on current locale
+	- Vitals get added from one large form instead of individual forms
+	- Height, Weight, and Temperature data now require units when adding
+	- Height, Weight, and Temperature data no display in metric and std.
+	- Historical Graphing for patient vital statistics
+	- Removed 'Scheduled' section from patient_queue.
+	- Added 'Seen' to the scheduled visits on patient demographic page
+	- Can edit patient's gender from demographics page
+	- Added contact phone and email fields to Patient
+	- Created a user_prefs page. (can set language)
+	- Added link to /admin site for 'staff' users
+	- Redesigned Past Visits Page
+	- Made Allergies display in red on chart
+	- Add Allergies list to Visit Record
+	- Added Lab and Med Tally Reports
+	- Added Clinician Tally Report
+	- Updated Tally Reports to provide CSV, direct display, or pie graphs.
+	- Reformatted user manual in latex.
 v0.3.4 -
 	- CHANGE: added age range restriction options to diagnosis tally report.
 v0.3.3 -

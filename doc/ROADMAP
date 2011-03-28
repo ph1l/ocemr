@@ -1,33 +1,40 @@
 OCEMR ROADMAP
 =============
 
-Current Releases
-----------------
+Past Releases
+-------------
 
 	OCEMR v0.3 (Released: January 2011)
 		- Supports Python 2.4 & 2.6 - Django v1.1.3
 		- Initial Public Release
 
-Planned Minor Releases
-----------------------
+Current Release
+---------------
 
-	OCEMR v0.4 (Expected: ???)
+	OCEMR v0.4 (Released: March 2011)
 		- Support Python 2.6 - Django v1.2.3
+		- Rudimentary Localization Support
 		- Revamp Vital system
 			-Input Unit conversion
 			-Display Unit Conversion
 			-Presentation
-			-Graphing? matplotlib
+			-Graphing
 		- Reporting
 			-Lab Tally
-				- Name, num_ordered, completed, pos, neg, failed
 			-Med Tally
-				- Name, times_ordered, tot_dispensed
+Planned Minor Releases
+----------------------
+
+	OCEMR v0.5 (Expected: ???)
+		- Revamp Payment/Billing System
 
 Planned Major Releases
 ----------------------
 
 	OCEMR v1.0 (Expected: ???)
-		- Appliance Ready
 		- Full Internationalization Support
+		- Appliance Ready
 
+Unplanned Future Stuff
+----------------------
+	- Linking multiple databases across installations?

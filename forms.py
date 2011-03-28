@@ -278,12 +278,12 @@ class NewVitalsForm(forms.Form):
 		)
 	bloodPressureSystolic = forms.IntegerField(
 		label="BP-Systolic",
-		help_text="in hhmg.",
+		help_text="in mmHg.",
 required=False
 		)
 	bloodPressureDiastolic = forms.IntegerField(
 		label="BP-Diastolic",
-		help_text="in hhmg.",
+		help_text="in mmHg.",
 		required=False
 		)
 	heartRate = forms.IntegerField(

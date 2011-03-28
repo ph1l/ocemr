@@ -378,6 +378,7 @@ def edit_visit(request, id):
 
 @login_required
 def edit_visit_seen(request, id):
+	from django.utils import formats
 	from ocemr.models import Visit
 
 	v = Visit.objects.get(pk=id)
@@ -388,7 +389,12 @@ def edit_visit_seen(request, id):
 			v.save()
 			return HttpResponseRedirect('/close_window/')
 	else:
-		form = EditVisitSeenForm(initial={'seenDate':v.seenDateTime.strftime("%d-%m-%Y"), 'seenTime': v.seenDateTime.strftime("%H:%M:%S")})
+		form = EditVisitSeenForm(initial={
+			'seenDate':formats.date_format(
+				v.seenDateTime, 'SHORT_DATE_FORMAT'),
+			'seenTime':formats.date_format(
+				v.seenDateTime, 'TIME_FORMAT'),
+			})
 	return render_to_response('popup_form.html', {
 		'title': 'Edit Visit seen time',
 		'form_action': '/patient/edit_visit_seen/%s/'%(id),
