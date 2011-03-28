@@ -1,3 +1,5 @@
+v0.4.1.1 -
+	- Added better error checking to the Add Vital form
 v0.4.1 -
 	- Added error templates for 404 500 errors
 	- Fixes for graphing in production
