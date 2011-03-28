@@ -34,7 +34,6 @@ from django.db import models
 import datetime
 
 from django.contrib.auth.models import User
-from mydbfields import EuDateField
 
 
 class Village(models.Model):
@@ -54,11 +53,13 @@ class Patient(models.Model):
 	middleName = models.CharField("Middle Name",max_length=128, blank=True)
 	gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
 	birthYear = models.IntegerField("Year of Birth",help_text="Year of Birth or Age")
-	birthDate = EuDateField(blank=True, null=True, help_text="If Available, Not Required")
+	birthDate = models.DateField(blank=True, null=True, help_text="If Available, Not Required")
 	village = models.ForeignKey(Village)
 	createdDateTime = models.DateTimeField(default=datetime.datetime.now)
 	createdBy = models.ForeignKey(User)
 	scratchNote = models.TextField(blank=True)
+	phone = models.CharField(max_length=32, blank=True)
+	email = models.EmailField(blank=True)
 	def __unicode__(self):
 		return '%s (%s-%d) %s' % (self.fullName, self.gender, self.age, self.village.name)
 	def _get_age(self):
@@ -112,7 +113,7 @@ class Visit(models.Model):
 		('MISS',  'Missed'),
 	)
 	patient = models.ForeignKey(Patient)
-	scheduledDate = EuDateField('Date scheduled')
+	scheduledDate = models.DateField('Date scheduled')
 	scheduledBy = models.ForeignKey(User, related_name="visit_scheduled_by")
 	status = models.CharField(max_length=4, choices=VISIT_STATUS_CHOICES, default='SCHE')
 	reason = models.CharField(max_length=3, choices=VISIT_REASON_CHOICES, default='NEW')
@@ -284,7 +285,7 @@ class Visit(models.Model):
 		vitals = Vital.objects.filter(visit=self)
 		out_txt += "O:"
 		for vital in vitals:
-			out_txt += " %s: %s" %(vital.type.title, vital.data)
+			out_txt += " %s: %s" %(vital.type.title, vital.get_display_data())
 		out_txt += "\n"
 		examNotes = ExamNote.objects.filter(visit=self)
 		for examNote in examNotes:
@@ -320,7 +321,7 @@ class VitalType(models.Model):
 	minValue = models.FloatField(default=-1024)
 	maxValue = models.FloatField(default=1024)
 	def __unicode__(self):
-		return "%s (%s)"%(self.title,self.unit)
+		return "%s"%(self.title)
 
 class Vital(models.Model):
 	type = models.ForeignKey(VitalType)
@@ -329,9 +330,20 @@ class Vital(models.Model):
 	observedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	observedBy = models.ForeignKey(User)
 	data = models.FloatField()
+
 	def __unicode__(self):
 		return "%f%s"%(self.data,self.type.unit)
-	
+
+	def get_display_data(self):
+		if self.type.title == "Temp":
+			return "%.2fc (%.1ff)"%(self.data, round( ((self.data*9/5)+32), 2) )
+		elif self.type.title == "Weight":
+			return "%.2fkg (%.1flb)"%(self.data, round( self.data*2.205,2))
+		elif self.type.title == "Height":
+			return "%.1fcm (%.2fin)"%(self.data, round( self.data/2.54,2))
+		else:
+			return "%.2f"%(self.data)
+
 class LabType(models.Model):
 	title = models.CharField(max_length=128)
 	def __unicode__(self):

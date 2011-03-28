@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#
 ##########################################################################
 #
 #    This file is part of OCEMR.
@@ -20,17 +22,37 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 
-from django import forms
-from django.forms.fields import DEFAULT_DATE_INPUT_FORMATS
-from django.db import models
+#
+#  This searches out irregularities in the Vitals data and attempts to
+# correct or clean it up.
+#
+# Temperature  - look for values outside the normal ranges and auto-
+#		convert them or delete them.
+#
+#
 
+import sys, re
 
-class EuDateField(models.DateField):
-    def formfield(self, **kwargs):
-        kwargs.update({'form_class': EuDateFormField})
-        return super(EuDateField, self).formfield(**kwargs)
+import util_conf
+sys.path = [ util_conf.APP_PATH ] + sys.path
 
-class EuDateFormField(forms.DateField):
-    def __init__(self, *args, **kwargs):
-        kwargs.update({'input_formats': ("%d.%m.%Y","%d-%m-%Y","%d/%m/%Y")+DEFAULT_DATE_INPUT_FORMATS})
-        super(EuDateFormField, self).__init__(*args, **kwargs)
+from django.core.management import setup_environ
+
+import settings
+
+setup_environ(settings)
+
+from ocemr.models import Vital
+from ocemr.models import VitalType
+
+from django.db.models import get_model, Q
+from datetime import datetime
+
+# Temperature
+for v in Vital.objects.filter( Q(type=VitalType.objects.get(id=3)) ):
+	if v.data > 45.:
+		print v,
+		# do something
+		print 
+
+	#v.save()

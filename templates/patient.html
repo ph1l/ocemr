@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% block title %}{{p}} ({{p.id}}){% endblock %}
-{% block extraheader %}
-        <A HREF=/patient_queue/>Patient Queue</A>(<A HREF=/patient/search/>search</a>,<a href=/patient/new>add</a>)|<A HREF=/lab_queue/>Lab Queue</A>|<A HREF=/med_queue/>Med Queue</A>|<A HREF=/reports/>Reports</A>
-{% endblock %}
 {% block content %}
 <DIV ALIGN=CENTER><B>{{p}}</B></DIV>
 <TABLE WIDTH=100%>
@@ -16,10 +13,14 @@
     <TD>Name <a href="#" onClick='window.open("/patient/edit/name/{{p.id}}/","Edit Name","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
     <TD>{{p.fullName}}</TD>
 </TR>
+<TR>
+    <TD>Gender <a href="#" onClick='window.open("/patient/edit/gender/{{p.id}}/","Edit Gender","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
+    <TD>{{p.gender}}</TD>
+</TR>
 {% if p.birthDate %}
 <TR>
     <TD>Birthdate (Age)<A href="#" onClick='window.open("/patient/edit/age/{{p.id}}/","Edit Age","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
-    <TD>{{p.birthDate|date:"d-m-Y"}} ({{p.age}})</TD>
+    <TD>{{p.birthDate|date:"SHORT_DATE_FORMAT"}} ({{p.age}})</TD>
 {% else %}
 <TR>
     <TD>Approx. Age <A href="#" onClick='window.open("/patient/edit/age/{{p.id}}/","Edit Age","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a></TD>
@@ -32,6 +33,18 @@
 </TD>
     <TD>{{p.village}}</TD>
 </TR>
+<TR>
+	<TD>Phone
+		<a href="#" onClick='window.open("/patient/edit/phone/{{p.id}}/","Edit ","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a>
+	</TD>
+	<TD>{{p.phone}}</TD>
+</TR>
+<TR>
+	<TD>e-mail
+		<a href="#" onClick='window.open("/patient/edit/email/{{p.id}}/","Edit ","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</a>
+	</TD>
+	<TD>{{p.email}}</TD>
+</TR>
 <TR><TD>Account Balance</TD>
 {% if p.isNegative %}
     <TD STYLE="color: RED;">
@@ -41,8 +54,9 @@
          {{p.get_account_balance}}</TD>
 </TR>
 <TR>
-    <TD COLSPAN=2>Record Created by {{p.createdBy}} on {{p.createdDateTime|date:"d-m H:i"}}</TD>
+    <TD COLSPAN=2>Record Created by {{p.createdBy}} on {{p.createdDateTime|date:"SHORT_DATETIME_FORMAT"}}</TD>
 </TR>
+<TR><TD COLSPAN=2><A HREF="#" onClick='window.open("/graphs/vitals/{{p.id}}/","Vitals Graphs","menubar=no,width=780,height=540,toolbar=no,scrollbars=yes");'>Show Historical Vitals Graphs</A></TD></TR>
 </TABLE>
 </TD><TD VALIGN=TOP>
 <TABLE>Scheduled Visits(<A HREF="#" onClick='window.open("/patient/schedule_new_visit/{{p.id}}/","Add Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Schedule Future Visit</a>):
@@ -50,11 +64,12 @@
 {% for v in upcoming_visits %}
 <TR>
   <TD><A HREF=/visit/{{v.id}}>{{ v.id }}</A>
-  <TD>{{ v.scheduledDate|date:"d-m-Y" }} by {{ v.scheduledBy }}
+  <TD>{{ v.scheduledDate|date:"SHORT_DATE_FORMAT" }} by {{ v.scheduledBy }}
   <TD>{{ v.displayStatus }}
    <TD>{{ v.reason }}
    <TD>{{ v.reasonDetail }} 
   <TD>
+<A HREF=# onClick='window.open("/visit/{{v.id}}/seen/","Seen Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Seen</A> |
 <A HREF="#" onClick='window.open("/patient/edit_visit/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit</a> |
 <A HREF="#" onClick='window.open("/patient/delete_visit/{{v.id}}/","Delete Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Delete</a>
 {% endfor %}
@@ -66,12 +81,14 @@
 <TR><TH>Reason<TH>Detail</TR>
 {% for v in visits %}
 <TR>
-   <TD>{{ v.scheduledDate|date:"d-m-Y" }}
+   <TD>{{ v.scheduledDate|date:"SHORT_DATE_FORMAT" }}
    <TD>{{ v.scheduledBy }}
 
 	{% ifequal v.status "MISS" %}
 		<TD STYLE='background-color:#FF5555;'>
 	{% else %} {% ifequal v.status "INPR" %}
+		<TD STYLE='background-color:#77FF77;'>
+	{% else %} {% ifequal v.status "CHOT" %}
 		<TD STYLE='background-color:#77FF77;'>
 	{% else %} {% ifequal v.status "WAIT" %}
 		<TD STYLE='background-color:#FFFF55;'>
@@ -80,13 +97,14 @@
 	{% endifequal %}
 	{% endifequal %}
 	{% endifequal %}
+	{% endifequal %}
 {{v.displayStatus}} </TD>
-   <TD>{{ v.seenDateTime|date:"d-m H:i" }}
-   <TD>{{ v.claimedDateTime|date:"d-m H:i" }}
+   <TD>{{ v.seenDateTime|date:"SHORT_DATETIME_FORMAT" }}
+   <TD>{{ v.claimedDateTime|date:"SHORT_DATETIME_FORMAT" }}
    by {{ v.claimedBy }}
-   <TD>{{ v.finishedDateTime|date:"d-m H:i" }}
+   <TD>{{ v.finishedDateTime|date:"SHORT_DATETIME_FORMAT" }}
    by {{ v.finishedBy }}
-   <TD>{{ v.resolvedDateTime|date:"d-m H:i" }}
+   <TD>{{ v.resolvedDateTime|date:"SHORT_DATETIME_FORMAT" }}
    by {{ v.resolvedBy }}
 <TD>{{v.cost}}(<A HREF=# onClick='window.open("/visit/{{v.id}}/bill_amount/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)</TD>
 <TD>
@@ -110,16 +128,32 @@
 		
 {% endifequal %}
 </TD>
-   <TD><A HREF=/visit/{{v.id}}>View Chart</A> |
-{% ifequal v.status 'WAIT' %}
-   <A HREF="#" onClick='window.open("/patient/edit_visit/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Details</a> |
-   <A HREF="#" onClick='window.open("/patient/edit_visit_seen/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Seen Time</a>
-{% else %}
-   <A HREF="#" onClick='window.open("/patient/edit_visit_reason/{{v.id}}/","Edit Visit Reason","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Reason</a>
+<TD>
+{% ifequal v.status 'MISS' %}
+	<A HREF=# onClick='window.open("/visit/{{v.id}}/unfinish/","Unfinish Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Miss</A>
+{% else %}{% ifequal v.status 'WAIT' %}
+	<A HREF=/visit/{{v.id}}>View Chart</A>
+	|
+	<A HREF="#" onClick='window.open("/patient/edit_visit_reason/{{v.id}}/","Edit Visit Reason","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Reason</a>
+	|
+	<A HREF="#" onClick='window.open("/patient/edit_visit_seen/{{v.id}}/","Edit Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Seen Time</a>
+{% else %} {% ifequal v.status 'INPR' %}
+	<A HREF=/visit/{{v.id}}>View Chart</A>
+	|
+	<A HREF="#" onClick='window.open("/patient/edit_visit_reason/{{v.id}}/","Edit Visit Reason","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Edit Reason</a>
+{% else %} {% ifequal v.status 'CHOT' %}
+	<A HREF=/visit/{{v.id}}>View Chart</A>
+	|
+{% else %} {% ifequal v.status 'RESO' %}
+	<A HREF=/visit/{{v.id}}>View Chart</A>
+	|
+	<A HREF=# onClick='window.open("/visit/{{v.id}}/record/print/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Print-Rec</A>
+	|
+	<A HREF=# onClick='window.open("/visit/{{v.id}}/record/view/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>View-Rec</A>
 {% endifequal %}
-{% ifequal v.status 'RESO' %}
-		| <A HREF=# onClick='window.open("/visit/{{v.id}}/record/print/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Print-Rec</A>
-		| <A HREF=# onClick='window.open("/visit/{{v.id}}/record/view/","Print","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>View-Rec</A>
+{% endifequal %}
+{% endifequal %}
+{% endifequal %}
 {% endifequal %}
 </TR>
 <TR>

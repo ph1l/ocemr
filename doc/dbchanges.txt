@@ -1,0 +1,15 @@
+0.3.X -> 0.4.X
+==============
+
+sqlite
+------
+
+ALTER TABLE ocemr_patient add column "phone" varchar(32) NOT NULL default "";
+ALTER TABLE ocemr_patient add column "email" varchar(75) NOT NULL default "";
+
+MySQL
+-----
+
+ALTER TABLE ocemr_patient add column `phone` varchar(32) NOT NULL;
+ALTER TABLE ocemr_patient add column `email` varchar(75) NOT NULL;
+

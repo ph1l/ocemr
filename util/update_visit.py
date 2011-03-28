@@ -21,6 +21,13 @@
 #########################################################################
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
+
+
+#
+#  This was a quick and dirty hack to add some data to the DB after a schema
+# change.
+#
+
 import sys, re
 
 import util_conf

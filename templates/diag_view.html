@@ -1,7 +1,7 @@
 {% extends "base_popup.html" %}
 
 {% block extrahead %}
-<link href="/css/diag_view.css" rel="stylesheet" />
+<link href="/media/ocemr/css/diag_view.css" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
@@ -12,7 +12,7 @@
   <DIV ID=diagnosisNotes>
   {% for diag in diags %}
   <DIV ID=diagnosisNote>
-    {{diag.diagnosedDateTime|date:"d-m H:i"}} - {{diag.displayStatus}} - {{diag.diagnosedBy}}<BR>
+    {{diag.diagnosedDateTime|date:"SHORT_DATETIME_FORMAT"}} - {{diag.displayStatus}} - {{diag.diagnosedBy}}<BR>
     "{{diag.notes}}"
   </DIV>
   {% endfor %}

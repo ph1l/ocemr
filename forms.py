@@ -24,7 +24,6 @@ from django import forms
 from django.db.models import get_model
 
 from django.contrib.auth.models import User
-from mydbfields import EuDateFormField
 
 
 import widgets
@@ -44,9 +43,13 @@ class EditPatientNameForm(forms.Form):
 	givenName = forms.CharField(label='First Name')
 	middleName = forms.CharField(label='Middle Name',required=False)
 
+class EditPatientGenderForm(forms.Form):
+	from models import Patient
+	gender = forms.ChoiceField(label='Gender',choices=Patient.GENDER_CHOICES)
+
 class EditPatientAgeForm(forms.Form):
 	birthYear = forms.IntegerField(required=False)
-	birthDate = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+	birthDate = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	def clean_birthYear(self):
 		import datetime
 		MAX_AGE=160
@@ -75,12 +78,16 @@ class EditPatientVillageForm(forms.Form):
 			v.save()
 		return v
 
+class EditPatientPhoneForm(forms.Form):
+	phone = forms.CharField(label='Phone')
 
+class EditPatientEmailForm(forms.Form):
+	email = forms.EmailField(label='e-mail')
 
 class NewScheduledVisitForm(forms.ModelForm):
 	from models import Patient
 	from models import Visit
-        scheduledDate = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+        scheduledDate = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
 	scheduledBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
 	status = forms.CharField(widget=forms.HiddenInput)
@@ -113,7 +120,7 @@ class NewScheduledVisitForm(forms.ModelForm):
 
 class EditScheduledVisitForm(forms.Form):
 	scheduledBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-        scheduledDate = EuDateFormField()
+        scheduledDate = forms.DateField()
         reasonDetail = forms.CharField(widget=forms.Textarea)
 
 	def __init__(self, v, user, *args, **kwargs):
@@ -125,7 +132,7 @@ class EditScheduledVisitForm(forms.Form):
 		self.fields['reasonDetail'].initial=v.reasonDetail
 
 class EditVisitSeenForm(forms.Form):
-        seenDate = EuDateFormField()
+        seenDate = forms.DateField()
         seenTime = forms.TimeField()
 
 
@@ -178,7 +185,7 @@ class NewWalkinVisitForm(forms.ModelForm):
 		return data
 
 class NewPatientForm(forms.ModelForm):
-        birthDate = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+        birthDate = forms.DateField(required=False,widget=widgets.CalendarWidget)
         village = forms.CharField(
 			widget=widgets.JQueryAutoComplete(
 				'/autocomplete_name/ocemr/Village/'
@@ -257,24 +264,150 @@ class ConfirmDeleteForm(forms.Form):
 		required=False
 	)
 
-class NewVitalForm(forms.ModelForm):
-	from models import Visit, VitalType, Patient
-	type = forms.ModelChoiceField(queryset=VitalType.objects.all(),widget=forms.HiddenInput)
+class NewVitalsForm(forms.Form):
+	from models import Visit, Patient
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
 	visit = forms.ModelChoiceField(queryset=Visit.objects.all(),widget=forms.HiddenInput)
 	observedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-	def __init__(self, v, vt, user, *args, **kwargs):
+	observedDateTime = forms.DateTimeField(widget=forms.HiddenInput,required=False)
+
+	temp_in = forms.CharField(
+		label="Temp",
+		help_text="in celcius or fahrenheit. (valid examples \"98.7f\" or \"37 c\".)",
+		required=False
+		)
+	bloodPressureSystolic = forms.IntegerField(
+		label="BP-Systolic",
+		help_text="in mmHg.",
+required=False
+		)
+	bloodPressureDiastolic = forms.IntegerField(
+		label="BP-Diastolic",
+		help_text="in mmHg.",
+		required=False
+		)
+	heartRate = forms.IntegerField(
+		label="Heart Rate",
+		help_text="in beats per minute.",
+		required=False
+		)
+	respiratoryRate = forms.IntegerField(
+		label="Respiratory Rate",
+		help_text="in breaths per minute.",
+		required=False
+		)
+	height_in = forms.CharField(
+		label="Height",
+		help_text="in centimeters or inches. (valid examples \"177 cm\" or \"70.25in\".)",
+		required=False
+		)
+	weight_in = forms.CharField(
+		label="Weight",
+		help_text="in kilograms or pounds. (valid examples \"77.5 kg\" or \"150lb\".)",
+		required=False
+		)
+
+	def __init__(self, v, user, *args, **kwargs):
 		
-		super(NewVitalForm, self).__init__(*args, **kwargs)
-		self.fields['type'].initial=vt.id
+		super(NewVitalsForm, self).__init__(*args, **kwargs)
 		self.fields['visit'].initial=v.id
 		self.fields['patient'].initial=v.patient.id
 		self.fields['observedBy'].initial=user.id
 
-	class Meta:
-		model = get_model('ocemr','Vital')
-                exclude = [ 'observedDateTime']
+	def clean_observedDateTime(self):
+		from datetime import datetime
+		return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+	def clean_temp_in(self):
+		data = str(self.cleaned_data['temp_in'])
+		if len(data) > 0:
+			if data.strip()[-1].lower() == 'f':
+				d = (float(data.strip()[0:-1])-32.0)*(5.0/9.0)
+			elif data.strip()[-1].lower() == 'c':
+				d = float(data.strip()[0:-1])
+			else:
+				raise forms.ValidationError("Please include a unit (c or f).")
+		else:
+			return ""
+		return d
+	def clean_height_in(self):
+		data = str(self.cleaned_data['height_in'])
+		if len(data) > 0:
+			if data.strip()[-2].lower() == 'i':
+				d = float(data.strip()[0:-2])*2.54
+			elif data.strip()[-2].lower() == 'c':
+				d = float(data.strip()[0:-2])
+			else:
+				raise forms.ValidationError("Please include a unit (cm or in).")
+		else:
+			return ""
+		return d
+	def clean_weight_in(self):
+		data = str(self.cleaned_data['weight_in'])
+		if len(data) > 0:
+			if data.strip()[-2].lower() == 'l':
+				d = float(data.strip()[0:-2])/2.205
+			elif data.strip()[-2].lower() == 'k':
+				d = float(data.strip()[0:-2])
+			else:
+				raise forms.ValidationError("Please include a unit (kg or lb).")
+		else:
+			return ""
+		return d
 
+#class NewVitalForm(forms.ModelForm):
+#	from models import Visit, VitalType, Patient
+#	type = forms.ModelChoiceField(queryset=VitalType.objects.all(),widget=forms.HiddenInput)
+#	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
+#	visit = forms.ModelChoiceField(queryset=Visit.objects.all(),widget=forms.HiddenInput)
+#	observedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+#	data_in = forms.CharField()
+#	def __init__(self, v, vt, user, *args, **kwargs):
+#		
+#		super(NewVitalForm, self).__init__(*args, **kwargs)
+#		self.fields['type'].initial=vt.id
+#		self.fields['visit'].initial=v.id
+#		self.fields['patient'].initial=v.patient.id
+#		self.fields['observedBy'].initial=user.id
+#
+#	class Meta:
+#		model = get_model('ocemr','Vital')
+#                exclude = [ 'observedDateTime', 'data']
+#
+#	def clean_data_in(self):
+#		data = str(self.cleaned_data['data_in'])
+#		#raise forms.ValidationError("DATA:%s"%(data))
+#		from models import VitalType
+#		vt = self.cleaned_data['type']
+#		if vt.title == "Temp":
+#			if data.strip()[-1].lower() == 'f':
+#				d = (float(data.strip()[0:-1])-32.0)*(5.0/9.0)
+#			elif data.strip()[-1].lower() == 'c':
+#				d = float(data.strip()[0:-1])
+#			else:
+#				raise forms.ValidationError("Please include a unit (c or f).")
+#		elif vt.title == "Weight":
+#			if data.strip()[-2].lower() == 'l':
+#				d = float(data.strip()[0:-2])/2.205
+#			elif data.strip()[-2].lower() == 'k':
+#				d = float(data.strip()[0:-2])
+#			else:
+#				raise forms.ValidationError("Please include a unit (kg or lb).")
+#		elif vt.title == "Height":
+#			if data.strip()[-2].lower() == 'i':
+#				d = float(data.strip()[0:-2])*2.54
+#			elif data.strip()[-2].lower() == 'c':
+#				d = float(data.strip()[0:-2])
+#			else:
+#				raise forms.ValidationError("Please include a unit (cm or in).")
+#		else:
+#			try:
+#				d = float(data.strip())
+#			except:
+#				raise forms.ValidationError("Please enter a number only.")
+#		self.instance.data=d
+#		return d
+#
+#
 class NewExamNoteForm(forms.ModelForm):
 	from models import Visit, ExamNoteType, Patient
 	type = forms.ModelChoiceField(queryset=ExamNoteType.objects.all(),widget=forms.HiddenInput)
@@ -470,17 +603,33 @@ class EditBillAmountForm(forms.Form):
 		self.fields['amount'].initial = a
 
 class SelectDateForm(forms.Form):
-	date = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+	date = forms.DateField(required=False,widget=widgets.CalendarWidget)
 
 class SelectDateRangeForm(forms.Form):
-	date_start = EuDateFormField(required=False,widget=widgets.CalendarWidget)
-	date_end = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+	date_start = forms.DateField(required=False,widget=widgets.CalendarWidget)
+	date_end = forms.DateField(required=False,widget=widgets.CalendarWidget)
 
-class DiagnosisTallyForm(forms.Form):
-	date_start = EuDateFormField(required=False,widget=widgets.CalendarWidget)
-	date_end = EuDateFormField(required=False,widget=widgets.CalendarWidget)
+class TallyReportForm(forms.Form):
+	date_start = forms.DateField(required=False,widget=widgets.CalendarWidget)
+	date_end = forms.DateField(required=False,widget=widgets.CalendarWidget)
+	dump_type = forms.ChoiceField(choices=(
+				('TABLE', 'display'),
+				('CSV', 'csv'),
+				('G_PIE', 'Pie Graph'),
+			)
+		)
+
+class DiagnosisTallyReportForm(forms.Form):
+	date_start = forms.DateField(required=False,widget=widgets.CalendarWidget)
+	date_end = forms.DateField(required=False,widget=widgets.CalendarWidget)
 	age_min = forms.IntegerField(required=False)
 	age_max = forms.IntegerField(required=False)
+	dump_type = forms.ChoiceField(choices=(
+				('TABLE', 'display'),
+				('CSV', 'csv'),
+				('G_PIE', 'Pie Graph'),
+			)
+		)
 
 class EditMedForm(forms.Form):
         type = forms.CharField(

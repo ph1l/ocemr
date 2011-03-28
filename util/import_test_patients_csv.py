@@ -67,5 +67,5 @@ for row in reader:
 	d = datetime.today()+timedelta(random.choice((-1,0,0,1,1,1,2)) )
 	t = random.choice( ("7:00","9:00","11:00","13:00","15:00")  )
 	print " V:%s:%s"%(d.date(),t)
-	v = Visit.objects.create(patient=p, scheduledDate=d.date(), scheduledTime=t, scheduledBy=u)
+	v = Visit.objects.create(patient=p, scheduledDate=d.date(), scheduledBy=u)
 	v.save()

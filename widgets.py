@@ -23,18 +23,18 @@
 from django import forms
 from django.utils.safestring import mark_safe
 from django.forms.widgets import flatatt
-from django.forms.util import smart_unicode
+from django.utils.encoding import smart_unicode
 from django.utils.html import escape
 from django.utils.simplejson import JSONEncoder
 
 class JQueryAutoComplete(forms.TextInput):
 	class Media:
 		js = (
-			'/js/jquery-1.4.2.js',
-			'/js/jquery.autocomplete.js',
+			'/media/ocemr/js/jquery-1.4.2.js',
+			'/media/ocemr/js/jquery.autocomplete.js',
 		)
 		css = {
-			'all': ('/css/jquery.autocomplete.css',),
+			'all': ('/media/ocemr/css/jquery.autocomplete.css',),
 		}
 	def __init__(self, source, options={}, attrs={}):
 		"""source can be a list containing the autocomplete values or a
@@ -84,11 +84,11 @@ class JQueryAutoComplete(forms.TextInput):
 class JQueryAutoContains(forms.TextInput):
 	class Media:
 		js = (
-			'/js/jquery-1.4.2.js',
-			'/js/jquery.autocomplete.js',
+			'/media/ocemr/js/jquery-1.4.2.js',
+			'/media/ocemr/js/jquery.autocomplete.js',
 		)
 		css = {
-			'all': ('/css/jquery.autocomplete.css',),
+			'all': ('/media/ocemr/css/jquery.autocomplete.css',),
 		}
 	def __init__(self, source, options={}, attrs={}):
 		"""source can be a list containing the autocomplete values or a
@@ -143,12 +143,13 @@ class CalendarWidget(forms.TextInput):
 	"""
 	class Media:
 		js = (
-			'/js/CalendarPopup.js',
-			'/js/AnchorPosition.js',
-			'/js/date.js',
-			'/js/PopupWindow.js',
+			'/media/ocemr/js/CalendarPopup.js',
+			'/media/ocemr/js/AnchorPosition.js',
+			'/media/ocemr/js/date.js',
+			'/media/ocemr/js/PopupWindow.js',
 		)
 	def render(self, name, value, attrs=None):
+		from django.utils import formats
 		output = []
 		output.append(
 			"""<SCRIPT LANGUAGE="JavaScript" ID="jscal_%(NAME)s">
@@ -159,11 +160,16 @@ class CalendarWidget(forms.TextInput):
 				'NAME': name,
 			})
 		output.append(super(CalendarWidget, self).render(name, value, attrs))
+		date_format = formats.get_format('DATE_INPUT_FORMATS')[0]
+		js_date_format = date_format.replace('%d','dd').replace('%m','MM').replace('%Y','yyyy').replace('%y','yy')
 		output.append(
 			"""<a href="#"
-				onClick='cal_%(NAME)s.select(document.forms[0].id_%(NAME)s,"%(NAME)s","dd/MM/yyyy"); return false;'
+				onClick='cal_%(NAME)s.select(document.forms[0].id_%(NAME)s,"%(NAME)s","%(DATE_FORMAT)s"); return false;'
 			 name="%(NAME)s" id="%(NAME)s">Show Calendar</a>
 			""" % \
-				{'NAME': name,})
+				{
+					'NAME': name,
+					'DATE_FORMAT': js_date_format,
+				})
 
 		return mark_safe(u''.join(output))

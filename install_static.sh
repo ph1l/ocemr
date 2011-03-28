@@ -1,7 +1,10 @@
 #!/bin/sh
 #
 
+RSYNC_OPTS="-aL --delete-after --verbose --progress"
+
 WEB_ROOT=${1}
+#/usr/share/pyshared/django
 DJANGO_ROOT=${2}
 
 if [ -z "${DJANGO_ROOT}" ]; then 
@@ -9,12 +12,8 @@ if [ -z "${DJANGO_ROOT}" ]; then
         exit
 fi
 
-rm -vrf ${WEB_ROOT}/media/admin
-rm -vrf ${WEB_ROOT}/css
-rm -vrf ${WEB_ROOT}/js
+#rm -vrf ${WEB_ROOT}/media/admin
+#rm -vrf ${WEB_ROOT}/media/ocemr
 
-cp -av ${DJANGO_ROOT}/contrib/admin/media ${WEB_ROOT}/media/admin
-cp -av static_media/css ${WEB_ROOT}/css
-cp -av static_media/js ${WEB_ROOT}/js
-
-
+rsync ${RSYNC_OPTS} ${DJANGO_ROOT}/contrib/admin/media/ ${WEB_ROOT}/media/admin
+rsync ${RSYNC_OPTS} static_media/ ${WEB_ROOT}/media/ocemr

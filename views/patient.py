@@ -33,28 +33,37 @@ from django.views.decorators.cache import cache_page
 def patient_queue(request,dayoffset=0):
 	"""
 	"""
+	from datetime import datetime, timedelta
+	from ocemr.models import Visit
+
+	d_today = datetime.today()
+
+	# Cleanup missed visits
+	d_missed = d_today-timedelta(7)
+	missed_q = Q(scheduledDate__lte=d_missed.date) & Q(status='SCHE')
+	for mv in Visit.objects.filter(missed_q):
+		mv.status = 'MISS'
+		# finished by noone
+		#mv.finishedBy = request.user
+		mv.finishedDateTime = datetime.now()
+		mv.save()
+
 	dayoffset = int(dayoffset)
 	dayoffset_prev = dayoffset-1
 	dayoffset_next = dayoffset+1
-	from datetime import datetime, timedelta
-	d_today = datetime.today()+timedelta(dayoffset)
-	d_missed = d_today-timedelta(7)
-	d_upcoming = d_today+timedelta(1)
+
+	# Update "today" to be whenever we're offset to
+	d_today += timedelta(dayoffset)
 
 	dt_start = datetime(d_today.year,d_today.month,d_today.day,0,0,0)
         dt_end = datetime(d_today.year,d_today.month,d_today.day,23,59,59)
 
-	from ocemr.models import Visit
-
 	active_q = Q(status='WAIT') | Q(status='INPR')
-	scheduled_q = Q(scheduledDate__lte=d_upcoming.date) & Q(status='SCHE')
-	resolved_q =  ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & ( Q(status='MISS') | Q(status='CHOT') | Q(status='RESO') )
-	
+	resolved_q =  ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & ( Q(status='CHOT') | Q(status='RESO') )
+
 	visits = Visit.objects.filter(active_q).order_by('seenDateTime')
-	s_visits = Visit.objects.filter(scheduled_q).order_by('scheduledDate', 'id')
 	r_visits = Visit.objects.filter(resolved_q).order_by('-finishedDateTime')
 	num_active = len(visits)
-	num_scheduled = len(s_visits)
 	num_inactive = len(r_visits)
 
 	return render_to_response(
@@ -98,7 +107,64 @@ def patient_edit_name(request, id):
 		'title': 'Edit Patient Name',
 		'form_action': '/patient/edit/name/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
+
+@login_required
+def patient_edit_gender(request, id):
+	from ocemr.models import Patient
+
+	p = Patient.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditPatientGenderForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			p.gender = form.cleaned_data['gender']
+			p.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditPatientGenderForm(initial={'gender': p.gender}) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Patient Gender',
+		'form_action': '/patient/edit/gender/%s/'%(id),
+		'form': form,
+	},context_instance=RequestContext(request))
+
+@login_required
+def patient_edit_phone(request, id):
+	from ocemr.models import Patient
+
+	p = Patient.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditPatientPhoneForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			p.phone = form.cleaned_data['phone']
+			p.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditPatientPhoneForm(initial={'phone': p.phone}) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Patient Phone',
+		'form_action': '/patient/edit/phone/%s/'%(id),
+		'form': form,
+	},context_instance=RequestContext(request))
+
+@login_required
+def patient_edit_email(request, id):
+	from ocemr.models import Patient
+
+	p = Patient.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditPatientEmailForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			p.email = form.cleaned_data['email']
+			p.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditPatientEmailForm(initial={'email': p.email}) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Patient E-Mail',
+		'form_action': '/patient/edit/email/%s/'%(id),
+		'form': form,
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_edit_age(request, id):
@@ -118,7 +184,7 @@ def patient_edit_age(request, id):
 		'title': 'Edit Patient Age',
 		'form_action': '/patient/edit/age/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_edit_village(request, id):
@@ -137,7 +203,7 @@ def patient_edit_village(request, id):
 		'title': 'Edit Patient Village',
 		'form_action': '/patient/edit/village/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_edit_note(request, id):
@@ -156,7 +222,7 @@ def patient_edit_note(request, id):
 		'title': 'Edit Patient Note',
 		'form_action': '/patient/edit/note/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 
 @login_required
@@ -235,7 +301,7 @@ def schedule_new_visit(request, id):
 		'title': 'Scedule Patient Visit',
 		'form_action': '/patient/schedule_new_visit/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def schedule_walkin_visit(request, id):
@@ -257,7 +323,7 @@ def schedule_walkin_visit(request, id):
 		'title': 'Schedule Patient Visit',
 		'form_action': '/patient/schedule_walkin_visit/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def delete_visit(request, id):
@@ -287,7 +353,7 @@ def delete_visit(request, id):
                 'title': 'Delete Visit: %s'%(o),
                 'form_action': '/patient/delete_visit/%s/'%(id),
                 'form': form,
-        })
+        },context_instance=RequestContext(request))
 
 @login_required
 def edit_visit(request, id):
@@ -308,10 +374,11 @@ def edit_visit(request, id):
 		'title': 'Edit Visit',
 		'form_action': '/patient/edit_visit/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def edit_visit_seen(request, id):
+	from django.utils import formats
 	from ocemr.models import Visit
 
 	v = Visit.objects.get(pk=id)
@@ -322,12 +389,17 @@ def edit_visit_seen(request, id):
 			v.save()
 			return HttpResponseRedirect('/close_window/')
 	else:
-		form = EditVisitSeenForm(initial={'seenDate':v.seenDateTime.strftime("%d-%m-%Y"), 'seenTime': v.seenDateTime.strftime("%H:%M:%S")})
+		form = EditVisitSeenForm(initial={
+			'seenDate':formats.date_format(
+				v.seenDateTime, 'SHORT_DATE_FORMAT'),
+			'seenTime':formats.date_format(
+				v.seenDateTime, 'TIME_FORMAT'),
+			})
 	return render_to_response('popup_form.html', {
 		'title': 'Edit Visit seen time',
 		'form_action': '/patient/edit_visit_seen/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def edit_visit_reason(request, id):
@@ -346,11 +418,11 @@ def edit_visit_reason(request, id):
 		'title': 'Edit Visit Reason',
 		'form_action': '/patient/edit_visit_reason/%s/'%(id),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def patient_merge(request, id):
-	from ocemr.models import *
+	from ocemr.models import Patient, Visit, Vital, Lab, Diagnosis, Med, Referral, ImmunizationLog, Allergy, CashLog
 
 	p = Patient.objects.get(pk=int(id))
 	valid_form=False
@@ -367,7 +439,7 @@ def patient_merge(request, id):
 			'title': 'Merge Patient Records',
 			'form_action': '/patient/merge/%s/'%(id),
 			'form': form,
-		})
+		},context_instance=RequestContext(request))
 	pdup = Patient.objects.get(pk=int(duplicateID))
 	out_txt="Merge %s: %s\n  into %s: %s\n\n"%(pdup.id, pdup, p.id, p)
 
@@ -402,7 +474,7 @@ def patient_merge(request, id):
 
 @login_required
 def patient_do_merge(request, id, dupid):
-	from ocemr.models import *
+	from ocemr.models import Patient, Visit, Vital, Lab, Diagnosis, Med, Referral, ImmunizationLog, Allergy, CashLog
 
 	p = Patient.objects.get(pk=int(id))
 	pdup = Patient.objects.get(pk=int(dupid))

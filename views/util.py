@@ -26,6 +26,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadReque
 
 from django.db.models import get_model
 from django.views.decorators.cache import cache_page
+from django.template import RequestContext
 
 def close_window(request):
 	return render_to_response('close_window.html', {})
@@ -40,6 +41,14 @@ def index(request):
 		-Redirect to patient Queue
 	"""
 	return HttpResponseRedirect('/patient_queue/')
+
+@login_required
+def user_prefs(request):
+	"""
+	"""
+	return render_to_response(
+                'user_prefs.html', locals(),
+                context_instance=RequestContext(request))
 
 def autocomplete_name(request, inapp, inmodel):
 	"""

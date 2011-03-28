@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}User Preferences{% endblock %}
+
+{% block content %}
+<H1>Language</H1>
+<form class=inlineform action="/i18n/setlang/" method="post">
+{% csrf_token %}
+<input name="next" type="hidden" value="{{request.path}}" />
+<select name="language">
+{% for lang in LANGUAGES %}
+<option value="{{ lang.0 }}"{% ifequal LANGUAGE_CODE lang.0 %} SELECTED{% endifequal %}>{{ lang.1 }}</option>
+{% endfor %}
+</select>
+<input type="submit" value="Go" />
+</form>
+{% endblock %}
+

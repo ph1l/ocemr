@@ -1,13 +1,13 @@
 {% extends "base_visit.html" %}
 {% block visitExtrahead %}
-<link href="/css/visit_immu.css" rel="stylesheet" />
+<link href="/media/ocemr/css/visit_immu.css" rel="stylesheet" />
 {% endblock %}
 {% block visitContent %}
 <A HREF="#" onClick='window.open("/visit/{{v.id}}/immu/new/","New Immunization Log","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Add an Immunization Log</A>
 {% for il in immunizationLogs %}
 <DIV ID=immunizationLogs>
 <TEXTAREA DISABLED>{{il.description}}</TEXTAREA><BR>
-<SPAN ID=immunizationLogsByline>by {{il.addedBy}} on {{il.addedDateTime|date:"d-m-Y H:i"}}</SPAN>
+<SPAN ID=immunizationLogsByline>by {{il.addedBy}} on {{il.addedDateTime|date:"SHORT_DATETIME_FORMAT"}}</SPAN>
 </DIV> <!-- immunizationLogs -->
 {% endfor %}
 

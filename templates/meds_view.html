@@ -26,7 +26,7 @@
 </TR>
 {% for m in v.get_meds %}
 <TR>
-<TD>{{m.addedDateTime|date:"d-m H:i"}}</TD>
+<TD>{{m.addedDateTime|date:"SHORT_DATETIME_FORMAT"}}</TD>
 <TD>{{m.addedBy}}</TD>
 <TD>{{ m.type.title }}</A></TD>
 <TD>{{ m.dosage }}</A></TD>
@@ -78,7 +78,7 @@
 	<TD COLSPAN=5>
 	{% for n in m.get_notes %}
 	    <DIV ID=medNote>
-		{{n.addedDateTime|date:"d-m H:i"}} |
+		{{n.addedDateTime|date:"SHORT_DATETIME_FORMAT"}} |
 		{{n.addedBy}} |
                 "{{n.note}}"
             </DIV>

@@ -117,6 +117,8 @@ def visit_unfinish(request,id):
 
 	v = Visit.objects.get(pk=id)
 	if v.status == 'MISS':
+		from datetime import datetime
+		v.seenDateTime = datetime.now()
 		v.status = 'WAIT'
 	else:
 		v.status = 'INPR'
@@ -200,7 +202,7 @@ def visit_subj_new(request,id, symptomtypeid):
 		'title': 'Add a Symptom: %s'%(st.title),
 		'form_action': '/visit/%d/subj/new/%d/'%(vid,stid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_subj_edit(request,id, visitsymptomid):
@@ -222,7 +224,7 @@ def visit_subj_edit(request,id, visitsymptomid):
 		'title': 'Edit Symptom Notes: %s'%(vs.type.title),
 		'form_action': '/visit/%s/subj/edit/%s/'%(id,visitsymptomid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_subj_delete(request,id, visitsymptomid):
@@ -245,7 +247,7 @@ def visit_subj_delete(request,id, visitsymptomid):
 		'title': 'Delete Symptom: %s'%(o.type.title),
 		'form_action': '/visit/%s/subj/delete/%s/'%(id,visitsymptomid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 	
 
@@ -262,7 +264,12 @@ def visit_obje(request,id):
 	p = v.patient
 
 	vitalTypes = VitalType.objects.all()
-	vitals = Vital.objects.filter(visit=v)
+	vital_times_in = Vital.objects.filter(visit=v).values('observedDateTime').distinct()
+	vital_times = []
+	for vt in vital_times_in:
+		vitals = Vital.objects.filter(visit=v, observedDateTime=vt['observedDateTime'])
+		vital_times.append( [ vt['observedDateTime'], vitals ] )
+	#vitals = Vital.objects.filter(visit=v)
 
 	examNoteTypes = ExamNoteType.objects.all()
 	examNotes = ExamNote.objects.filter(visit=v)
@@ -270,29 +277,125 @@ def visit_obje(request,id):
 	return render_to_response('visit_obje.html', locals(),context_instance=RequestContext(request))
 
 @login_required
-def visit_obje_vital_new(request,id, vitaltypeid):
+def visit_obje_vitals_new(request,id):
 	"""
 	"""
-	from ocemr.models import VitalType, Visit
-	from ocemr.forms import NewVitalForm
+	from ocemr.models import Vital, VitalType, Visit
+	from ocemr.forms import NewVitalsForm
 	vid=int(id)
-	vtid=int(vitaltypeid)
 	v=Visit.objects.get(pk=vid)
-	vt=VitalType.objects.get(pk=vtid)
 
 	if request.method == 'POST': # If the form has been submitted...
-		form = NewVitalForm(v, vt, request.user, request.POST) # A form bound to the POST data
+		form = NewVitalsForm(v, request.user, request.POST) # A form bound to the POST data
 		if form.is_valid(): # All validation rules pass
-			o = form.save()
+			#form.cleaned_data['']
+			p = form.cleaned_data['patient']
+			vis = form.cleaned_data['visit']
+			dt = form.cleaned_data['observedDateTime']
+			u = form.cleaned_data['observedBy']
+			# Temp
+			data = form.cleaned_data['temp_in']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='Temp')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['bloodPressureSystolic']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='BP - Systolic')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['bloodPressureDiastolic']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='BP - Diastolic')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['heartRate']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='HR')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['respiratoryRate']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='RR')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['height_in']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='Height')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#
+			data = form.cleaned_data['weight_in']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='Weight')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
 			return HttpResponseRedirect('/close_window/')
 	else:
-		form = NewVitalForm(v, vt, request.user) # An unbound form
+		form = NewVitalsForm(v, request.user) # An unbound form
 	return render_to_response('popup_form.html', {
-		'title': 'Add a Vital: %s'%(vt),
-		'form_action': '/visit/%d/obje/vital/new/%d/'%(vid,vtid),
+		'title': 'Add Vitals',
+		'form_action': '/visit/%d/obje/vitals/new/'%(vid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
+#@login_required
+#def visit_obje_vital_new(request,id, vitaltypeid):
+#	"""
+#	"""
+#	from ocemr.models import VitalType, Visit
+#	from ocemr.forms import NewVitalForm
+#	vid=int(id)
+#	vtid=int(vitaltypeid)
+#	v=Visit.objects.get(pk=vid)
+#	vt=VitalType.objects.get(pk=vtid)
+#
+#	if request.method == 'POST': # If the form has been submitted...
+#		form = NewVitalForm(v, vt, request.user, request.POST) # A form bound to the POST data
+#		if form.is_valid(): # All validation rules pass
+#			o = form.save()
+#			return HttpResponseRedirect('/close_window/')
+#	else:
+#		form = NewVitalForm(v, vt, request.user) # An unbound form
+#	return render_to_response('popup_form.html', {
+#		'title': 'Add a Vital: %s'%(vt),
+#		'form_action': '/visit/%d/obje/vital/new/%d/'%(vid,vtid),
+#		'form': form,
+#	},context_instance=RequestContext(request))
+#
 @login_required
 def visit_obje_vital_delete(request,id, oid):
 	"""
@@ -314,7 +417,7 @@ def visit_obje_vital_delete(request,id, oid):
 		'title': 'Delete Vital: %s'%(o),
 		'form_action': '/visit/%s/obje/vital/delete/%s/'%(id,oid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 	
 @login_required
@@ -339,7 +442,7 @@ def visit_obje_examNote_new(request,id, examnotetypeid):
 		'title': 'Add an Exam Note: %s'%(ent.title),
 		'form_action': '/visit/%d/obje/examNote/new/%d/'%(vid,entid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_obje_examNote_edit(request,id, examnoteid):
@@ -361,7 +464,7 @@ def visit_obje_examNote_edit(request,id, examnoteid):
 		'title': 'Edit Exam Note: %s'%(en.type.title),
 		'form_action': '/visit/%s/obje/examNote/edit/%s/'%(id,examnoteid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 
 @login_required
@@ -430,7 +533,7 @@ def visit_plan_diag_new(request,id):
                 'title': 'Add a Diagnosis for %s'%(p),
                 'form_action': '/visit/%d/plan/diag/new/'%(v.id),
                 'form': form,
-        })
+        },context_instance=RequestContext(request))
 
 @login_required
 def visit_plan_diag_new_bytype(request, id, dtid):
@@ -488,7 +591,7 @@ def visit_meds_new(request,id,did):
                 'title': 'Add a Med for %s - %s'%(d.patient,d.type.title),
                 'form_action': '/visit/%d/meds/new/%d/'%(d.visit.id,did),
                 'form': form,
-        })
+        },context_instance=RequestContext(request))
 
 
 @login_required
@@ -526,7 +629,7 @@ def visit_refe_new(request,id):
 		'title': 'Add a Referral',
 		'form_action': '/visit/%d/refe/new/'%(vid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_refe_edit(request,id, refid):
@@ -549,7 +652,7 @@ def visit_refe_edit(request,id, refid):
 		'title': 'Edit Referral: %s'%(r),
 		'form_action': '/visit/%s/refe/edit/%s/'%(id,refid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 
 @login_required
@@ -587,7 +690,7 @@ def visit_immu_new(request,id):
 		'title': 'Add an Immunization Log',
 		'form_action': '/visit/%d/immu/new/'%(vid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 
 @login_required
@@ -622,7 +725,7 @@ def visit_allergy_new(request,id):
 		'title': 'Add an Allergy',
 		'form_action': '/visit/%d/allergy/new/'%(vid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_allergy_delete(request,id, oid):
@@ -645,7 +748,7 @@ def visit_allergy_delete(request,id, oid):
 		'title': 'Delete Allergy: %s'%(o.to),
 		'form_action': '/visit/%s/allergy/delete/%s/'%(id,oid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 
 @login_required
 def visit_collect(request,id):
@@ -667,7 +770,7 @@ def visit_collect(request,id):
 		'title': 'Collect',
 		'form_action': '/visit/%d/collect/'%(vid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 	
 
 @login_required
@@ -691,7 +794,7 @@ def visit_bill_amount(request,id):
 		'title': 'Edit Bill Amount',
 		'form_action': '/visit/%d/bill_amount/'%(vid),
 		'form': form,
-	})
+	},context_instance=RequestContext(request))
 	
 
 @login_required
@@ -728,8 +831,6 @@ def visit_record(request, id, type):
 	"""
 
 	from ocemr.models import Visit
-	from subprocess import Popen, PIPE
-	from ocemr.settings import PRINTER_NAME
 
 	v = Visit.objects.get(pk=id)
 
@@ -741,6 +842,10 @@ def visit_record(request, id, type):
 """
 	head_text += "\tPatient: %s\tVisit# %05d\tDate: %02d-%02d-%02d\n"%(v.patient,v.id,
 		v.scheduledDate.day, v.scheduledDate.month, v.scheduledDate.year)
+	allergy_list = []
+	for a in v.patient.get_allergies():
+		 allergy_list.append(a.to)
+	head_text += "\t\tAllergies: %s\n"%(", ".join(allergy_list))
 	summ_text = v.get_summary_text()
 	next_visits = Visit.objects.filter(patient=v.patient,scheduledDate__gt=v.scheduledDate)
 	upco_text=""
@@ -759,10 +864,11 @@ def visit_record(request, id, type):
 	text_out = head_text + summ_text + upco_text
 
 	if type == "print":
-		p = Popen(
-			['enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman12', '--header=', '--media=A4'],
-			stdin=PIPE, stdout=PIPE, close_fds=True
-			)
+		from subprocess import Popen, PIPE
+		from ocemr.settings import PRINTER_NAME, PAPER_SIZE
+		cmd = " ".join( ('enscript', '-P', PRINTER_NAME, '--word-wrap', '--mark-wrapped-lines=arrow', '--font=Times-Roman12', '--header=', '--media='+PAPER_SIZE) )
+		p = Popen(cmd, shell=True, bufsize=0,
+			stdin=PIPE, stdout=PIPE, close_fds=True)
 		(child_stdin, child_stdout) = (p.stdin, p.stdout)
 		child_stdin.write(text_out)
 		out,err=p.communicate()

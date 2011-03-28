@@ -1,0 +1,98 @@
+Installing OCEMR for Development or Testing
+===========================================
+
+Preparing the Environment
+-------------------------
+
+ -  Install Prerequisites:
+
+    $ sudo apt-get install python-django python-sqlite python-matplotlib 
+
+ -  Install a Database:
+
+    $ sudo apt-get install python-sqlite 
+
+    $ sudo apt-get install python-mysqldb mysql-server mysql-client
+
+ -  Git a copy of the software:
+
+    $ git clone git://github.com/ph1l/ocemr.git
+
+ -  Checkout the development branch:
+
+    $ git checkout develop
+
+ -  Copy the config File:
+
+    $ cp settings.py.DIST settings.py
+
+ -  Edit the config file:
+
+    $ vi settings.py
+
+     -  For testing leave the DATABASE_ENGINE set to sqlite3
+     -  change DATABASE_NAME to reflect a different location if you wish
+     -  change APP_PATH and TIME_ZONE 
+
+ -  Setup version.py:
+
+    $ ./util/make_version.sh  > version.py
+
+ -  Setup Utilities Configuration:
+
+    $ cp ./util/util_conf.py.DIST ./util/util_conf.py
+    $ vi ./util/util_conf.py
+
+     -  Edit the APP_PATH
+
+Setting up the Database
+-----------------------
+
+ -  Reset the database:
+
+    $ ./util/reset_test_db.sh
+    ...
+    You just installed Django's auth system, which means you don't have any superusers defined.
+    Would you like to create one now? (yes/no): yes 
+    Username (Leave blank to use 'phil'): admin
+    E-mail address: philip.freeman@gmail.com
+    Password: 
+    Password (again): 
+    Superuser created successfully.
+    ...
+
+Running the Testing Server
+---------------------------
+
+ -  Run the server 
+
+    $ python ./manage.py runserver
+    Validating models...
+    0 errors found
+    
+    Django version 1.2.3, using settings 'ocemr.settings'
+    Development server is running at http://127.0.0.1:8000/
+    Quit the server with CONTROL-C.
+
+ -  Goto http://127.0.0.1:8000/ in your browser.
+
+Running under Apace
+-------------------
+
+ -  Add the following to your /etc/apache2/sites-available/default
+
+    <Location "/">
+      SetHandler python-program
+      PythonHandler django.core.handlers.modpython
+      SetEnv DJANGO_SETTINGS_MODULE ocemr.settings
+      #SetEnv MATPLOTLIBDATA "/usr/share/matplotlib/"
+      SetEnv HOME "/tmp"
+      PythonDebug On
+      PythonPath "['/home/test/apps'] + sys.path"
+    </Location>
+
+    <Location "/media">
+      SetHandler None
+    </Location>
+
+

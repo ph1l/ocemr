@@ -85,6 +85,42 @@ def dump_csv(filename,field_names,headers,data_rows):
         response['Content-Disposition'] = 'attachment; filename=%s' % (filename)
         return response
 
+def dump_graph_pie(title,labels,data):
+        """
+        """
+        import pylab
+        import matplotlib
+
+
+	#
+	total = 0
+	other = 0
+	for x in data:
+		total += x
+	todelete=[]
+	for i in range(0,len(labels)):
+		if float(data[i])/float(total) <= .02:
+			other += data[i]
+			todelete.append(i)
+	todelete.reverse()
+	for i in todelete:
+		labels.pop(i)
+		data.pop(i)
+	if other > 0:
+		labels.append('Other ( < 2% )')
+		data.append(other)
+
+        #fig = pylab.figure(figsize=(6,6))
+        fig = pylab.figure()
+        pylab.pie(data, labels=labels, autopct='%1.1f%%', shadow=True)
+        pylab.title(title, bbox={'facecolor':'0.8', 'pad':5})
+
+        canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
+        response = HttpResponse(content_type='image/png')
+        canvas.print_png(response)
+        matplotlib.pyplot.close(fig)
+        return response
+
 @login_required
 def index(request):
         """
@@ -93,75 +129,241 @@ def index(request):
         return render_to_response('reports.html',context_instance=RequestContext(request))
 
 @login_required
-def clinician_daily(request):
+def lab_tally(request):
 	"""
 	"""
-	from ocemr.forms import SelectDateForm
+	from ocemr.forms import TallyReportForm
 
 	form_valid=0
 	if request.method == 'POST':
-		form = SelectDateForm(request.POST)
+		form = TallyReportForm(request.POST)
 		if form.is_valid():
-			date_in = form.cleaned_data['date']
+                        date_start_in = form.cleaned_data['date_start']
+			if form.cleaned_data['date_end']==None:
+                        	date_end_in = form.cleaned_data['date_start']
+			else:
+                        	date_end_in = form.cleaned_data['date_end']
+			dump_type = form.cleaned_data['dump_type']
+
 			form_valid=1
 	else:
-		form = SelectDateForm()
+		form = TallyReportForm()
 	if not form_valid:
 		return render_to_response('popup_form.html', {
 	                'title': 'Enter Date For Report',
-	                'form_action': '/reports/clinician/daily/',
+	                'form_action': '/reports/lab/tally/',
 	                'form': form,
-	        })
-	from ocemr.models import Visit, Diagnosis, Med, Referral
-	field_names=[
-		'clinician',
-		'num_patients_day',
-		'num_patients_month',
-		]
+	        },context_instance=RequestContext(request))
+
+	dt_start = datetime(date_start_in.year,date_start_in.month,date_start_in.day,0,0,0)
+	dt_end = datetime(date_end_in.year,date_end_in.month,date_end_in.day,23,59,59)
+	q_this_day = (Q(orderedDateTime__gte=dt_start) & Q(orderedDateTime__lte=dt_end)) & (Q(status="CAN") | Q(status="COM")| Q(status="FAI"))
+	from ocemr.models import Lab
+	days_labs = Lab.objects.filter(q_this_day)
+	ordered={}
+	canceled={}
+	complete={}
+	failed={}
+	for l in days_labs:
+		if l.type.title not in ordered.keys():
+			ordered[l.type.title] = 0
+			canceled[l.type.title] = 0
+			complete[l.type.title] = 0
+			failed[l.type.title] = 0
+		ordered[l.type.title] += 1
+		if l.status == "COM":
+			complete[l.type.title] += 1
+		elif l.status == "CAN":
+			canceled[l.type.title] += 1
+		elif l.status == "FAI":
+			failed[l.type.title] += 1
+
+	sorted_keys=sorted(ordered,key=ordered.__getitem__,reverse=True)
+
+	if dump_type == "G_PIE":
+		title="Lab Tally %s -> %s"%(dt_start.strftime("%Y-%m-%d"),dt_end.strftime("%Y-%m-%d"))
+		labels=[]
+		data = []
+		for key in sorted_keys:
+			labels.append(key)
+			data.append(ordered[key])
+		return dump_graph_pie(title, labels, data)
+
+	summary_rows=[]
+	field_names=[ 'lab', 'ordered', 'complete', 'canceled', 'failed' ]
 	headers={
-		'clinician': 'Clinician',
-		'num_patients_day': 'Number of Patients per Day',
-		'num_patients_month': 'Number of Patients per Month',
-		}
-	if date_in.month == 12:
-		next_month=1
+		'lab': 'Lab Type',
+		'ordered': 'Number Ordered',
+		'complete': 'Number Complete',
+		'canceled': 'Number Canceled',
+		'failed': 'Number Failed',
+		 }
+	for l in sorted_keys:
+		summary_rows.append(
+			{
+				'lab': l,
+				'ordered': ordered[l],
+				'complete': complete[l],
+				'canceled': canceled[l],
+				'failed': failed[l],
+			})
+	if dump_type == "CSV":
+		return dump_csv( "lab-tally-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
+	elif dump_type == "TABLE":
+		return dump_table(field_names, headers, summary_rows )
+
+@login_required
+def med_tally(request):
+	"""
+	"""
+	from ocemr.forms import TallyReportForm
+
+	form_valid=0
+	if request.method == 'POST':
+		form = TallyReportForm(request.POST)
+		if form.is_valid():
+                        date_start_in = form.cleaned_data['date_start']
+			if form.cleaned_data['date_end']==None:
+                        	date_end_in = form.cleaned_data['date_start']
+			else:
+                        	date_end_in = form.cleaned_data['date_end']
+			dump_type = form.cleaned_data['dump_type']
+
+			form_valid=1
 	else:
-		next_month=date_in.month+1
-	dt_month_start = datetime(date_in.year,date_in.month,1,0,0,0)
-	dt_month_end = datetime(date_in.year,next_month,1,0,0,0)
-	dt_start = datetime(date_in.year,date_in.month,date_in.day,0,0,0)
-	dt_end = datetime(date_in.year,date_in.month,date_in.day,23,59,59)
-	q_this_month = ( Q(finishedDateTime__gte=dt_month_start) &
-				Q(finishedDateTime__lt=dt_month_end ) &
-				Q(finishedDateTime__lt=dt_start)
-			) & (Q(status="CHOT") | Q(status="RESO"))
+		form = TallyReportForm()
+	if not form_valid:
+		return render_to_response('popup_form.html', {
+	                'title': 'Enter Date For Report',
+	                'form_action': '/reports/med/tally/',
+	                'form': form,
+	        },context_instance=RequestContext(request))
+
+	dt_start = datetime(date_start_in.year,date_start_in.month,date_start_in.day,0,0,0)
+	dt_end = datetime(date_end_in.year,date_end_in.month,date_end_in.day,23,59,59)
+	q_this_day = (Q(addedDateTime__gte=dt_start) & Q(addedDateTime__lte=dt_end)) & (Q(status="DIS") | Q(status="SUB")| Q(status="CAN"))
+	from ocemr.models import Med
+	days_meds = Med.objects.filter(q_this_day)
+	daily_index=0
+	ordered={}
+	dispensed={}
+	substituted={}
+	canceled={}
+	for m in days_meds:
+		if m.type.title not in ordered.keys():
+			ordered[m.type.title] = 0
+			dispensed[m.type.title] = 0
+			substituted[m.type.title] = 0
+			canceled[m.type.title] = 0
+		ordered[m.type.title] += 1
+		if m.status == "DIS":
+			dispensed[m.type.title] += 1
+		elif m.status == "SUB":
+			substituted[m.type.title] += 1
+		elif m.status == "CAN":
+			canceled[m.type.title] += 1
+
+	sorted_keys=sorted(ordered,key=ordered.__getitem__,reverse=True)
+
+	if dump_type == "G_PIE":
+		title="Med Tally %s -> %s"%(dt_start.strftime("%Y-%m-%d"),dt_end.strftime("%Y-%m-%d"))
+		labels=[]
+		data = []
+		for key in sorted_keys:
+			labels.append(key)
+			data.append(ordered[key])
+		return dump_graph_pie(title, labels, data)
+
+	summary_rows=[]
+	field_names=[ 'med', 'ord', 'dis', 'sub', 'can' ]
+	headers={
+		'med': 'Med Type',
+		'ord': 'Number Ordered',
+		'dis': 'Number Dispensed',
+		'sub': 'Number Substituted',
+		'can': 'Number Canceled',
+		 }
+	for m in sorted_keys:
+		summary_rows.append(
+			{
+				'med': m,
+				'ord': ordered[m],
+				'dis': dispensed[m],
+				'sub': substituted[m],
+				'can': canceled[m],
+			})
+	if dump_type == "CSV":
+		return dump_csv( "med-tally-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
+	elif dump_type == "TABLE":
+		return dump_table(field_names, headers, summary_rows )
+
+@login_required
+def clinician_tally(request):
+	"""
+	"""
+	from ocemr.forms import TallyReportForm
+
+	form_valid=0
+	if request.method == 'POST':
+		form = TallyReportForm(request.POST)
+		if form.is_valid():
+                        date_start_in = form.cleaned_data['date_start']
+			if form.cleaned_data['date_end']==None:
+                        	date_end_in = form.cleaned_data['date_start']
+			else:
+                        	date_end_in = form.cleaned_data['date_end']
+			dump_type = form.cleaned_data['dump_type']
+
+			form_valid=1
+	else:
+		form = TallyReportForm()
+	if not form_valid:
+		return render_to_response('popup_form.html', {
+	                'title': 'Enter Date For Report',
+	                'form_action': '/reports/clinician/tally/',
+	                'form': form,
+	        },context_instance=RequestContext(request))
+	from ocemr.models import Visit
+	dt_start = datetime(date_start_in.year,date_start_in.month,date_start_in.day,0,0,0)
+	dt_end = datetime(date_end_in.year,date_end_in.month,date_end_in.day,23,59,59)
 	q_this_day = (Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end)) & (Q(status="CHOT") | Q(status="RESO"))
-	months_visits = Visit.objects.filter(q_this_month)
-	pt_monthly_index = len(months_visits)
 	days_visits = Visit.objects.filter(q_this_day)
 	daily_index=0
 	totals={}
-	for v in months_visits:
-		if v.finishedBy not in totals.keys():
-			totals[v.finishedBy] = {'day': 0, 'month': 0}
-		totals[v.finishedBy]['month'] += 1
 	for v in days_visits:
 		if v.finishedBy not in totals.keys():
-			totals[v.finishedBy] = {'day': 0, 'month': 0}
-		totals[v.finishedBy]['day'] += 1
+			totals[v.finishedBy] = 0
+		totals[v.finishedBy] += 1
+
+	sorted_keys=sorted(totals,key=totals.__getitem__,reverse=True)
+
+	if dump_type == "G_PIE":
+		title="Clinician Visit Tally %s -> %s"%(dt_start.strftime("%Y-%m-%d"),dt_end.strftime("%Y-%m-%d"))
+		labels=[]
+		data = []
+		for key in sorted_keys:
+			labels.append(key)
+			data.append(totals[key])
+		return dump_graph_pie(title, labels, data)
+
 	summary_rows=[]
-	for clinician in totals.keys():
-		summary_rows.append({'clinician':clinician, 'num_patients_day':totals[clinician]['day'],'num_patients_month': totals[clinician]['month']})
-	return dump_table( field_names, headers, summary_rows )
+	field_names=[ 'clinician', 'num_patients', ]
+	headers={ 'clinician': 'Clinician', 'num_patients': 'Number of Patients', }
+	for clinician in sorted_keys:
+		summary_rows.append({'clinician':clinician, 'num_patients':totals[clinician]})
+	if dump_type == "CSV":
+		return dump_csv( "clinician-visit-tally-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
+	elif dump_type == "TABLE":
+		return dump_table(field_names, headers, summary_rows )
 
 @login_required
 def diagnosis_tally(request):
 	"""
 	"""
-	from ocemr.forms import DiagnosisTallyForm
+	from ocemr.forms import DiagnosisTallyReportForm
 	form_valid=0
         if request.method == 'POST':
-                form = DiagnosisTallyForm(request.POST)
+                form = DiagnosisTallyReportForm(request.POST)
                 if form.is_valid():
                         date_start_in = form.cleaned_data['date_start']
 			if form.cleaned_data['date_end']==None:
@@ -170,15 +372,16 @@ def diagnosis_tally(request):
                         	date_end_in = form.cleaned_data['date_end']
 			age_min = form.cleaned_data['age_min']
 			age_max = form.cleaned_data['age_max']
+			dump_type = form.cleaned_data['dump_type']
 			form_valid=1
         else:
-                form = DiagnosisTallyForm()
+                form = DiagnosisTallyReportForm()
 	if not form_valid:
 	        return render_to_response('popup_form.html', {
 	                'title': 'Enter Date Range For Report',
 	                'form_action': '/reports/diagnosis/tally/',
 	                'form': form,
-	        })
+	        },context_instance=RequestContext(request))
 	dt_start = datetime(
 		date_start_in.year,date_start_in.month,date_start_in.day,
 		0,0,0
@@ -223,6 +426,15 @@ def diagnosis_tally(request):
 	sorted_keys=sorted(s, key=s.get)
 	sorted_keys.reverse()
 
+	if dump_type == "G_PIE":
+		title="Diagnosis Tally %s -> %s"%(dt_start.strftime("%Y-%m-%d"),dt_end.strftime("%Y-%m-%d"))
+		labels=[]
+		data = []
+		for key in sorted_keys:
+			labels.append(key)
+			data.append(s[key])
+		return dump_graph_pie(title, labels, data)
+
 	summary_rows=[]
 	summary_rows.append({'diag':'Dates:', 'tally': "%s-%s-%s -> %s-%s-%s"%(
 		dt_start.day, dt_start.month, dt_start.year,
@@ -233,7 +445,12 @@ def diagnosis_tally(request):
 	summary_rows.append({'diag':'Diagnosis', 'tally':'Tally'})
 	for key in sorted_keys:
 		summary_rows.append({'diag': key, 'tally': s[key]})
-	return dump_csv( "diagnosis-tally-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
+	if dump_type == "CSV":
+		return dump_csv( "diagnosis-tally-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
+	elif dump_type == "TABLE":
+		return dump_table(field_names, headers, summary_rows )
+	else:
+		raise "Invalid Dump Type"
 		
 @login_required
 def legacy_patient_daily(request):
@@ -254,7 +471,7 @@ def legacy_patient_daily(request):
 	                'title': 'Enter Date For Report',
 	                'form_action': '/reports/legacy/patient/daily/',
 	                'form': form,
-	        })
+	        },context_instance=RequestContext(request))
 
 
 	from ocemr.models import Visit, Diagnosis, Med, Referral
@@ -368,7 +585,7 @@ def cashflow(request):
 	                'title': 'Enter Date Range For Report',
 	                'form_action': '/reports/cashflow/',
 	                'form': form,
-	        })
+	        },context_instance=RequestContext(request))
 
 	
 	field_names=[
@@ -429,7 +646,7 @@ def accounts_outstanding(request):
 	                'title': 'Enter Date Range For Report',
 	                'form_action': '/reports/accounts_outstanding/',
 	                'form': form,
-	        })
+	        },context_instance=RequestContext(request))
 
 
 	from ocemr.models import Patient, Visit, CashLog

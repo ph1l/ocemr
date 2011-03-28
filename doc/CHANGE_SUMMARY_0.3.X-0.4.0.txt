@@ -1,0 +1,58 @@
+User Interface Change Summary v0.3.4 -> v0.4.0
+==============================================
+
+* Localization Support *
+------------------------
+
+  The software now automatically detects your prefered languages and formats
+dates according to your locale. This means that if you have your language set
+to American English, dates will display as Month-Date-Year; if you have your
+language set to British English, dates will display as Date-Month-Year.
+
+  You can change the detected default in the new 'User Prefs' page and the
+system will save the setting for your user in the future.
+
+* Patient Queue and Info *
+--------------------------
+
+  You will no longer see the 'Scheduled Visits' section on the Patient Queue
+page, the system will automatically mark scheduled visits as missed after a
+few days. When you are checking someone in just search for them by name and
+if they have a scheduled visit you can mark them as 'Seen' in the scheduled
+visits section of their 'Patient Info' page.
+
+  Also, I've added a couple of options to the Patient Info Page. Firstly,
+you can now edit the gender of a patient in case of mistake. Secondly, you
+can add a contact phone number or email address to their record if it's
+available.
+
+- Patient Charts -
+------------------
+
+  I redesigned the past visits page to hopefully make it clearer and easier
+to read. Allergies that are added to a patient show up in red at the top of
+their chart.
+
+* Vitals, Adding and Viewing *
+------------------------------
+
+  When adding vitals, the system now shows you all possible types at once. In
+addition, heights, weights, and temperatures require you to include a unit in
+the submission and automatically convert it on the backend. All of the fields
+on the 'Add Vitals' form are optional, so include only the measurments you
+want to record.
+
+  The system will display the patients vitals linked by their submission date
+and will also alow you to view their vitals in a series of historical graphs.
+
+- System Administration and Reporting -
+---------------------------------------
+
+  Users with access to the 'Admin' section of the site should now see a link
+available from the main menu, making it easier to navigate there for
+administrative tasks.
+
+  Tally type reports can now generate a pie chart, csv file, or just display
+the results directly in a table. Added 3 new reports: the Lab, Med, and
+Clinician tally reports.
+

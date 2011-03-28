@@ -10,10 +10,6 @@
 {% endcomment %}
 {% endblock %}  
 
-{% block extraheader %}
-	<A HREF=/patient_queue/>Patient Queue</A>|<A HREF=/lab_queue/>Lab Queue</A>|Med Queue|<A HREF=/reports/>Reports</A>
-{% endblock %}
-
 {% block content %}
 <TABLE>
 <TR>
@@ -29,7 +25,7 @@
 </TR>
 {% for v in visits_active %}
 <TR>
-<TD>{{v.finishedDateTime|date:"d-m H:i"}}</TD>
+<TD>{{v.finishedDateTime|date:"SHORT_DATETIME_FORMAT"}}</TD>
 <TD>{{v.finishedBy}}
 <TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
 <TD>{{ v.get_num_meds }}</TD>
@@ -99,7 +95,7 @@ Resolved:
 </TR>
 {% for v in visits_inactive %}
 <TR>
-<TD>{{v.resolvedDateTime|date:"d-m H:i"}}</TD>
+<TD>{{v.resolvedDateTime|date:"SHORT_DATETIME_FORMAT"}}</TD>
 <TD>{{v.resolvedBy}}
 <TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
 <TD>{{ v.get_num_meds }}</TD>

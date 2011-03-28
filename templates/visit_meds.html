@@ -1,6 +1,6 @@
 {% extends "base_visit.html" %}
 {% block visitExtrahead %}
-<link href="/css/visit_meds.css" rel="stylesheet" />
+<link href="/media/ocemr/css/visit_meds.css" rel="stylesheet" />
 {% endblock %}
 {% block visitContent %}
 <OL>
@@ -36,7 +36,7 @@
 		<TR><TD COLSPAN=4>
 		{% for n in m.get_notes %}
 		    <DIV ID=medNote>
-	                "{{n.note}}" by {{n.addedBy}} @{{n.addedDateTime|date:"d-m H:i"}}
+	                "{{n.note}}" by {{n.addedBy}} @{{n.addedDateTime|date:"SHORT_DATETIME_FORMAT"}}
 	            </DIV>
 
 		{% endfor %}
