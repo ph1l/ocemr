@@ -1,5 +1,7 @@
 v0.4.1.1 -
 	- Added better error checking to the Add Vital form
+	- Fixed bug where all patients were getting an allergies header
+	 on their record even when none existed
 v0.4.1 -
 	- Added error templates for 404 500 errors
 	- Fixes for graphing in production
