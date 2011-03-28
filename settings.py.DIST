@@ -28,6 +28,7 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+SERVER_EMAIL = 'ocemr@domain.com'
 
 #
 # APP_PATH -
