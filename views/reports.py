@@ -112,7 +112,7 @@ def dump_graph_pie(title,labels,data):
         matplotlib.use('Agg')
         import matplotlib.pyplot as plt
 
-	fig = plt.figure(figsize=(10,10),dpi=75)
+	fig = plt.figure(figsize=(5,5),dpi=75)
 	fig.interactive = False
 
         plt.pie(data, labels=labels, autopct='%1.1f%%', shadow=True)
