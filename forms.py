@@ -318,40 +318,67 @@ required=False
 		from datetime import datetime
 		return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 	def clean_temp_in(self):
-		data = str(self.cleaned_data['temp_in'])
-		if len(data) > 0:
-			if data.strip()[-1].lower() == 'f':
-				d = (float(data.strip()[0:-1])-32.0)*(5.0/9.0)
-			elif data.strip()[-1].lower() == 'c':
-				d = float(data.strip()[0:-1])
-			else:
-				raise forms.ValidationError("Please include a unit (c or f).")
-		else:
+		message="Must be a number followed by a unit (c or f)."
+		data = str(self.cleaned_data['temp_in']).strip()
+		if len(data) == 0:
 			return ""
+		if len(data) >= 2:
+			if data[-1].lower() == 'f':
+				try:
+					d = (float(data[0:-1])-32.0)*(5.0/9.0)
+				except:
+					raise forms.ValidationError(message)
+			elif data[-1].lower() == 'c':
+				try:
+					d = float(data[0:-1])
+				except:
+					raise forms.ValidationError(message)
+			else:
+				raise forms.ValidationError(message)
+		else:
+			raise forms.ValidationError(message)
 		return d
 	def clean_height_in(self):
-		data = str(self.cleaned_data['height_in'])
-		if len(data) > 0:
-			if data.strip()[-2].lower() == 'i':
-				d = float(data.strip()[0:-2])*2.54
-			elif data.strip()[-2].lower() == 'c':
-				d = float(data.strip()[0:-2])
-			else:
-				raise forms.ValidationError("Please include a unit (cm or in).")
-		else:
+		message="Must be a number followed by a unit (cm or in)."
+		data = str(self.cleaned_data['height_in']).strip()
+		if len(data) == 0:
 			return ""
+		if len(data) >= 3:
+			if data[-2].lower() == 'i':
+				try:
+					d = float(data[0:-2])*2.54
+				except:
+					raise forms.ValidationError(message)
+			elif data[-2].lower() == 'c':
+				try:
+					d = float(data[0:-2])
+				except:
+					raise forms.ValidationError(message)
+			else:
+				raise forms.ValidationError(message)
+		else:
+			raise forms.ValidationError(message)
 		return d
 	def clean_weight_in(self):
-		data = str(self.cleaned_data['weight_in'])
-		if len(data) > 0:
-			if data.strip()[-2].lower() == 'l':
-				d = float(data.strip()[0:-2])/2.205
-			elif data.strip()[-2].lower() == 'k':
-				d = float(data.strip()[0:-2])
-			else:
-				raise forms.ValidationError("Please include a unit (kg or lb).")
-		else:
+		message="Must be a number followed by a unit (kg or lb)."
+		data = str(self.cleaned_data['weight_in']).strip()
+		if len(data) == 0:
 			return ""
+		if len(data) >= 3:
+			if data[-2].lower() == 'l':
+				try:
+					d = float(data[0:-2])/2.205
+				except:
+					raise forms.ValidationError(message)
+			elif data[-2].lower() == 'k':
+				try:
+					d = float(data[0:-2])
+				except:
+					raise forms.ValidationError(message)
+			else:
+				raise forms.ValidationError(message)
+		else:
+			raise forms.ValidationError(message)
 		return d
 
 #class NewVitalForm(forms.ModelForm):
