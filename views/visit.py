@@ -871,7 +871,7 @@ def visit_record(request, id, type):
 		p = Popen(cmd, shell=True, bufsize=0,
 			stdin=PIPE, stdout=PIPE, close_fds=True)
 		(child_stdin, child_stdout) = (p.stdin, p.stdout)
-		child_stdin.write(text_out)
+		child_stdin.write(text_out.encode( "utf-8" ))
 		out,err=p.communicate()
 		return render_to_response('close_window.html', {})
 	else:
