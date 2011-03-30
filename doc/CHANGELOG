@@ -1,3 +1,5 @@
+v0.4.1.2 -
+	- encode unicode sting to utf-8 before sending it out to enscript
 v0.4.1.1 -
 	- Added better error checking to the Add Vital form
 	- Fixed bug where all patients were getting an allergies header
