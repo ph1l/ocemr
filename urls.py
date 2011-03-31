@@ -35,10 +35,8 @@ urlpatterns = patterns('',
     (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     (r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'template_name': 'logout.html'}),
     #Development
-    (r'^media/ocemr/css/(?P<path>.*)$', 'django.views.static.serve',
-	{'document_root': settings.APP_PATH+'/static_media/css'}),
-    (r'^media/ocemr/js/(?P<path>.*)$', 'django.views.static.serve',
-	{'document_root': settings.APP_PATH+'/static_media/js'}),
+    (r'^media/ocemr/(?P<path>.*)$', 'django.views.static.serve',
+	{'document_root': settings.APP_PATH+'/static_media'}),
 )
 urlpatterns += patterns('ocemr.views.util',
 
