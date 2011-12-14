@@ -163,6 +163,38 @@ class Visit(models.Model):
 	is_checking_out = property(_is_checking_out)
 	is_finished = property(_is_finished)
 	get_num_meds = property(_get_num_meds)
+
+	def get_estimated_visit_cost_detail(self):
+		"""
+		Returns an array of estimated cost items
+		each array item is a list:
+			( description, base cost, quantity, total )
+		"""
+		cost_detail =[]
+		labs = Lab.objects.filter(visit=self)
+		if len(labs) > 0:
+			for l in labs:
+				if l.status != "COM":
+					continue
+				cost_detail.append( (
+					( "Lab: %s"%(l.type.title), l.type.cost , float(1), l.type.cost)
+					) )
+		meds = Med.objects.filter(visit=self)
+		if len(meds) > 0:
+			for m in meds:
+				if m.status == "DIS":
+					cost_detail.append(
+						( "Med: %s"%(m.type.title), m.type.cost, m.dispenseAmount, m.type.cost * m.dispenseAmount )
+						)
+		return cost_detail
+
+	def get_estimated_visit_cost(self):
+		cost_estimate = float(0)
+		cost_detail = self.get_estimated_visit_cost_detail()
+		for row in cost_detail:
+			cost_estimate += row[3]
+		return cost_estimate
+
 	def get_lab_status(self):
 		"""
 			returns an INT indicated the following statuses:
@@ -346,6 +378,7 @@ class Vital(models.Model):
 
 class LabType(models.Model):
 	title = models.CharField(max_length=128)
+	cost = models.FloatField(default=0)
 	def __unicode__(self):
 		return "%s"%(self.title)
 
@@ -424,6 +457,7 @@ class Diagnosis(models.Model):
 
 class MedType(models.Model):
 	title = models.CharField(max_length=128)
+	cost = models.FloatField(default=0)
 	def __unicode__(self):
 		return "%s"%(self.title)
 

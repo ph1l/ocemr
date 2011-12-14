@@ -774,6 +774,23 @@ def visit_collect(request,id):
 	
 
 @login_required
+def visit_cost_estimate_detail(request,id):
+	from ocemr.models import Visit
+	vid=int(id)
+	v=Visit.objects.get(pk=vid)
+	table="<TR><TH>Title<TH>Base Cost<TH>Quantity<TH>Total</TR>"
+	ced = v.get_estimated_visit_cost_detail()
+	for row in ced:
+		table+="<TR><TD>%s<TD>%s<TD>%s<TD>%s</TR>"%(
+			row[0], row[1], row[2], row[3] )
+	table+="<TR><TD COLSPAN=3>TOTAL<TD>%s</TR>"%(
+		v.get_estimated_visit_cost() )
+	return render_to_response('popup_table.html', {
+		'title': 'Estimated Visit Cost Detail',
+		'table': table,
+	},context_instance=RequestContext(request))
+
+@login_required
 def visit_bill_amount(request,id):
 	"""
 	"""

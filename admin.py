@@ -58,7 +58,7 @@ admin.site.register(VitalType,VitalTypeAdmin)
 
 
 class LabTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title' ]
+	list_display = [ 'id', 'title', 'cost' ]
 	search_fields = [ 'title' ]
 
 admin.site.register(LabType,LabTypeAdmin)
@@ -70,7 +70,7 @@ class DiagnosisTypeAdmin(admin.ModelAdmin):
 admin.site.register(DiagnosisType, DiagnosisTypeAdmin)
 
 class MedTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title' ]
+	list_display = [ 'id', 'title', 'cost' ]
 	search_fields = [ 'title' ]
 
 admin.site.register(MedType,MedTypeAdmin)
