@@ -81,6 +81,12 @@ class ExamNoteTypeAdmin(admin.ModelAdmin):
 
 admin.site.register(ExamNoteType,ExamNoteTypeAdmin)
 
+class VacTypeAdmin(admin.ModelAdmin):
+	list_display = [ 'id', 'title', 'cost' ]
+	search_fields = [ 'title' ]
+
+admin.site.register(VacType,VacTypeAdmin)
+
 #admin.site.register(Referral)
 #admin.site.register(VisitSymptom)
 #admin.site.register(Vital)
