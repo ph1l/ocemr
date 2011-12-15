@@ -499,6 +499,47 @@ class ImmunizationLog(models.Model):
 	def __unicode__(self):
 		return "%s: ImmunizationLog"%(self.id)
 
+class VacType(models.Model):
+	title = models.CharField(max_length=128)
+	enabled = models.BooleanField(default=True)
+	cost = models.FloatField(default=0)
+	def __unicode__(self):
+		return "%s"%(self.title)
+
+class Vac(models.Model):
+	VAC_STATUS_CHOICES = (
+		('PLA','Planned'),
+		('INP','In Progress'),
+		('CAN','Canceled'),
+		('COM','Completed'),
+	)
+	type = models.ForeignKey(VacType)
+	patient = models.ForeignKey(Patient)
+	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	addedBy = models.ForeignKey(User)
+	status = models.CharField(max_length=3, choices=VAC_STATUS_CHOICES)
+	def _get_displayStatus(self):
+		for code, displayStatus in self.VAC_STATUS_CHOICES:
+			if code == self.status:
+				return displayStatus
+		return ""
+	displayStatus = property(_get_displayStatus)
+	def get_notes(self):
+		"""
+		"""
+		from models import VacNote
+		return VacNote.objects.filter(vac=self).order_by('-addedDateTime')
+	def __unicode__(self):
+		return "%s: %s"%(self.id, self.type.title)
+
+
+class VacNote(models.Model):
+	vac = models.ForeignKey(Vac)
+	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	addedBy = models.ForeignKey(User)
+	note = models.TextField(default="")
+
+
 class Allergy(models.Model):
 	patient = models.ForeignKey(Patient)
 	to = models.CharField(max_length=64)
