@@ -28,7 +28,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadReque
 
 from django.db.models import get_model, Q
 
-def get_visit_menu(current):
+def get_visit_menu(current,patient):
 	
 	menu = [
 		{ 'link': 'past', 'ord':1, 'title': 'Past Visits', 'active': False },
@@ -40,12 +40,15 @@ def get_visit_menu(current):
 		{ 'link': 'refe', 'ord':7, 'title': 'Referrals', 'active': False },
 		{ 'link': 'immu', 'ord':8, 'title': 'Immunizations', 'active': False },
 		{ 'link': 'vacs', 'ord':9, 'title': 'Vaccinations', 'active': False },
-		{ 'link': 'note', 'ord':10, 'title': 'Notes', 'active': False },
+		{ 'link': 'note', 'ord':10, 'title': 'Notes', 'active': False, 'hilite': False },
 		]
 	for i in range(0,len(menu)):
 		if menu[i]['link']==current:
 			menu[i]['active']=True
-			return menu
+	if patient.scratchNote:
+		for i in range(0,len(menu)):
+			if menu[i]['link']=='note':
+				menu[i]['hilite']=True
 	return menu
 @login_required
 def visit(request,id):
@@ -157,11 +160,11 @@ def visit_past(request,id):
 	"""
 	Visit 
 	"""
-	menu = get_visit_menu('past')
 	from ocemr.models import Visit
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
+	menu = get_visit_menu('past', p)
 
 	
 	return render_to_response('visit_past.html', locals(),context_instance=RequestContext(request))
@@ -171,11 +174,11 @@ def visit_subj(request,id):
 	"""
 	Visit 
 	"""
-	menu = get_visit_menu('subj')
 	from ocemr.models import Visit, SymptomType, VisitSymptom
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
+	menu = get_visit_menu('subj',p)
 
 	symptomTypes = SymptomType.objects.all()
 	symptoms = VisitSymptom.objects.filter(visit=v)
@@ -257,12 +260,12 @@ def visit_obje(request,id):
 	"""
 	Visit 
 	"""
-	menu = get_visit_menu('obje')
 	from ocemr.models import Visit, VitalType, Vital
 	from ocemr.models import ExamNoteType, ExamNote
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
+	menu = get_visit_menu('obje',p)
 
 	vitalTypes = VitalType.objects.all()
 	vital_times_in = Vital.objects.filter(visit=v).values('observedDateTime').distinct()
@@ -473,11 +476,11 @@ def visit_labs(request,id):
 	"""
 	Visit 
 	"""
-	menu = get_visit_menu('labs')
 	from ocemr.models import Visit, LabType, Lab
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
+	menu = get_visit_menu('labs',p)
 
 	labTypes = LabType.objects.all()
 	labs = Lab.objects.filter(visit=v)
@@ -503,11 +506,11 @@ def visit_plan(request,id):
 	"""
 	Visit 
 	"""
-	menu = get_visit_menu('plan')
 	from ocemr.models import Visit
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
+	menu = get_visit_menu('plan',p)
 
 	return render_to_response('visit_plan.html', locals(),context_instance=RequestContext(request))
 
@@ -558,11 +561,11 @@ def visit_meds(request,id):
 	"""
 	Visit 
 	"""
-	menu = get_visit_menu('meds')
 	from ocemr.models import Visit, Diagnosis
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
+	menu = get_visit_menu('meds',p)
 	q_status = Q( status='NEW' ) | Q( status='FOL' )
 	diagnoses = Diagnosis.objects.filter(visit=v).filter(q_status)
 
@@ -599,11 +602,11 @@ def visit_refe(request,id):
 	"""
 	Visit 
 	"""
-	menu = get_visit_menu('refe')
 	from ocemr.models import Visit, Referral
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
+	menu = get_visit_menu('refe',p)
 
 	referrals = Referral.objects.filter(patient=p).order_by('-addedDateTime')
 
@@ -660,11 +663,11 @@ def visit_immu(request,id):
 	"""
 	Visit 
 	"""
-	menu = get_visit_menu('immu')
 	from ocemr.models import Visit, ImmunizationLog
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
+	menu = get_visit_menu('immu',p)
 
 	immunizationLogs = ImmunizationLog.objects.filter(patient=p)
 
@@ -698,11 +701,11 @@ def visit_vacs(request,id):
 	"""
 	
 	"""
-	menu = get_visit_menu('vacs')
 	from ocemr.models import Visit, Patient, Vac
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
+	menu = get_visit_menu('vacs',p)
 	vaccinations = Vac.objects.filter(patient=p)
 
 
@@ -739,11 +742,11 @@ def visit_note(request,id):
 	"""
 	Visit 
 	"""
-	menu = get_visit_menu('note')
 	from ocemr.models import Visit
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
+	menu = get_visit_menu('note',p)
 	return render_to_response('visit_note.html', locals(),context_instance=RequestContext(request))
 
 @login_required
