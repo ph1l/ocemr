@@ -91,7 +91,7 @@ def autosearch_title(request, inapp, inmodel):
 	except ValueError:
 		return HttpResponseBadRequest() 
 	Foo = get_model( inapp, inmodel )
-	foos = Foo.objects.filter(title__icontains=q) #[:limit]
+	foos = Foo.objects.filter(title__icontains=q,active=True) #[:limit]
 	return HttpResponse(iter_results(foos), mimetype='text/plain')
 
 autosearch_title = cache_page(autosearch_title, 60 * 60)

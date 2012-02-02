@@ -379,6 +379,7 @@ class Vital(models.Model):
 class LabType(models.Model):
 	title = models.CharField(max_length=128)
 	cost = models.FloatField(default=0)
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s"%(self.title)
 
@@ -422,6 +423,7 @@ class DiagnosisType(models.Model):
 	title = models.CharField(max_length=128)
 	chronic = models.BooleanField(default=False)
 	icpc2Code = models.CharField(max_length=5,default="")
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s {%s}"%(self.title,self.icpc2Code)
 
@@ -458,6 +460,7 @@ class Diagnosis(models.Model):
 class MedType(models.Model):
 	title = models.CharField(max_length=128)
 	cost = models.FloatField(default=0)
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s"%(self.title)
 
@@ -537,6 +540,7 @@ class VacType(models.Model):
 	title = models.CharField(max_length=128)
 	enabled = models.BooleanField(default=True)
 	cost = models.FloatField(default=0)
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s"%(self.title)
 
