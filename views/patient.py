@@ -226,6 +226,44 @@ def patient_edit_note(request, id):
 
 
 @login_required
+def patient_edit_alt_contact_name(request, id):
+	from ocemr.models import Patient
+
+	p = Patient.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditPatientAltContactNameForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			p.altContactName = form.cleaned_data['alt_contact_name']
+			p.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditPatientAltContactNameForm(initial={'alt_contact_name': p.altContactName}) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Patient Alternate Contact Name',
+		'form_action': '/patient/edit/alt_contact_name/%s/'%(id),
+		'form': form,
+	},context_instance=RequestContext(request))
+
+@login_required
+def patient_edit_alt_contact_phone(request, id):
+	from ocemr.models import Patient
+
+	p = Patient.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditPatientAltContactPhoneForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			p.altContactPhone = form.cleaned_data['alt_contact_phone']
+			p.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditPatientAltContactPhoneForm(initial={'alt_contact_phone': p.altContactPhone}) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Patient Alternate Contact Phone',
+		'form_action': '/patient/edit/alt_contact_phone/%s/'%(id),
+		'form': form,
+	},context_instance=RequestContext(request))
+
+@login_required
 def patient(request,id):
 	"""
 	Patient Index

@@ -60,6 +60,8 @@ class Patient(models.Model):
 	scratchNote = models.TextField(blank=True)
 	phone = models.CharField(max_length=32, blank=True)
 	email = models.EmailField(blank=True)
+	altContactName = models.CharField(max_length=32, blank=True)
+	altContactPhone = models.CharField(max_length=32, blank=True)
 	def __unicode__(self):
 		return '%s (%s-%d) %s' % (self.fullName, self.gender, self.age, self.village.name)
 	def _get_age(self):

@@ -84,6 +84,12 @@ class EditPatientPhoneForm(forms.Form):
 class EditPatientEmailForm(forms.Form):
 	email = forms.EmailField(label='e-mail')
 
+class EditPatientAltContactNameForm(forms.Form):
+	alt_contact_name = forms.CharField(label='Name')
+
+class EditPatientAltContactPhoneForm(forms.Form):
+	alt_contact_phone = forms.CharField(label='Phone')
+
 class NewScheduledVisitForm(forms.ModelForm):
 	from models import Patient
 	from models import Visit
