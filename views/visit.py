@@ -78,9 +78,14 @@ def visit_claim(request,id):
 	if old_v != None:
 		old_diags = Diagnosis.objects.filter(visit=old_v).exclude(status='RES')
 		for old_diag in old_diags:
-			d, is_new = Diagnosis.objects.get_or_create(type=old_diag.type, patient=p, visit=v, diagnosedBy=request.user)
-			if is_new:
-				d.save()
+			try: # Check for existing Diagnosis in this record
+				d = Diagnosis.objects.get(type=old_diag.type, patient=p, visit=v)
+			except: 
+				d = None
+			if d == None: # Create the record.
+				d, is_new = Diagnosis.objects.get_or_create(type=old_diag.type, patient=p, visit=v, diagnosedBy=request.user)
+				if is_new:
+					d.save()
 				
 		
 	return render_to_response('close_window.html', {})
