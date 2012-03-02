@@ -900,6 +900,7 @@ def visit_record(request, id, type):
 
 	v = Visit.objects.get(pk=id)
 
+	# TODO: Make this header Configurable!
 	head_text = """\t\t\t\tEngeye Health Clinic - Ddegeya-Masaka
 \t\t\t\tP.O. Box 26592, Kampala\t\t0772-556105\t\twww.engeye.org
 
