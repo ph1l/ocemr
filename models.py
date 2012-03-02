@@ -315,21 +315,21 @@ class Visit(models.Model):
 		
 		symptoms = VisitSymptom.objects.filter(visit=self)
 		for symptom in symptoms:
-			out_txt += "   %s: %s\n"%(symptom.type.title,symptom.notes)
+			out_txt += "\t%s: %s\n"%(symptom.type.title,symptom.notes)
 		vitals = Vital.objects.filter(visit=self)
 		out_txt += "O:"
 		for vital in vitals:
-			out_txt += " %s: %s" %(vital.type.title, vital.get_display_data())
+			out_txt += "\t%s: %s" %(vital.type.title, vital.get_display_data())
 		out_txt += "\n"
 		examNotes = ExamNote.objects.filter(visit=self)
 		for examNote in examNotes:
-			out_txt += "   %s: %s\n"%(examNote.type.title, examNote.note)
+			out_txt += "\t%s: %s\n"%(examNote.type.title, examNote.note)
 		diagnoses = Diagnosis.objects.filter(visit=self)
 		for diagnosis in diagnoses:
 			out_txt +="AP: %s:%s - %s\n"%(diagnosis.displayStatus,diagnosis.type.title, diagnosis.notes)
 			meds = Med.objects.filter(diagnosis=diagnosis, status='DIS')
 			for med in meds:
-				out_txt +="    Med: %s - %s\n"%(med.type.title,med.dosage)
+				out_txt +="\tMed: %s - %s\n"%(med.type.title,med.dosage)
 		referrals = Referral.objects.filter(visit=self)
 		for referral in referrals:
 			out_txt +="Referral: %s - %s"%(referral.to, referral.reason)

@@ -942,5 +942,5 @@ def visit_record(request, id, type):
 		out,err=p.communicate()
 		return render_to_response('close_window.html', {})
 	else:
-		lines = text_out.replace(' ','&nbsp;').replace('\t','&nbsp;&nbsp;&nbsp;').replace('\n','<BR>')
+		lines = text_out.replace('\t','&nbsp;&nbsp;&nbsp;').replace('\n','<BR>')
 		return render_to_response('popup_lines.html', {'lines': lines, 'link_text': """<a href="#" onclick="window.print();return false;">Print</a>"""})
