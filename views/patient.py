@@ -30,6 +30,30 @@ from django.db.models import get_model, Q
 from django.views.decorators.cache import cache_page
 
 @login_required
+def select_date_for_patient_queue(request):
+	"""
+	"""
+	from ocemr.forms import SelectDateForm
+	import datetime
+
+	form_valid=0
+        if request.method == 'POST':
+                form = SelectDateForm(request.POST)
+                if form.is_valid():
+                        date_in = form.cleaned_data['date']
+			form_valid=1
+        else:
+                form = SelectDateForm()
+	if not form_valid:
+	        return render_to_response('popup_form.html', {
+	                'title': 'Enter Date For Patient Queue',
+	                'form_action': '/select_date_for_patient_queue/',
+	                'form': form,
+	        },context_instance=RequestContext(request))
+	days_offset=(datetime.date.today()-date_in).days *-1
+	return HttpResponseRedirect('/patient_queue/%d/'%(days_offset))
+
+@login_required
 def patient_queue(request,dayoffset=0):
 	"""
 	"""
