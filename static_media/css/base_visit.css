@@ -82,6 +82,13 @@ border: .1em solid #03c;
 border-bottom: .5em solid #03c;
 margin-bottom: .3em;
 }
+li.MenuTabHilite { 
+display:inline; 
+background-color:#FFF;
+border: .1em solid #03c;
+border-bottom: .5em solid #03c;
+margin-bottom: .3em;
+}
 li.MenuTabActive { 
 display:inline; 
 background-color: #03c;
@@ -95,6 +102,10 @@ color: #03c;
 }
 a.MenuTab:hover {
 text-decoration: underline;
+}
+a.MenuTabHilite {
+text-decoration: none;
+color: #f00;
 }
 a.MenuTabActive {
 text-decoration: none;

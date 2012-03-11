@@ -8,16 +8,28 @@
   <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> 
   <META HTTP-EQUIV="Refresh" CONTENT="30"> 
 {% endcomment %}
+<script type="text/javascript" src="/media/ocemr/js/CalendarPopup.js"></script>
+<script type="text/javascript" src="/media/ocemr/js/AnchorPosition.js"></script> 
+<script type="text/javascript" src="/media/ocemr/js/date.js"></script>
+<script type="text/javascript" src="/media/ocemr/js/PopupWindow.js"></script>
 {% endblock %}
 
 {% block content %}
 <DIV STYLE="font-size: 1.2em; text-align: center;">
-Showing Data For:
+<FORM ACTION="/select_date_for_patient_queue/" METHOD="POST">
 (
 <A HREF=/patient_queue/{{dayoffset_prev}}/>&#60;prev</A>
-{{d_today|date:"SHORT_DATE_FORMAT"}}
+<SCRIPT LANGUAGE="JavaScript" ID="jscal_date">
+				var cal_date = new CalendarPopup();
+				cal_date.showYearNavigation();
+				cal_date.showYearNavigationInput();
+			</SCRIPT>
+<INPUT TYPE="text" NAME="date" ID="id_date" SIZE=7 VALUE="{{d_today|date:"SHORT_DATE_FORMAT"}}" >
+<A HREF="#" onClick='cal_date.select(document.forms[0].id_date,"date","yyyy-MM-dd"); return false;' NAME="date" ID="date">^</a>
+<INPUT TYPE=submit VALUE=go>
 <A HREF=/patient_queue/{{dayoffset_next}}/>next&#62;</A>
 )
+</FORM>
 </DIV>
 
 

@@ -84,6 +84,12 @@ class EditPatientPhoneForm(forms.Form):
 class EditPatientEmailForm(forms.Form):
 	email = forms.EmailField(label='e-mail')
 
+class EditPatientAltContactNameForm(forms.Form):
+	alt_contact_name = forms.CharField(label='Name')
+
+class EditPatientAltContactPhoneForm(forms.Form):
+	alt_contact_phone = forms.CharField(label='Phone')
+
 class NewScheduledVisitForm(forms.ModelForm):
 	from models import Patient
 	from models import Visit
@@ -233,6 +239,7 @@ class PatientSearchForm(forms.Form):
 				),
 			required=False,
 			)
+	pid = forms.IntegerField(label='Patient ID#', required=False)
 
 
 class NewVisitSymptomForm(forms.ModelForm):
@@ -304,6 +311,16 @@ required=False
 	weight_in = forms.CharField(
 		label="Weight",
 		help_text="in kilograms or pounds. (valid examples \"77.5 kg\" or \"150lb\".)",
+		required=False
+		)
+	spo2_in = forms.CharField(
+		label="SpO2",
+		help_text="in percent. (valid examples \"80\" or \"98%\".)",
+		required=False
+		)
+	oxygen_in = forms.CharField(
+		label="% Oxygen",
+		help_text="in percent. (valid examples \"20\" or \"30%\".)",
 		required=False
 		)
 
@@ -380,7 +397,40 @@ required=False
 		else:
 			raise forms.ValidationError(message)
 		return d
-
+	def clean_spo2_in(self):
+		message="Must be a percentage."
+		data = str(self.cleaned_data['spo2_in']).strip()
+		if len(data) == 0:
+			return ""
+		else:
+			if data[-1].lower() == '%':
+				try:
+					d = float(data[0:-1])
+				except:
+					raise forms.ValidationError(message)
+			else:
+				try:
+					d = float(data)
+				except:
+					raise forms.ValidationError(message)
+		return d
+	def clean_oxygen_in(self):
+		message="Must be a percentage."
+		data = str(self.cleaned_data['oxygen_in']).strip()
+		if len(data) == 0:
+			return ""
+		else:
+			if data[-1].lower() == '%':
+				try:
+					d = float(data[0:-1])
+				except:
+					raise forms.ValidationError(message)
+			else:
+				try:
+					d = float(data)
+				except:
+					raise forms.ValidationError(message)
+		return d
 #class NewVitalForm(forms.ModelForm):
 #	from models import Visit, VitalType, Patient
 #	type = forms.ModelChoiceField(queryset=VitalType.objects.all(),widget=forms.HiddenInput)

@@ -32,7 +32,11 @@
     {% if mi.active %}
      <li class="MenuTabActive"><a class="MenuTabActive" href=/visit/{{v.id}}/{{mi.link}}/>{{ mi.title }}</a></li>
     {% else %}
-     <li class="MenuTab"><a class="MenuTab" href=/visit/{{v.id}}/{{mi.link}}/>{{ mi.title }}</a></li>
+      {% if mi.hilite %}
+       <li class="MenuTabHilite"><a class="MenuTabHilite" href=/visit/{{v.id}}/{{mi.link}}/>{{ mi.title }}</a></li>
+      {% else %}
+       <li class="MenuTab"><a class="MenuTab" href=/visit/{{v.id}}/{{mi.link}}/>{{ mi.title }}</a></li>
+      {% endif %}
     {% endif %}
 {% endfor %}
   </ul> 

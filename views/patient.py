@@ -30,6 +30,30 @@ from django.db.models import get_model, Q
 from django.views.decorators.cache import cache_page
 
 @login_required
+def select_date_for_patient_queue(request):
+	"""
+	"""
+	from ocemr.forms import SelectDateForm
+	import datetime
+
+	form_valid=0
+        if request.method == 'POST':
+                form = SelectDateForm(request.POST)
+                if form.is_valid():
+                        date_in = form.cleaned_data['date']
+			form_valid=1
+        else:
+                form = SelectDateForm()
+	if not form_valid:
+	        return render_to_response('popup_form.html', {
+	                'title': 'Enter Date For Patient Queue',
+	                'form_action': '/select_date_for_patient_queue/',
+	                'form': form,
+	        },context_instance=RequestContext(request))
+	days_offset=(datetime.date.today()-date_in).days *-1
+	return HttpResponseRedirect('/patient_queue/%d/'%(days_offset))
+
+@login_required
 def patient_queue(request,dayoffset=0):
 	"""
 	"""
@@ -226,6 +250,44 @@ def patient_edit_note(request, id):
 
 
 @login_required
+def patient_edit_alt_contact_name(request, id):
+	from ocemr.models import Patient
+
+	p = Patient.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditPatientAltContactNameForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			p.altContactName = form.cleaned_data['alt_contact_name']
+			p.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditPatientAltContactNameForm(initial={'alt_contact_name': p.altContactName}) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Patient Alternate Contact Name',
+		'form_action': '/patient/edit/alt_contact_name/%s/'%(id),
+		'form': form,
+	},context_instance=RequestContext(request))
+
+@login_required
+def patient_edit_alt_contact_phone(request, id):
+	from ocemr.models import Patient
+
+	p = Patient.objects.get(pk=id)
+	if request.method == 'POST': # If the form has been submitted...
+		form = EditPatientAltContactPhoneForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			p.altContactPhone = form.cleaned_data['alt_contact_phone']
+			p.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = EditPatientAltContactPhoneForm(initial={'alt_contact_phone': p.altContactPhone}) # An unbound form
+	return render_to_response('popup_form.html', {
+		'title': 'Edit Patient Alternate Contact Phone',
+		'form_action': '/patient/edit/alt_contact_phone/%s/'%(id),
+		'form': form,
+	},context_instance=RequestContext(request))
+
+@login_required
 def patient(request,id):
 	"""
 	Patient Index
@@ -250,6 +312,7 @@ def patient_search(request):
 		if form.is_valid(): # All validation rules pass
 			name = form.cleaned_data['name']
 			village = form.cleaned_data['village']
+			pid = form.cleaned_data['pid']
 			from django.db.models import Q
 			from ocemr.models import Patient
 			#qset = Q ()
@@ -271,6 +334,8 @@ def patient_search(request):
                                           )
 					i += 1
 				patients = patients.filter(q_name)
+			if pid != None:
+				patients = patients.filter(pk=pid)
 			return render_to_response('patient_list.html', {
 				'patients':patients,
 			}, context_instance=RequestContext(request),)

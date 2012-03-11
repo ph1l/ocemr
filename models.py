@@ -60,6 +60,8 @@ class Patient(models.Model):
 	scratchNote = models.TextField(blank=True)
 	phone = models.CharField(max_length=32, blank=True)
 	email = models.EmailField(blank=True)
+	altContactName = models.CharField(max_length=32, blank=True)
+	altContactPhone = models.CharField(max_length=32, blank=True)
 	def __unicode__(self):
 		return '%s (%s-%d) %s' % (self.fullName, self.gender, self.age, self.village.name)
 	def _get_age(self):
@@ -313,21 +315,21 @@ class Visit(models.Model):
 		
 		symptoms = VisitSymptom.objects.filter(visit=self)
 		for symptom in symptoms:
-			out_txt += "   %s: %s\n"%(symptom.type.title,symptom.notes)
+			out_txt += "\t%s: %s\n"%(symptom.type.title,symptom.notes)
 		vitals = Vital.objects.filter(visit=self)
 		out_txt += "O:"
 		for vital in vitals:
-			out_txt += " %s: %s" %(vital.type.title, vital.get_display_data())
+			out_txt += "\t%s: %s" %(vital.type.title, vital.get_display_data())
 		out_txt += "\n"
 		examNotes = ExamNote.objects.filter(visit=self)
 		for examNote in examNotes:
-			out_txt += "   %s: %s\n"%(examNote.type.title, examNote.note)
+			out_txt += "\t%s: %s\n"%(examNote.type.title, examNote.note)
 		diagnoses = Diagnosis.objects.filter(visit=self)
 		for diagnosis in diagnoses:
 			out_txt +="AP: %s:%s - %s\n"%(diagnosis.displayStatus,diagnosis.type.title, diagnosis.notes)
 			meds = Med.objects.filter(diagnosis=diagnosis, status='DIS')
 			for med in meds:
-				out_txt +="    Med: %s - %s\n"%(med.type.title,med.dosage)
+				out_txt +="\tMed: %s - %s\n"%(med.type.title,med.dosage)
 		referrals = Referral.objects.filter(visit=self)
 		for referral in referrals:
 			out_txt +="Referral: %s - %s"%(referral.to, referral.reason)
@@ -379,7 +381,7 @@ class Vital(models.Model):
 class LabType(models.Model):
 	title = models.CharField(max_length=128)
 	cost = models.FloatField(default=0)
-	enabled = models.BooleanField(default=True)
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s"%(self.title)
 
@@ -423,7 +425,7 @@ class DiagnosisType(models.Model):
 	title = models.CharField(max_length=128)
 	chronic = models.BooleanField(default=False)
 	icpc2Code = models.CharField(max_length=5,default="")
-	enabled = models.BooleanField(default=True)
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s {%s}"%(self.title,self.icpc2Code)
 
@@ -460,7 +462,7 @@ class Diagnosis(models.Model):
 class MedType(models.Model):
 	title = models.CharField(max_length=128)
 	cost = models.FloatField(default=0)
-	enabled = models.BooleanField(default=True)
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s"%(self.title)
 
@@ -538,8 +540,8 @@ class ImmunizationLog(models.Model):
 
 class VacType(models.Model):
 	title = models.CharField(max_length=128)
-	enabled = models.BooleanField(default=True)
 	cost = models.FloatField(default=0)
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s"%(self.title)
 

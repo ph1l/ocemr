@@ -187,7 +187,6 @@ def vitals_hrrr(request, id):
 	matplotlib.pyplot.close(fig)
 	return response
 
-
 def vitals_height_weight(request, id):
 	"""
 	"""
@@ -234,7 +233,51 @@ def vitals_height_weight(request, id):
 	matplotlib.pyplot.close(fig)
 	return response
 
+def vitals_spo2_o2(request, id):
+	"""
+	"""
+	from ocemr.models import Patient, VitalType, Vital
+	p = Patient.objects.get(pk=id)
+	vt= VitalType.objects.get(title="SpO2")
+	vitals=Vital.objects.filter(patient=p,type=vt)
+	date_list=[]
+	data_list=[]
+	for v in vitals:
+		date_list.append(v.observedDateTime)
+		data_list.append(v.data)
+	vt2= VitalType.objects.get(title="Oxygen")
+	vitals2=Vital.objects.filter(patient=p,type=vt2)
+	date_list2=[]
+	data_list2=[]
+	for v in vitals2:
+		date_list2.append(v.observedDateTime)
+		data_list2.append(v.data)
+
+	import matplotlib
+	matplotlib.use('Agg')
+	import matplotlib.pyplot as plt
+
+	fig = plt.figure(num=1,figsize=(10,5),dpi=75)
+	fig.interactive = False
+	plt.title('SpO2 / Oxygen History for %s'%(p))
+	plt.grid(True)
+	#plt.axhspan(ymin=36.75, ymax=37.25, color='g',alpha=.5)
+	plt.plot(date_list,data_list, 'o-', color='r',label="SpO2")
+	plt.plot(date_list2,data_list2, 'o-', color='m',label="Oxygen")
+	plt.ylabel('percent')
+	plt.legend(loc=0)
+	fig.autofmt_xdate()
+
+	fig.text(0.15, 0.33, 'OCEMR',
+		fontsize=150, color='gray',
+		alpha=0.07)
+
+	plt.draw()
+	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
+	response = HttpResponse(content_type='image/png')
+	canvas.print_png(response)
+	matplotlib.pyplot.close(fig)
+	return response
 
 def vitals_graphs_index(request, id):
 	return render_to_response('popup_graphs_index.html', {'id': id, })
-
