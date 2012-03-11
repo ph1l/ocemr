@@ -371,6 +371,25 @@ def visit_obje_vitals_new(request,id):
 					observedDateTime=dt, observedBy=u,
 					data=data)
 				v.save()
+			#SpO2
+			data = form.cleaned_data['spo2_in']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='SpO2')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
+
+			#Oxygen
+			data = form.cleaned_data['oxygen_in']
+			if not ( data == None or data == ''):
+				vt = VitalType.objects.get(title='Oxygen')
+				v = Vital(
+					type=vt,patient=p, visit=vis,
+					observedDateTime=dt, observedBy=u,
+					data=data)
+				v.save()
 
 			return HttpResponseRedirect('/close_window/')
 	else:
