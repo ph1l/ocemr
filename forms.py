@@ -239,6 +239,7 @@ class PatientSearchForm(forms.Form):
 				),
 			required=False,
 			)
+	pid = forms.IntegerField(label='Patient ID#', required=False)
 
 
 class NewVisitSymptomForm(forms.ModelForm):

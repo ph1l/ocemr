@@ -312,6 +312,7 @@ def patient_search(request):
 		if form.is_valid(): # All validation rules pass
 			name = form.cleaned_data['name']
 			village = form.cleaned_data['village']
+			pid = form.cleaned_data['pid']
 			from django.db.models import Q
 			from ocemr.models import Patient
 			#qset = Q ()
@@ -333,6 +334,8 @@ def patient_search(request):
                                           )
 					i += 1
 				patients = patients.filter(q_name)
+			if pid != None:
+				patients = patients.filter(pk=pid)
 			return render_to_response('patient_list.html', {
 				'patients':patients,
 			}, context_instance=RequestContext(request),)
