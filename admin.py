@@ -58,19 +58,19 @@ admin.site.register(VitalType,VitalTypeAdmin)
 
 
 class LabTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title', 'cost' ]
+	list_display = [ 'id', 'title', 'cost', 'enabled' ]
 	search_fields = [ 'title' ]
 
 admin.site.register(LabType,LabTypeAdmin)
 
 class DiagnosisTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'icpc2Code', 'title' ]
+	list_display = [ 'id', 'icpc2Code', 'title', 'enabled' ]
 	search_fields = [ 'icpc2Code', 'title' ]
 
 admin.site.register(DiagnosisType, DiagnosisTypeAdmin)
 
 class MedTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title', 'cost' ]
+	list_display = [ 'id', 'title', 'cost', 'enabled' ]
 	search_fields = [ 'title' ]
 
 admin.site.register(MedType,MedTypeAdmin)

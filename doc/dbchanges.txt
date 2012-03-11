@@ -1,5 +1,7 @@
 0.4.X -> 0.5.X
 
+(first run 'manage.py syncdb' to add new tables.)
+
 sqlite
 ------
 ALTER TABLE ocemr_labtype add column "cost" double precision NOT NULL default 0;
@@ -8,7 +10,10 @@ ALTER TABLE ocemr_medtype add column "cost" double precision NOT NULL default 0;
 MySQL
 -----
 ALTER TABLE ocemr_labtype add column `cost` double precision NOT NULL default 0;
+ALTER TABLE ocemr_labtype add column `enabled` bool NOT NULL default True;
 ALTER TABLE ocemr_medtype add column `cost` double precision NOT NULL default 0;
+ALTER TABLE ocemr_medtype add column `enabled` bool NOT NULL default True;
+ALTER TABLE ocemr_diagnosistype add column `enabled` bool NOT NULL default True;
 
 0.3.X -> 0.4.X
 ==============
