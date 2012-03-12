@@ -540,7 +540,6 @@ class ImmunizationLog(models.Model):
 
 class VacType(models.Model):
 	title = models.CharField(max_length=128)
-	cost = models.FloatField(default=0)
 	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s"%(self.title)

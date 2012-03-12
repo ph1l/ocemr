@@ -82,7 +82,7 @@ class ExamNoteTypeAdmin(admin.ModelAdmin):
 admin.site.register(ExamNoteType,ExamNoteTypeAdmin)
 
 class VacTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title', 'cost', 'active' ]
+	list_display = [ 'id', 'title', 'active' ]
 	search_fields = [ 'title' ]
 
 admin.site.register(VacType,VacTypeAdmin)
