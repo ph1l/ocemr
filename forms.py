@@ -552,49 +552,6 @@ class NewImmunizationLogForm(forms.ModelForm):
 		model = get_model('ocemr','ImmunizationLog')
                 exclude = [ 'addedDateTime']
 
-class NewVacForm(forms.ModelForm):
-	from models import Patient
-        type = forms.CharField(
-			widget=widgets.JQueryAutoContains(
-				'/autosearch_title/ocemr/VacType/'
-				)
-			)
-	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
-	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-	status = forms.CharField(widget=forms.HiddenInput)
-	
-	def __init__(self, patient, user, *args, **kwargs):
-		
-		super(NewVacForm, self).__init__(*args, **kwargs)
-		#raise(" | ".join(dir(self.fields['createdBy'])))
-		self.fields['addedBy'].initial=user.id
-		self.fields['patient'].initial=patient.id
-		self.fields['status'].initial='PLA'
-
-        class Meta:
-                model = get_model('ocemr','Vac')
-                exclude = [ 'addedDateTime', ]
-
-	def clean_type(self):
-		data = self.cleaned_data['type']
-		from models import VacType
-		d = VacType.objects.get(title=data)
-		return d
-
-class NewVacNoteForm(forms.ModelForm):
-	from models import Vac
-	vac = forms.ModelChoiceField(queryset=Vac.objects.all(),widget=forms.HiddenInput)
-	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-	def __init__(self, v, user, *args, **kwargs):
-		
-		super(NewVacNoteForm, self).__init__(*args, **kwargs)
-		self.fields['vac'].initial=v.id
-		self.fields['addedBy'].initial=user.id
-
-	class Meta:
-		model = get_model('ocemr','VacNote')
-                exclude = [ 'addedDateTime']
-
 class NewLabNoteForm(forms.ModelForm):
 	from models import Visit, Lab
 	lab = forms.ModelChoiceField(queryset=Lab.objects.all(),widget=forms.HiddenInput)

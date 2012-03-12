@@ -39,7 +39,6 @@ def get_visit_menu(current,patient):
 		{ 'link': 'meds', 'ord':6, 'title': 'Meds', 'active': False },
 		{ 'link': 'refe', 'ord':7, 'title': 'Referrals', 'active': False },
 		{ 'link': 'immu', 'ord':8, 'title': 'Immunizations', 'active': False },
-		{ 'link': 'vacs', 'ord':9, 'title': 'Vaccinations', 'active': False },
 		{ 'link': 'note', 'ord':10, 'title': 'Notes', 'active': False, 'hilite': False },
 		]
 	for i in range(0,len(menu)):
@@ -719,47 +718,6 @@ def visit_immu_new(request,id):
 		'form': form,
 	},context_instance=RequestContext(request))
 
-
-@login_required
-def visit_vacs(request,id):
-	"""
-	
-	"""
-	from ocemr.models import Visit, Patient, Vac
-
-	v = Visit.objects.get(pk=id)
-	p = v.patient
-	menu = get_visit_menu('vacs',p)
-	vaccinations = Vac.objects.filter(patient=p)
-
-
-	return render_to_response('visit_vacs.html', locals(),context_instance=RequestContext(request))
-
-
-@login_required
-def visit_vacs_new(request,id):
-        """
-        """
-	from ocemr.models import Visit
-	from ocemr.forms import NewVacForm
-
-	id = int(id)
-	v = Visit.objects.get(pk=id)
-	p = v.patient
-
-        if request.method == 'POST':
-                form = NewVacForm(p, request.user, request.POST) # A form bound to the POST data
-                if form.is_valid(): # All validation rules pass
-                        o = form.save()
-                        return HttpResponseRedirect('/close_window/')
-        else:  
-                form = NewVacForm(p, request.user) # An unbound form
-
-	return render_to_response('popup_form.html', {
-                'title': 'Add a Vac for %s'%(p),
-                'form_action': '/visit/%d/vacs/new/'%(v.id),
-                'form': form,
-        },context_instance=RequestContext(request))
 
 @login_required
 def visit_note(request,id):
