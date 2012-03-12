@@ -1,0 +1,9 @@
+ requires:
+
+python-django python-sqlite python-matplotlib python-mysqldb
+cups enscript
+
+ Suggests:
+
+mysql-client mysql-server
+
