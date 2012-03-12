@@ -926,8 +926,13 @@ def visit_record(request, id, type):
 \t\tBino bye bikwata ku kujjanjabibwa kwo funnye leero
 
 """
-	head_text += "\tPatient: %s\tVisit# %05d\tDate: %02d-%02d-%02d\n"%(v.patient,v.id,
-		v.scheduledDate.day, v.scheduledDate.month, v.scheduledDate.year)
+	if v.finishedDateTime:
+		d = v.finishedDateTime
+	else:
+		d = v.seenDateTime
+	head_text += "\tPatient: %s\tVisit# %05d\tDate: %02d-%02d-%02d\n"%(
+		v.patient,v.id,
+		d.day, d.month, d.year)
 	allergy_list = []
 	for a in v.patient.get_allergies():
 		 allergy_list.append(a.to)
