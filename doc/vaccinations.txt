@@ -1,0 +1,66 @@
+Vaccination Support in OCEMR
+============================
+
+Overview
+--------
+
+  It is important to track vaccinations for our patients.  The actual
+implementation can be done in multiple ways.  On the backend, I could
+piggy back the vaccination support off of the currently implemented
+medication support or vaccinations could be a totally seperate set of
+data points with all new user interface views.
+
+Extending Medication to support Vaccinations
+--------------------------------------------
+
+  Vaccinations are a specific sub-type of medications.  This possible
+implementation would extend the idea of medication being tied to a
+diagnosis by allowing a medication to be tied to a diagnosis or a
+vaccination.
+
+ * Pros
+   * may make the user interface more streamlined.
+
+ * Cons
+   * Introduces more complexity into the codebase surrounding meds
+
+Tracking Vaccinations Seperately
+--------------------------------
+
+  Vaccinations are seperate set of data tables and user views in the
+system. while they may not need a seperate "queue" view, they would
+appear a seperate lists on the med queue.
+
+ * Pros
+   * seperation between meds and vaccines will limit the possibility
+   of introducing bugs into the codebase surrounding the complex
+   medication process.
+   * seperation of meds and vacs will preserve the expected functionality
+   of existing reporting functionality
+ * Cons
+   * adding a seperate section to the medqueue for vaccinations may
+   complicate the user's checkout process.
+
+Logical Structure of Vaccinations
+---------------------------------
+
+
+* VacType	= This tracks a specific vaccination by what it treats.
+  * Ex. "Measles", "Hep-A", "Typhoid"
+  * Should contain the fields ( "title", ... )
+* Vac		+ This field would track vaccinations for patients
+  * Fields - Patient, VacType, Date, Batchnumber?, Num in Series?, ... ?
+* VacNote	= similar to Med Notes or LabNotes, etc....
+
+...?
+
+Open Questions
+--------------
+
+  @ Engeye, what is the process currently for tracking and administering
+vaccines?
+
+  Are vaccines handled like any other medication? i.e. perscribed by the
+nurse/doctor, then given in the pharmacy?
+
+  How does this process work generally at other facilities?
