@@ -37,8 +37,9 @@ def get_visit_menu(current,patient):
 		{ 'link': 'labs', 'ord':4, 'title': 'Labs', 'active': False },
 		{ 'link': 'plan', 'ord':5, 'title': 'Assessment/Plan', 'active': False },
 		{ 'link': 'meds', 'ord':6, 'title': 'Meds', 'active': False },
-		{ 'link': 'refe', 'ord':7, 'title': 'Referrals', 'active': False },
-		{ 'link': 'immu', 'ord':8, 'title': 'Immunizations', 'active': False },
+		{ 'link': 'vacs', 'ord':7, 'title': 'Vaccinations', 'active': False },
+		{ 'link': 'refe', 'ord':8, 'title': 'Referrals', 'active': False },
+		{ 'link': 'immu', 'ord':9, 'title': 'Immunizations', 'active': False },
 		{ 'link': 'note', 'ord':10, 'title': 'Notes', 'active': False, 'hilite': False },
 		]
 	for i in range(0,len(menu)):
@@ -591,6 +592,21 @@ def visit_meds(request,id):
 	menu = get_visit_menu('meds',p)
 	q_status = Q( status='NEW' ) | Q( status='FOL' )
 	diagnoses = Diagnosis.objects.filter(visit=v).filter(q_status)
+
+
+	return render_to_response('visit_meds.html', locals(),context_instance=RequestContext(request))
+
+@login_required
+def visit_vacs(request,id):
+	"""
+	Visit 
+	"""
+	from ocemr.models import Visit, Vac
+
+	v = Visit.objects.get(pk=id)
+	p = v.patient
+	menu = get_visit_menu('vacs',p)
+	vacs = Vac.objects.filter(patient=p)
 
 
 	return render_to_response('visit_meds.html', locals(),context_instance=RequestContext(request))

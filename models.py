@@ -506,6 +506,46 @@ class MedNote(models.Model):
 	note = models.TextField(default="")
 
 
+class VacType(models.Model):
+	title = models.CharField(max_length=128)
+	active = models.BooleanField(default=True)
+	expiry_months = models.FloatField(default=0,help_text="months from completion that vaccination expires. ( 0 == no expiration. )")
+	def __unicode__(self):
+		return "%s"%(self.title)
+
+class Vac(models.Model):
+	VAC_STATUS_CHOICES = (
+		('INP','In Progress'),
+		('COM','Completed'),
+		('CAN','Canceled'),
+	)
+	type = models.ForeignKey(MedType)
+	patient = models.ForeignKey(Patient)
+	startedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	completedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	status = models.CharField(max_length=3, choices=VAC_STATUS_CHOICES)
+	def _get_displayStatus(self):
+		for code, displayStatus in self.VAC_STATUS_CHOICES:
+			if code == self.status:
+				return displayStatus
+		return ""
+	displayStatus = property(_get_displayStatus)
+	def get_notes(self):
+		"""
+		"""
+		from models import VacNote
+		return VacNote.objects.filter(vac=self).order_by('-startedDateTime')
+	def __unicode__(self):
+		return "%s: %s"%(self.id, self.type.title)
+
+
+class VacNote(models.Model):
+	vac = models.ForeignKey(Vac)
+	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	addedBy = models.ForeignKey(User)
+	note = models.TextField(default="")
+
+
 class ExamNoteType(models.Model):
 	title = models.CharField(max_length=128)
 	def __unicode__(self):
