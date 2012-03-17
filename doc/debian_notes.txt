@@ -7,3 +7,6 @@ cups enscript
 
 mysql-client mysql-server
 
+
+
+/usr/share/pyshared/django/contrib/admin/media

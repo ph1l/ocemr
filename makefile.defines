@@ -1,0 +1,5 @@
+PREFIX=/usr
+SHARE=$(PREFIX)/share/ocemr
+WWW=$(SHARE)/www
+SITE=$(SHARE)/site
+
