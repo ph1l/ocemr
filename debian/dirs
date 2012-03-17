@@ -1,0 +1,3 @@
+var/lib/ocemr
+var/log/apache2/ocemr
+etc/apache2/sites-available

@@ -1,5 +1,7 @@
 PREFIX=/usr
 SHARE=$(PREFIX)/share/ocemr
 WWW=$(SHARE)/www
-SITE=$(SHARE)/site
+APPS=$(SHARE)/apps
+SITE=$(APPS)/ocemr
+CONF=/etc/ocemr
 

@@ -1,8 +1,8 @@
 Source: ocemr
-#Section: Medical
+Section: misc
 Priority: extra
 Maintainer: Philip Freeman <philip.freeman@gmail.com>
-Build-Depends: debhelper (>= 7.0.50~)
+Build-Depends: debhelper (>= 7.0.50~), python-all
 Standards-Version: 3.8.4
 Homepage: http://kremlor.net/projects/ocemr
 #Vcs-Git: git://git.debian.org/collab-maint/ocemr.git
@@ -10,7 +10,11 @@ Homepage: http://kremlor.net/projects/ocemr
 
 Package: ocemr
 Architecture: all
-Depends: ${misc:Depends}
+Depends: ${python:Depends}, ${misc:Depends}, python-django, python-sqlite,
+ python-matplotlib, python-mysqldb, python-django-registration,
+ apache2, libapache2-mod-python,
+ cups, enscript
+Recommends: mysql-server, mysql-client
 Description: Open Clinic Electonic Medical Records
  This is a Python, Django based webapp for managing medical records in a
- remote clinic. blah blah blah...
+ remote clinic.

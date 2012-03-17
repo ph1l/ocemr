@@ -8,7 +8,7 @@
 #
 #
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 #
@@ -28,7 +28,7 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-SERVER_EMAIL = 'ocemr@domain.com'
+SERVER_EMAIL = 'ocemr@example.com'
 
 #
 # APP_PATH -
@@ -36,7 +36,7 @@ SERVER_EMAIL = 'ocemr@domain.com'
 #
 #
 
-APP_PATH="/home/user/ocemr"
+APP_PATH="/usr/share/ocemr/app/ocemr"
 
 #
 # DATABASE_ENGINE -
@@ -54,7 +54,7 @@ DATABASE_ENGINE = 'sqlite3'
 # DATABASE_NAME = '/home/user/ocemr.db'
 #
 
-DATABASE_NAME = '/home/user/ocemr.db'
+DATABASE_NAME = '/var/lib/ocemr/ocemr.db'
 
 #
 # DATABASE_* -
@@ -77,8 +77,8 @@ DATABASE_PORT = ''             # Set to empty string for default.
 #       Paper Size. 'letter' or 'A4'
 #
 
-PRINTER_NAME = "P1102w"
-PAPER_SIZE = "A4"
+PRINTER_NAME = "Some_CUPS_Printer"
+PAPER_SIZE = "Letter"
 
 
 # Local time zone for this installation. Choices can be found here:

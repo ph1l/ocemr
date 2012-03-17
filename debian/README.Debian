@@ -1,6 +1,8 @@
 ocemr for Debian
 ----------------
 
-<possible notes regarding this package - if none, delete this file>
+QUICKSTART -
+
+$ sudo python /usr/share/ocemr/apps/ocemr/manage.py createsuperuser --username admin --email=admin@example.com
 
  -- Philip Freeman <philip.freeman@gmail.com>  Sat, 17 Mar 2012 00:43:18 -0500
