@@ -36,7 +36,7 @@ setup_environ(settings)
 from ocemr.models import ExamNoteType
 
 import datetime
-reader = csv.reader(open("%s/source_data/OcemrExamNoteTypes.csv"%(settings.APP_PATH), "rb"))
+reader = csv.reader(open("%s/source_data/OcemrExamNoteTypes.csv"%(settings.CONTRIB_PATH), "rb"))
 
 for row in reader:
 	if row[0] == "title": continue

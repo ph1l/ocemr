@@ -34,7 +34,7 @@ setup_environ(settings)
 
 #from ocemr.models import ###
 from ocemr.models import SymptomType
-reader = csv.reader(open("%s/source_data/EngeyeEMRsymptoms.csv"%(settings.APP_PATH), "rb"))
+reader = csv.reader(open("%s/source_data/EngeyeEMRsymptoms.csv"%(settings.CONTRIB_PATH), "rb"))
 
 for row in reader:
 	if len(row) < 1: continue

@@ -27,7 +27,15 @@ case "$1" in
 		chmod 660 /var/lib/ocemr/ocemr.db
 		(
 			cd /usr/share/ocemr/apps/ocemr;
-			python manage.py syncdb --noinput
+			python manage.py syncdb --noinput;
+			cd /usr/share/ocemr/util;
+			python ./import_symptom_csv.py;
+			python ./import_vital_csv.py;
+			python ./import_examnotes_csv.py;
+			python ./import_labs_csv.py;
+			python ./import_dx_csv.py;
+			python ./import_rx_csv.py
+
 		)
 	fi
 		
