@@ -555,3 +555,9 @@ class CashLog(models.Model):
 	def __unicode__(self):
 		return "%s: CashLog"%(self.id)
 
+class DBVersion(models.Model):
+	major = models.IntegerField()
+	minor = models.IntegerField()
+	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	def __unicode__(self):
+		return "Version %d.%d.x"%(self.major,self.minor)
