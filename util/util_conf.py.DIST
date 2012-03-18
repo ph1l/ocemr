@@ -1,3 +1,2 @@
-APP_PATH='/home/user/ocemr'
+APP_PATH='/usr/share/ocemr/apps/ocemr'
 VIEWER_PASSWORD='changeme'
-

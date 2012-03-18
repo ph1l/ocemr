@@ -34,7 +34,7 @@ setup_environ(settings)
 
 #from ocemr.models import ###
 from ocemr.models import DiagnosisType
-reader = csv.reader(open("%s/source_data/EngeyeEMRdx.csv"%(settings.APP_PATH), "rb"))
+reader = csv.reader(open("%s/source_data/EngeyeEMRdx.csv"%(settings.CONTRIB_PATH), "rb"))
 
 for row in reader:
 	if row[0] == "icpc2code": continue
