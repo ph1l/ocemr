@@ -3,12 +3,44 @@
 #
 
 #
+# DATABASE_ENGINE -
+#       'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'
+#
+#
+
+DATABASE_ENGINE = 'sqlite3'
+
+#
+# DATABASE_NAME -
+#       database name OR path to database file if using sqlite3.
+#
+
+DATABASE_NAME = '/var/lib/ocemr/db/ocemr.db'
+
+#
+# DATABASE_* -
+#       other database connection options (Not used with sqlite3.)
+#
+#
+DATABASE_USER = ''
+DATABASE_PASSWORD = ''
+DATABASE_HOST = ''             # Set to empty string for localhost.
+DATABASE_PORT = ''             # Set to empty string for default.
+
+#
+# DB_BACKUP_*
+#
+
+DB_BACKUP_ENCRYPT=False
+DB_BACKUP_ENCRYPT_TO=( "ocemr@localhost" )
+
+#
 # DEBUG -
 #       set debug mode on?
 #
 #
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 #
@@ -28,7 +60,7 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-SERVER_EMAIL = 'ocemr@domain.com'
+SERVER_EMAIL = 'ocemr@example.com'
 
 #
 # APP_PATH -
@@ -36,36 +68,9 @@ SERVER_EMAIL = 'ocemr@domain.com'
 #
 #
 
-APP_PATH="/home/user/ocemr"
-
-#
-# DATABASE_ENGINE -
-#       'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'
-#
-#
-
-DATABASE_ENGINE = 'sqlite3'
-
-#
-# DATABASE_NAME -
-#       database name OR path to database file if using sqlite3.
-#
-# DATABASE_NAME = 'ocemr'
-# DATABASE_NAME = '/home/user/ocemr.db'
-#
-
-DATABASE_NAME = '/home/user/ocemr.db'
-
-#
-# DATABASE_* -
-#       other database connection options (Not used with sqlite3.)
-#
-#
-DATABASE_USER = ''
-DATABASE_PASSWORD = ''
-DATABASE_HOST = ''             # Set to empty string for localhost.
-DATABASE_PORT = ''             # Set to empty string for default.
-
+APP_PATH="/usr/share/ocemr/apps/ocemr"
+CONTRIB_PATH="/usr/share/ocemr/contrib"
+VAR_PATH="/var/lib/ocemr"
 
 #
 # OCEMR PRINTER SETTINGS
@@ -77,8 +82,8 @@ DATABASE_PORT = ''             # Set to empty string for default.
 #       Paper Size. 'letter' or 'A4'
 #
 
-PRINTER_NAME = "P1102w"
-PAPER_SIZE = "A4"
+PRINTER_NAME = "Some_CUPS_Printer"
+PAPER_SIZE = "Letter"
 
 
 # Local time zone for this installation. Choices can be found here:

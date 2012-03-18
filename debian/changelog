@@ -1,4 +1,5 @@
-v0.5.0 -
+ocemr (0.5.0) unstable; urgency=low
+
   * cost estimation (assign cost in labtype and medtype)
   * track alternate contact info for patients
   * add pulse oximetry and oxygen vitals
@@ -10,5 +11,7 @@ v0.5.0 -
   * FIX: dupe Diags with multiple user claim of visit.
   * FIX: word wrap issue in view/print record
   * FIX: daily pt report: pt # of month wrong in dec
-  * FIX: record uses visit finished date
+  * FIX: record uses visit finished date 
 
+
+ -- Philip Freeman <philip.freeman@gmail.com>  Sat, 17 Mar 2012 00:43:18 -0500
