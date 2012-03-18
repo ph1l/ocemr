@@ -520,6 +520,7 @@ class Vac(models.Model):
 	)
 	type = models.ForeignKey(VacType)
 	patient = models.ForeignKey(Patient)
+	visit = models.ForeignKey(Visit)
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	addedBy = models.ForeignKey(User,related_name="vac_added_by")
 	status = models.CharField(max_length=3, choices=VAC_STATUS_CHOICES)

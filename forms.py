@@ -650,6 +650,7 @@ class NewVacForm(forms.ModelForm):
 				)
 			)
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
+	visit = forms.ModelChoiceField(queryset=Visit.objects.all(),widget=forms.HiddenInput)
 	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
 	status = forms.CharField(widget=forms.HiddenInput)
 
@@ -659,6 +660,7 @@ class NewVacForm(forms.ModelForm):
 		#raise(" | ".join(dir(self.fields['createdBy'])))
 		self.fields['addedBy'].initial=user.id
 		self.fields['patient'].initial=visit.patient.id
+		self.fields['visit'].initial=visit.id
 		self.fields['status'].initial='COM'
 
         class Meta:
