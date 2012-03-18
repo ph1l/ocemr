@@ -776,3 +776,29 @@ class EditMedForm(forms.Form):
 
 class MergePatientForm(forms.Form):
 	duplicateID = forms.IntegerField()
+
+class MergeVillageForm(forms.Form):
+        villageIncorrect = forms.CharField(
+			widget=widgets.JQueryAutoComplete(
+				'/autocomplete_name/ocemr/Village/'
+				)
+			)
+        villageCorrect = forms.CharField(
+			widget=widgets.JQueryAutoComplete(
+				'/autocomplete_name/ocemr/Village/'
+				)
+			)
+	def clean_villageIncorrect(self):
+		data = self.cleaned_data['villageIncorrect']
+		from models import Village
+		v, is_new = Village.objects.get_or_create(name=data)
+		if is_new:
+			raise forms.ValidationError("The Incorrect Village name must exist!")
+		return v
+	def clean_villageCorrect(self):
+		data = self.cleaned_data['villageCorrect']
+		from models import Village
+		v, is_new = Village.objects.get_or_create(name=data)
+		if is_new:
+			v.save()
+		return v
