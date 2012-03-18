@@ -601,12 +601,19 @@ def visit_vacs(request,id):
 	"""
 	Visit 
 	"""
-	from ocemr.models import Visit, Vac
+	from ocemr.models import Visit, VacType, VacNote, Vac
 
 	v = Visit.objects.get(pk=id)
 	p = v.patient
 	menu = get_visit_menu('vacs',p)
-	vacs = Vac.objects.filter(patient=p).order_by("-addedDateTime")
+	vacs = []
+	for vt in VacType.objects.filter(active=True):
+		vac = Vac.objects.filter(type=vt, patient=p)
+		vn = VacNote.objects.filter(type=vt,patient=p)
+		if len(vac) > 0:
+			vacs.append( (vt, vac[0], vn) )
+		else:
+			vacs.append( (vt, None, vn) )
 
 
 	return render_to_response('visit_vacs.html', locals(),context_instance=RequestContext(request))
@@ -634,31 +641,6 @@ def visit_meds_new(request,id,did):
                 'form_action': '/visit/%d/meds/new/%d/'%(d.visit.id,did),
                 'form': form,
         },context_instance=RequestContext(request))
-
-@login_required
-def visit_vacs_new(request,id):
-        """
-        """
-	from ocemr.models import Visit
-	from ocemr.forms import NewVacForm
-
-	id = int(id)
-	visit = Visit.objects.get(pk=id)
-
-        if request.method == 'POST':
-                form = NewVacForm(visit, request.user, request.POST) # A form bound to the POST data
-                if form.is_valid(): # All validation rules pass
-                        o = form.save()
-                        return HttpResponseRedirect('/close_window/')
-        else:
-                form = NewVacForm(visit, request.user) # An unbound form
-
-	return render_to_response('popup_form.html', {
-                'title': 'Add a Vac for %s '%(visit.patient),
-                'form_action': '/visit/%d/vacs/new/'%(visit.id),
-                'form': form,
-        },context_instance=RequestContext(request))
-
 
 @login_required
 def visit_refe(request,id):
