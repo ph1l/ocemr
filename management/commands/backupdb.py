@@ -38,11 +38,22 @@ class Command(BaseCommand):
         elif self.engine in ('postgresql_psycopg2', 'postgresql'):
             print 'Doing Postgresql backup to database %s into %s' % (self.db, outfile)
             self.do_postgresql_backup(outfile)
+        elif self.engine =='sqlite3':
+	    print 'Doing sqlite3 backup to database %s into %s' % (self.db, outfile)
+	    self.do_sqlite3_backup(outfile)
         else:
             print 'Backup in %s engine not implemented' % self.engine
         if self.encrypt:
             print 'Encrypting %s to %s %s.gpg'%(outfile, self.encrypt_to, outfile)
             self.do_encrypt_backup(outfile)
+
+    def do_sqlite3_backup(self, outfile):
+        args = [self.db, ".dump"]
+
+        cmd = 'sqlite3 %s > %s' % (' '.join(args), outfile)
+        exit_status = os.system(cmd)
+        if exit_status != 0:
+                raise Exception("Dump command (%s) failed with %s."%(cmd,exit_status))
 
     def do_mysql_backup(self, outfile):
         args = []

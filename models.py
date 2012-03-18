@@ -186,8 +186,13 @@ class Visit(models.Model):
 		if len(meds) > 0:
 			for m in meds:
 				if m.status == "DIS":
+					#Set m_dispenseAmount to zero if it's not valid
+					try:
+						m_dispenseAmount=float(m.dispenseAmount)
+					except:
+						m_dispenseAmount=float(0)
 					cost_detail.append(
-						( "Med: %s"%(m.type.title), m.type.cost, m.dispenseAmount, m.type.cost * m.dispenseAmount )
+						( "Med: %s"%(m.type.title), m.type.cost, m.dispenseAmount, m.type.cost * m_dispenseAmount )
 						)
 		return cost_detail
 
@@ -310,7 +315,7 @@ class Visit(models.Model):
 		return a text summary of the Visit
 		"""
 
-		from models import VisitSymptom, Vital, ExamNote
+		from models import VisitSymptom, Vital, ExamNote, Vac
 
 		out_txt="S:\n"
 		
@@ -331,12 +336,15 @@ class Visit(models.Model):
 			meds = Med.objects.filter(diagnosis=diagnosis, status='DIS')
 			for med in meds:
 				out_txt +="\tMed: %s - %s\n"%(med.type.title,med.dosage)
+		vacs = Vac.objects.filter(visit=self)
+		for vac in vacs:
+			out_txt +="Vac: %s - %s\n"%(vac.type.title,vac.displayStatus)
+
 		referrals = Referral.objects.filter(visit=self)
 		for referral in referrals:
 			out_txt +="Referral: %s - %s"%(referral.to, referral.reason)
 		out_txt += "\n\nSeen By: %s %s\n\n" %( self.claimedBy.first_name, self.claimedBy.last_name)
 		return out_txt
-
 
 class SymptomType(models.Model):
 	title = models.CharField(max_length=128)
@@ -510,20 +518,19 @@ class MedNote(models.Model):
 class VacType(models.Model):
 	title = models.CharField(max_length=128)
 	active = models.BooleanField(default=True)
-	expiry_months = models.FloatField(default=0,help_text="months from completion that vaccination expires. ( 0 == no expiration. )")
 	def __unicode__(self):
 		return "%s"%(self.title)
 
 class Vac(models.Model):
 	VAC_STATUS_CHOICES = (
-		('INP','In Progress'),
 		('COM','Completed'),
 		('CAN','Canceled'),
 	)
-	type = models.ForeignKey(MedType)
+	type = models.ForeignKey(VacType)
 	patient = models.ForeignKey(Patient)
-	startedDateTime = models.DateTimeField(default=datetime.datetime.now)
-	completedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	visit = models.ForeignKey(Visit)
+	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	addedBy = models.ForeignKey(User,related_name="vac_added_by")
 	status = models.CharField(max_length=3, choices=VAC_STATUS_CHOICES)
 	def _get_displayStatus(self):
 		for code, displayStatus in self.VAC_STATUS_CHOICES:
@@ -535,10 +542,9 @@ class Vac(models.Model):
 		"""
 		"""
 		from models import VacNote
-		return VacNote.objects.filter(vac=self).order_by('-startedDateTime')
+		return VacNote.objects.filter(vac=self).order_by('-addedDateTime')
 	def __unicode__(self):
 		return "%s: %s"%(self.id, self.type.title)
-
 
 class VacNote(models.Model):
 	vac = models.ForeignKey(Vac)

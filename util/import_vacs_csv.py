@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/python
 #
 ##########################################################################
 #
@@ -21,31 +21,33 @@
 #########################################################################
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
-VAR=/var/lib/ocemr
-APP=/usr/share/ocemr/apps/ocemr
-UTIL=/usr/share/ocemr/util
+import sys, csv, re
 
-if [ -e ${VAR}/db/ocemr.db ]; then
-	echo SQLite database present, aborting execution...
-	exit 10
-fi
+import util_conf
+sys.path = [ util_conf.APP_PATH ] + sys.path
 
+from django.core.management import setup_environ
 
-python ${APP}/manage.py syncdb
+import settings
 
-#----------
+setup_environ(settings)
 
-python ${UTIL}/import_symptom_csv.py
-python ${UTIL}/import_vital_csv.py
-python ${UTIL}/import_examnotes_csv.py
-python ${UTIL}/import_labs_csv.py
-python ${UTIL}/import_dx_csv.py
-python ${UTIL}/import_rx_csv.py
-python ${UTIL}/import_vacs_csv.py
+#from ocemr.models import ###
+from ocemr.models import VacType
 
-#----------
-#
-# python ./util/import_test_patients_csv.py
-#
+import datetime
+reader = csv.reader(open("%s/source_data/%s/EngeyeEMRvacs.csv"%(settings.CONTRIB_PATH, util_conf.SOURCE_TEMPLATE), "rb"))
 
-echo "all done initializing in ${VAR}/db/ocemr.db"
+for row in reader:
+	if row[0] == "title": continue
+	if len(row) < 1: continue
+	if row[0] =="": continue
+	title=row[0]
+	vt, is_new = VacType.objects.get_or_create(title=title)
+	print "VacType: %s "%(vt),
+	if is_new:
+		print "NEW ",
+		vt.save()
+	else:
+		print "OLD ",
+	print ""

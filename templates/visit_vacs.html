@@ -1,0 +1,31 @@
+{% extends "base_visit.html" %}
+{% block visitExtrahead %}
+{% endblock %}
+{% block visitContent %}
+    <A HREF=# onClick='window.open("/visit/{{v.id}}/vacs/new/","Add Vaccination","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Add New</A>
+<TABLE>
+{% for v in vacs %}
+<TR>
+	<TD>{{v.type.title}}
+	<TD STYLE='background-color:#{% ifequal v.status "COM" %}55FF55{% endifequal %}{% ifequal v.status "CAN" %}FF5555{% endifequal %}'>{{v.displayStatus}}
+	<TD>{{v.addedBy}}@{{v.addedDateTime}}
+	<TD>
+
+	<A href="#" onClick='window.open("/vac/{{v.id}}/notate/","Notate","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Note</A>
+	|
+	{% ifequal v.status "COM" %}
+	<A HREF=# onClick='window.open("/vac/{{v.id}}/cancel/","Cancel","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Cancel</A>
+	{% endifequal %}
+	{% ifequal v.status "CAN" %}
+	<A HREF=# onClick='window.open("/vac/{{v.id}}/undo_cancel/","Undo Cancel","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Undo Cancel</A>
+	{% endifequal %}
+<TR><TD COLSPAN=4>
+	{% for n in v.get_notes %}
+		<DIV ID=vacNote>
+			"{{n.note}}" by {{n.addedBy}} @{{n.addedDateTime|date:"SHORT_DATETIME_FORMAT"}}
+		</DIV>
+	{% endfor %}
+{% endfor %}
+</TABLE>
+{% endblock %}
+
