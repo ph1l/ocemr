@@ -186,8 +186,13 @@ class Visit(models.Model):
 		if len(meds) > 0:
 			for m in meds:
 				if m.status == "DIS":
+					#Set m_dispenseAmount to zero if it's not valid
+					try:
+						m_dispenseAmount=float(m.dispenseAmount)
+					except:
+						m_dispenseAmount=float(0)
 					cost_detail.append(
-						( "Med: %s"%(m.type.title), m.type.cost, m.dispenseAmount, m.type.cost * m.dispenseAmount )
+						( "Med: %s"%(m.type.title), m.type.cost, m.dispenseAmount, m.type.cost * m_dispenseAmount )
 						)
 		return cost_detail
 
