@@ -2,6 +2,37 @@
 # OCEMR - settings.py
 #
 
+#
+# DATABASE_ENGINE -
+#       'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'
+#
+#
+
+DATABASE_ENGINE = 'sqlite3'
+
+#
+# DATABASE_NAME -
+#       database name OR path to database file if using sqlite3.
+#
+
+DATABASE_NAME = '/var/lib/ocemr/db/ocemr.db'
+
+#
+# DATABASE_* -
+#       other database connection options (Not used with sqlite3.)
+#
+#
+DATABASE_USER = ''
+DATABASE_PASSWORD = ''
+DATABASE_HOST = ''             # Set to empty string for localhost.
+DATABASE_PORT = ''             # Set to empty string for default.
+
+#
+# DB_BACKUP_*
+#
+
+DB_BACKUP_ENCRYPT=False
+DB_BACKUP_ENCRYPT_TO=( "ocemr@localhost" )
 
 #
 # DEBUG -
@@ -40,37 +71,6 @@ SERVER_EMAIL = 'ocemr@example.com'
 APP_PATH="/usr/share/ocemr/apps/ocemr"
 CONTRIB_PATH="/usr/share/ocemr/contrib"
 
-#
-# DATABASE_ENGINE -
-#       'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'
-#
-#
-
-DATABASE_ENGINE = 'sqlite3'
-
-#
-# DATABASE_NAME -
-#       database name OR path to database file if using sqlite3.
-#
-
-DATABASE_NAME = '/var/lib/ocemr/db/ocemr.db'
-
-#
-# DATABASE_* -
-#       other database connection options (Not used with sqlite3.)
-#
-#
-DATABASE_USER = ''
-DATABASE_PASSWORD = ''
-DATABASE_HOST = ''             # Set to empty string for localhost.
-DATABASE_PORT = ''             # Set to empty string for default.
-
-#
-# DB_BACKUP_*
-#
-
-DB_BACKUP_ENCRYPT=False
-DB_BACKUP_ENCRYPT_TO=( "ocemr@localhost" )
 
 #
 # OCEMR PRINTER SETTINGS
