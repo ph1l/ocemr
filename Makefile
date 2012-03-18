@@ -20,3 +20,10 @@ install:
 	install -m 644 apache2.conf $(DESTDIR)$(CONF)
 	make -C static_media install
 	make -C source_data install
+
+pkg:
+	dpkg-buildpackage -rfakeroot
+pkgtest:
+	lintian ../ocemr_*_all.deb
+pkgclean:
+	fakeroot ./debian/rules clean
