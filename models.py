@@ -310,7 +310,7 @@ class Visit(models.Model):
 		return a text summary of the Visit
 		"""
 
-		from models import VisitSymptom, Vital, ExamNote
+		from models import VisitSymptom, Vital, ExamNote, Vac
 
 		out_txt="S:\n"
 		
@@ -331,12 +331,15 @@ class Visit(models.Model):
 			meds = Med.objects.filter(diagnosis=diagnosis, status='DIS')
 			for med in meds:
 				out_txt +="\tMed: %s - %s\n"%(med.type.title,med.dosage)
+		vacs = Vac.objects.filter(visit=self)
+		for vac in vacs:
+			out_txt +="\tVac: %s - %s\n"%(vac.type.title,vac.displayStatus)
+
 		referrals = Referral.objects.filter(visit=self)
 		for referral in referrals:
 			out_txt +="Referral: %s - %s"%(referral.to, referral.reason)
 		out_txt += "\n\nSeen By: %s %s\n\n" %( self.claimedBy.first_name, self.claimedBy.last_name)
 		return out_txt
-
 
 class SymptomType(models.Model):
 	title = models.CharField(max_length=128)
