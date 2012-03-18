@@ -510,22 +510,18 @@ class MedNote(models.Model):
 class VacType(models.Model):
 	title = models.CharField(max_length=128)
 	active = models.BooleanField(default=True)
-	expiry_months = models.FloatField(default=0,help_text="months from completion that vaccination expires. ( 0 == no expiration. )")
 	def __unicode__(self):
 		return "%s"%(self.title)
 
 class Vac(models.Model):
 	VAC_STATUS_CHOICES = (
-		('INP','In Progress'),
 		('COM','Completed'),
 		('CAN','Canceled'),
 	)
 	type = models.ForeignKey(VacType)
 	patient = models.ForeignKey(Patient)
-	startedDateTime = models.DateTimeField(default=datetime.datetime.now)
-	startedBy = models.ForeignKey(User,related_name="vac_started_by")
-	completedDateTime = models.DateTimeField(blank=True,null=True)
-	completedBy = models.ForeignKey(User,related_name="vac_completed_by", blank=True,null=True)
+	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	addedBy = models.ForeignKey(User,related_name="vac_added_by")
 	status = models.CharField(max_length=3, choices=VAC_STATUS_CHOICES)
 	def _get_displayStatus(self):
 		for code, displayStatus in self.VAC_STATUS_CHOICES:
@@ -540,7 +536,6 @@ class Vac(models.Model):
 		return VacNote.objects.filter(vac=self).order_by('-startedDateTime')
 	def __unicode__(self):
 		return "%s: %s"%(self.id, self.type.title)
-
 
 class VacNote(models.Model):
 	vac = models.ForeignKey(Vac)

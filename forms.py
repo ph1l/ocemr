@@ -650,21 +650,20 @@ class NewVacForm(forms.ModelForm):
 				)
 			)
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
-	startedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
 	status = forms.CharField(widget=forms.HiddenInput)
 
 	def __init__(self, visit, user, *args, **kwargs):
 
 		super(NewVacForm, self).__init__(*args, **kwargs)
 		#raise(" | ".join(dir(self.fields['createdBy'])))
-		self.fields['startedBy'].initial=user.id
+		self.fields['addedBy'].initial=user.id
 		self.fields['patient'].initial=visit.patient.id
-		self.fields['status'].initial='INP'
-
+		self.fields['status'].initial='COM'
 
         class Meta:
                 model = get_model('ocemr','Vac')
-                exclude = [ 'startedDateTime', 'completedDateTime', 'completedBy'  ]
+                exclude = [ 'addedDateTime' ]
 
 	def clean_type(self):
 		data = self.cleaned_data['type']

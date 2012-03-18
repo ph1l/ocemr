@@ -44,10 +44,10 @@ for row in reader:
 	if row[0] =="": continue
 	title=row[0]
 	vt, is_new = VacType.objects.get_or_create(title=title)
-	print "VacType: %s "%(lt),
+	print "VacType: %s "%(vt),
 	if is_new:
 		print "NEW ",
-		lt.save()
+		vt.save()
 	else:
 		print "OLD ",
 	print ""
