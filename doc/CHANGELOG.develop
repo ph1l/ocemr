@@ -1,7 +1,9 @@
 v0.5.0 -
+  * add vaccination tracking tab on chart.
   * cost estimation (assign cost in labtype and medtype)
   * track alternate contact info for patients
   * add pulse oximetry and oxygen vitals
+  * add "Merge Village" utility
   * patient navigation and search enahancements
   * "Admin" panel moved to user prefs page
   * disable types (lab, med, diagnosis) in Data Admin Panel
