@@ -643,35 +643,39 @@ class NewMedForm(forms.ModelForm):
 		return d
 
 class NewVacForm(forms.ModelForm):
-	from models import Visit, Patient
-        type = forms.CharField(
-			widget=widgets.JQueryAutoContains(
-				'/autosearch_title/ocemr/VacType/'
-				)
-			)
+	from models import Visit, Patient, VacType
+	receivedDate = forms.DateField(required=False,widget=widgets.CalendarWidget)
+        type = forms.ModelChoiceField(queryset=VacType.objects.all(),widget=forms.HiddenInput)
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
-	visit = forms.ModelChoiceField(queryset=Visit.objects.all(),widget=forms.HiddenInput)
 	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-	status = forms.CharField(widget=forms.HiddenInput)
 
-	def __init__(self, visit, user, *args, **kwargs):
+	def __init__(self, patient, vactype, user, *args, **kwargs):
 
 		super(NewVacForm, self).__init__(*args, **kwargs)
 		#raise(" | ".join(dir(self.fields['createdBy'])))
+		self.fields['type'].initial=vactype.id
 		self.fields['addedBy'].initial=user.id
-		self.fields['patient'].initial=visit.patient.id
-		self.fields['visit'].initial=visit.id
-		self.fields['status'].initial='COM'
+		self.fields['patient'].initial=patient.id
 
         class Meta:
                 model = get_model('ocemr','Vac')
                 exclude = [ 'addedDateTime' ]
 
-	def clean_type(self):
-		data = self.cleaned_data['type']
-		from models import VacType
-		v = VacType.objects.get(title=data)
-		return v
+	def clean_receivedDate(self):
+		data = self.cleaned_data['receivedDate']
+		if data == "" or data == None:
+			from datetime import datetime
+			return datetime.now().date()
+		return data
+
+class EditVacReceivedForm(forms.Form):
+        receivedDate = forms.DateField(widget=widgets.CalendarWidget)
+
+	def __init__(self, v, user, *args, **kwargs):
+		
+		super(EditVacReceivedForm, self).__init__(*args, **kwargs)
+		#raise(" | ".join(dir(self.fields['createdBy'])))
+		self.fields['receivedDate'].initial = v.receivedDate
 
 class NewMedNoteForm(forms.ModelForm):
 	from models import Med
@@ -688,13 +692,15 @@ class NewMedNoteForm(forms.ModelForm):
                 exclude = [ 'addedDateTime']
 
 class NewVacNoteForm(forms.ModelForm):
-	from models import Vac
-	vac = forms.ModelChoiceField(queryset=Vac.objects.all(),widget=forms.HiddenInput)
+	from models import Patient, VacType
+	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
+	type = forms.ModelChoiceField(queryset=VacType.objects.all(),widget=forms.HiddenInput)
 	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-	def __init__(self, v, user, *args, **kwargs):
+	def __init__(self, p, vt, user, *args, **kwargs):
 		
 		super(NewVacNoteForm, self).__init__(*args, **kwargs)
-		self.fields['vac'].initial=v.id
+		self.fields['patient'].initial=p.id
+		self.fields['type'].initial=vt.id
 		self.fields['addedBy'].initial=user.id
 
 	class Meta:
