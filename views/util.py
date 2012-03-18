@@ -93,7 +93,7 @@ def autocomplete_name(request, inapp, inmodel):
 	except ValueError:
 		return HttpResponseBadRequest() 
 	Foo = get_model( inapp, inmodel )
-	foos = Foo.objects.filter(name__istartswith=q,active=true)[:limit]
+	foos = Foo.objects.filter(name__istartswith=q,active=True)[:limit]
 	return HttpResponse(iter_results(foos), mimetype='text/plain')
 
 autocomplete_name = cache_page(autocomplete_name, 60 * 60)

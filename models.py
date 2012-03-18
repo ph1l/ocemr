@@ -39,6 +39,7 @@ from django.contrib.auth.models import User
 class Village(models.Model):
 	name = models.CharField(max_length=128)
 	quick = models.BooleanField(default=False)
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return self.name
 	
