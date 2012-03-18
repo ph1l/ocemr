@@ -2,7 +2,8 @@
  Command for backup database
 """
 
-import os, popen2, time
+import os, time
+from subprocess import Popen
 from django.core.management.base import BaseCommand, CommandError
 
 class Command(BaseCommand):
@@ -35,9 +36,9 @@ class Command(BaseCommand):
         if self.engine == 'mysql':
             print 'Doing Mysql backup to database %s into %s' % (self.db, outfile)
             self.do_mysql_backup(outfile)
-        elif self.engine in ('postgresql_psycopg2', 'postgresql'):
-            print 'Doing Postgresql backup to database %s into %s' % (self.db, outfile)
-            self.do_postgresql_backup(outfile)
+        #elif self.engine in ('postgresql_psycopg2', 'postgresql'):
+        #    print 'Doing Postgresql backup to database %s into %s' % (self.db, outfile)
+        #    self.do_postgresql_backup(outfile)
         elif self.engine =='sqlite3':
 	    print 'Doing sqlite3 backup to database %s into %s' % (self.db, outfile)
 	    self.do_sqlite3_backup(outfile)
@@ -84,11 +85,11 @@ class Command(BaseCommand):
             args += ["--port=%s" % self.port]
         if self.db:
             args += [self.db]
-        pipe = popen2.Popen4('pg_dump %s > %s' % (' '.join(args), outfile))
+	p = Popen("pg_dump %s > %s" %( ' '.join(args), outfile ), shell=True,
+		stdin=PIPE, stdout=PIPE, close_fds=True)
         if self.passwd:
-            pipe.tochild.write('%s\n' % self.passwd)
-            pipe.tochild.close()
-        
+            p.stdin.write('%s\n' % self.passwd)
+        print p.stdout.read()
 
     def do_encrypt_backup(self, outfile):
         args = ["--encrypt", "--batch", "--yes",
