@@ -17,6 +17,15 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+reload_apache()
+{
+    if apache2ctl configtest 2>/dev/null; then
+        invoke-rc.d apache2 force-reload || true
+    else
+        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+    fi
+}
+
 
 case "$1" in
     configure)
@@ -26,6 +35,7 @@ case "$1" in
 		cat /usr/share/ocemr/contrib/gpg_server_key.options | gpg --home /var/lib/ocemr/gnupg --gen-key --batch
 	fi
 	chown -R www-data:www-data /var/lib/ocemr/*
+	reload_apache
 		
     ;;
 
