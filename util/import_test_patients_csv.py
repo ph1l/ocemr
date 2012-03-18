@@ -38,7 +38,7 @@ from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 import random
 
-reader = csv.reader(open("%s/source_data/OcemrTestPatients.csv"%(settings.CONTRIB_PATH), "rb"))
+reader = csv.reader(open("%s/source_data/%s/OcemrTestPatients.csv"%(settings.CONTRIB_PATH, util_conf.SOURCE_TEMPLATE), "rb"))
 
 u = User.objects.get(pk=1)
 

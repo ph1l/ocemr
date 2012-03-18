@@ -36,7 +36,7 @@ setup_environ(settings)
 from ocemr.models import LabType
 
 import datetime
-reader = csv.reader(open("%s/source_data/EngeyeEMRlabs.csv"%(settings.CONTRIB_PATH), "rb"))
+reader = csv.reader(open("%s/source_data/%s/EngeyeEMRlabs.csv"%(settings.CONTRIB_PATH, util_conf.SOURCE_TEMPLATE), "rb"))
 
 for row in reader:
 	if row[0] == "title": continue
