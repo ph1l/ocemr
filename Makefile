@@ -19,7 +19,7 @@ install:
 	install -T -o root -g www-data -m 640 settings.py.DIST $(DESTDIR)$(CONF)/settings.py
 	install -m 644 apache2.conf $(DESTDIR)$(CONF)
 	make -C static_media install
-	make -C source_data install
+	make -C contrib install
 
 pkg:
 	dpkg-buildpackage -rfakeroot
