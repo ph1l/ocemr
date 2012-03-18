@@ -7,5 +7,5 @@ ALTER TABLE ocemr_patient add column `altContactName` varchar(32) NOT NULL
          default "";
 ALTER TABLE ocemr_patient add column `altContactPhone` varchar(32) NOT NULL
          default "";
-INSERT INTO ocemr_vitaltype VALUES(8,'SpO2','%',0.0,100.0);
-INSERT INTO ocemr_vitaltype VALUES(9,'Oxygen','%',0.0,100.0);
+INSERT INTO ocemr_vitaltype VALUES('','SpO2','%',0.0,100.0);
+INSERT INTO ocemr_vitaltype VALUES('','Oxygen','%',0.0,100.0);

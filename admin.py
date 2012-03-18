@@ -81,6 +81,11 @@ class ExamNoteTypeAdmin(admin.ModelAdmin):
 
 admin.site.register(ExamNoteType,ExamNoteTypeAdmin)
 
+class DBVerisionAdmin(admin.ModelAdmin):
+	list_display = [ 'id', 'major', 'minor', 'addedDateTime' ]
+
+admin.site.register(DBVersion,DBVerisionAdmin)
+
 #admin.site.register(Referral)
 #admin.site.register(VisitSymptom)
 #admin.site.register(Vital)

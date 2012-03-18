@@ -11,7 +11,7 @@ def post_syncdb_auto_upgrade(sender, **kwargs):
 	from ocemr.settings import DATABASE_ENGINE, CONTRIB_PATH, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT
 
 
-	DEBUG=True
+	DEBUG=False
 
 	if DATABASE_ENGINE not in ('mysql', 'sqlite3'):
 		print "Skipping post_syncdb_auto_upgrade because %s is an unsupported DATABASE_ENGINE."%(DATABASE_ENGINE)
@@ -33,10 +33,10 @@ def post_syncdb_auto_upgrade(sender, **kwargs):
 			f_minor=int(m.group(2))
 			if DEBUG: print "found %s: major=%d, minor=%d"%(fname,f_major,f_minor)
 			if f_major > latest_version.major or ( f_major == latest_version.major and f_minor > latest_version.minor ):
-				if DEBUG: print "applying %s..."%(fname)
+				print "applying %s..."%(fname)
 				cmd="cat %s/schema_updates/%s | "%(CONTRIB_PATH,fname)
 				if DATABASE_ENGINE=='mysql':
-					cmd += "mysql "
+					cmd += "mysql --force "
 					if DATABASE_USER:
 						cmd += "--user=%s " % DATABASE_USER
 					if DATABASE_PASSWORD:
@@ -51,6 +51,8 @@ def post_syncdb_auto_upgrade(sender, **kwargs):
 				else:
 					raise Exception("WTF")
 				exit_status = os.system(cmd)
+				dbv = DBVersion.objects.create(major=f_major,minor=f_minor)
+				dbv.save()
 				if exit_status != 0:
 					raise Exception("Command (%s) failed with %s."%(cmd,exit_status))
 	return

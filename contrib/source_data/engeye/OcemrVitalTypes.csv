@@ -6,3 +6,5 @@ HR,bpm,20,200
 RR,bpm,5,100
 BP - Systolic,mmHg,32,256
 BP - Diastolic,mmHg,24,192
+SpO2,%,0,100
+Oxygen,%,0,100
