@@ -70,7 +70,7 @@ SERVER_EMAIL = 'ocemr@example.com'
 
 APP_PATH="/usr/share/ocemr/apps/ocemr"
 CONTRIB_PATH="/usr/share/ocemr/contrib"
-
+VAR_PATH="/var/lib/ocemr"
 
 #
 # OCEMR PRINTER SETTINGS
