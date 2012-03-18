@@ -2,6 +2,9 @@
 # OCEMR - settings.py
 #
 
+DB_BACKUP_ENCRYPT=False
+DB_BACKUP_ENCRYPT_TO=""
+
 #
 # DEBUG -
 #       set debug mode on?
