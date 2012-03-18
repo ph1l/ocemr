@@ -333,7 +333,7 @@ class Visit(models.Model):
 				out_txt +="\tMed: %s - %s\n"%(med.type.title,med.dosage)
 		vacs = Vac.objects.filter(visit=self)
 		for vac in vacs:
-			out_txt +="\tVac: %s - %s\n"%(vac.type.title,vac.displayStatus)
+			out_txt +="Vac: %s - %s\n"%(vac.type.title,vac.displayStatus)
 
 		referrals = Referral.objects.filter(visit=self)
 		for referral in referrals:
