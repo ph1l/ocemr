@@ -642,6 +642,36 @@ class NewMedForm(forms.ModelForm):
 		d = MedType.objects.get(title=data)
 		return d
 
+class NewVacForm(forms.ModelForm):
+	from models import Visit, Patient
+        type = forms.CharField(
+			widget=widgets.JQueryAutoContains(
+				'/autosearch_title/ocemr/VacType/'
+				)
+			)
+	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
+	startedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+	status = forms.CharField(widget=forms.HiddenInput)
+
+	def __init__(self, visit, user, *args, **kwargs):
+
+		super(NewVacForm, self).__init__(*args, **kwargs)
+		#raise(" | ".join(dir(self.fields['createdBy'])))
+		self.fields['startedBy'].initial=user.id
+		self.fields['patient'].initial=visit.patient.id
+		self.fields['status'].initial='INP'
+
+
+        class Meta:
+                model = get_model('ocemr','Vac')
+                exclude = [ 'startedDateTime', 'completedDateTime', 'completedBy'  ]
+
+	def clean_type(self):
+		data = self.cleaned_data['type']
+		from models import VacType
+		v = VacType.objects.get(title=data)
+		return v
+
 class NewMedNoteForm(forms.ModelForm):
 	from models import Med
 	med = forms.ModelChoiceField(queryset=Med.objects.all(),widget=forms.HiddenInput)

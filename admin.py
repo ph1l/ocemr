@@ -75,6 +75,12 @@ class MedTypeAdmin(admin.ModelAdmin):
 
 admin.site.register(MedType,MedTypeAdmin)
 
+class VacTypeAdmin(admin.ModelAdmin):
+	list_display = [ 'id', 'title', 'active' ]
+	search_fields = [ 'title' ]
+
+admin.site.register(VacType,VacTypeAdmin)
+
 class ExamNoteTypeAdmin(admin.ModelAdmin):
 	list_display = [ 'id', 'title' ]
 	search_fields = [ 'title' ]

@@ -1,0 +1,13 @@
+{% extends "base_visit.html" %}
+{% block visitExtrahead %}
+{% endblock %}
+{% block visitContent %}
+<UL>
+    <A HREF=# onClick='window.open("/visit/{{v.id}}/vacs/new/","Add Vaccination","menubar=no,width=540,height=360,toolbar=no,scrollbars=yes");'>Add New</A>
+{% for v in vacs %}
+  <LI>{{v.type.title}}</LI><SPAN STYLE='background-color:#{% ifequal v.status "INP" %}FFFF55{% endifequal %}{% ifequal v.status "COM" %}55FF55{% endifequal %}{% ifequal v.status "CAN" %}55FF55{% endifequal %}'>
+	{{v.displayStatus}}</SPAN>
+{% endfor %}
+</UL>
+{% endblock %}
+

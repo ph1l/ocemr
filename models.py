@@ -520,10 +520,12 @@ class Vac(models.Model):
 		('COM','Completed'),
 		('CAN','Canceled'),
 	)
-	type = models.ForeignKey(MedType)
+	type = models.ForeignKey(VacType)
 	patient = models.ForeignKey(Patient)
 	startedDateTime = models.DateTimeField(default=datetime.datetime.now)
-	completedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	startedBy = models.ForeignKey(User,related_name="vac_started_by")
+	completedDateTime = models.DateTimeField(blank=True,null=True)
+	completedBy = models.ForeignKey(User,related_name="vac_completed_by", blank=True,null=True)
 	status = models.CharField(max_length=3, choices=VAC_STATUS_CHOICES)
 	def _get_displayStatus(self):
 		for code, displayStatus in self.VAC_STATUS_CHOICES:
