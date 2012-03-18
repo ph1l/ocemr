@@ -3,22 +3,34 @@ ocemr for Debian
 
 New Install -
 
-    1). Setup a Database: 
+    1). Setup a Database: (select one)
 
 	- SQLite -
 
-	-- settings.py --
+	-- /etc/ocemr/settings.py --
 	DATABASE_ENGINE = 'sqlite3'
 	DATABASE_NAME = '/var/lib/ocemr/db/ocemr.db'
-	-----------------
+	----------------------------
 
 	$ sudo -u www-data /usr/share/ocemr/util/initialize_sqlite_db.sh
 
 
 	- MySQL -
 
+	-- /etc/ocemr/settings.py --
+	DATABASE_ENGINE = 'mysql'
+	DATABASE_NAME = 'ocemr'
+	DATABASE_USER = 'ocemr'
+	DATABASE_PASSWORD = 'password'
+	----------------------------
+
+	$ sudo apt-get install mysql-server
+	$ sudo -u www-data /usr/share/ocemr/util/initialize_mysql_db.sh
+
 
 	- PostgreSQL -
+
+	(should work, not scripted.)
 
     2). Enable the website:
 

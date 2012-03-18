@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 #
 ##########################################################################
 #
@@ -21,15 +21,46 @@
 #########################################################################
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
-VAR=/var/lib/ocemr
+MYSQL_DATA=/var/lib/mysql
 APP=/usr/share/ocemr/apps/ocemr
 UTIL=/usr/share/ocemr/util
 
-if [ -e ${VAR}/db/ocemr.db ]; then
-	echo SQLite database present, aborting execution...
-	exit 10
+MYSQL_ADMIN_USER=root
+MYSQL_USER=ocemr
+MYSQL_HOST=localhost
+MYSQL_DBNAME=ocemr
+
+if ! cat /etc/ocemr/settings.py  | grep -v ^# | grep DATABASE_ENGINE | grep mysql >/dev/null; then
+	echo "set \"DATABASE_ENGINE\" in /etc/ocemr/settings.py to \"mysql\""
+	exit 1
+fi
+	
+if [ -e ${MYSQL_DATA}/${MYSQL_DBNAME} ]; then
+	echo "MySQL database present (${MYSQL_DATA}/${MYSQN_DBNAME}), aborting initialization..."
+	exit 1
+fi
+echo
+echo -n please enter mysql password for ${MYSQL_USER}@${MYSQL_HOST}:\ 
+read -s PASSWD
+echo
+echo
+echo -n again:\ 
+read -s PASSWD2
+echo
+
+if [ ${PASSWD} != ${PASSWD2} ]; then
+	echo Error: Passwords didn\'t match.
+	exit 1
 fi
 
+echo
+echo please enter mysql credentials for ${MYSQL_ADMIN_USER}:
+mysqladmin -u${MYSQL_ADMIN_USER} -p create ${MYSQL_DBNAME}
+
+echo
+echo please enter mysql credentials for ${MYSQL_ADMIN_USER}:
+echo 'GRANT ALL ON ocemr.* TO '${MYSQL_USER}'@'${MYSQL_HOST}' IDENTIFIED BY "'${PASSWD}'";' \
+	| mysql -u${MYSQL_ADMIN_USER} -p
 
 python ${APP}/manage.py syncdb
 
@@ -47,4 +78,4 @@ python ${UTIL}/import_rx_csv.py
 # python ./util/import_test_patients_csv.py
 #
 
-echo "all done initializing in ${VAR}/db/ocemr.db"
+echo "all done initializing in MySQL"
