@@ -10,3 +10,5 @@ install:
 		install -m 755 -d $(DESTDIR)$(SHARE)/contrib/source_data/$$t;\
 		install -m 644 source_data/$$t/*.csv $(DESTDIR)$(SHARE)/contrib/source_data/$$t;\
 	done
+	install -m 755 -d $(DESTDIR)$(SHARE)/contrib/schema_updates
+	install -m 644 schema_updates/* $(DESTDIR)$(SHARE)/contrib/schema_updates

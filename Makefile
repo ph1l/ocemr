@@ -1,7 +1,8 @@
 include makefile.defines
 
 SITE_FILES=admin.py forms.py __init__.py manage.py models.py urls.py widgets.py
-SITE_DIRS=formats formats/en formats/en_GB templates templatetags views
+SITE_DIRS=formats formats/en formats/en_GB templates templatetags views \
+	management management/commands
 
 all: $(SITE_FILES)
 
@@ -22,7 +23,7 @@ install:
 	make -C contrib install
 
 pkg:
-	dpkg-buildpackage -rfakeroot
+	dpkg-buildpackage -rfakeroot -us -uc
 pkgtest:
 	lintian ../ocemr_*_all.deb
 pkgclean:
