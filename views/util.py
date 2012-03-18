@@ -121,3 +121,57 @@ def autosearch_title(request, inapp, inmodel):
 
 autosearch_title = cache_page(autosearch_title, 60 * 60)
 
+@login_required
+def village_merge_wizard(request):
+	"""
+	"""
+	from ocemr.models import Village, Patient
+	from ocemr.forms import MergeVillageForm
+
+	valid_form=False
+
+	if request.method == 'POST': # If the form has been submitted...
+		form = MergeVillageForm(request.POST) # A form bound to the POST data
+		if form.is_valid(): # All validation rules pass
+			villageIncorrect = form.cleaned_data['villageIncorrect']
+			villageCorrect = form.cleaned_data['villageCorrect']
+			valid_form=True
+	else:
+		form = MergeVillageForm() # An unbound form
+	if not valid_form:
+		return render_to_response('popup_form.html', {
+			'title': 'Merge Patient Records',
+			'form_action': '/village_merge_wizard/',
+			'form': form,
+		},context_instance=RequestContext(request))
+	out_txt="Merge %s: %s\n  into %s: %s\n\n"%(villageIncorrect.id, villageIncorrect, villageCorrect.id, villageCorrect)
+
+	patients=	Patient.objects.filter(village=villageIncorrect)
+
+	for o in patients: out_txt += "  -> Patient: %s\n"%(o)
+
+	out_txt += "\n\nThere is NO UNDO function to reverse this change.\n"
+	out_txt += "Please be sure this is what you want before continuing...\n"
+	out_link = "<A HREF=/village_merge_wizard/%d/%d/>Do the merge!</A> or "%(villageCorrect.id,villageIncorrect.id)
+	return render_to_response('popup_info.html', {
+		'title': 'Schedule Patient Visit',
+		'info': out_txt,
+		'link_text': out_link,
+		})
+
+@login_required
+def village_merge_wizard_go(request,villageId,villageIncorrectId):
+	"""
+	"""
+	from ocemr.models import Village, Patient
+
+	village = Village.objects.get(pk=int(villageId))
+	villageIncorrect = Village.objects.get(pk=int(villageIncorrectId))
+
+	patients = Patient.objects.filter(village=villageIncorrect)
+
+	for o in patients:
+		o.village=village
+		o.save()
+	villageIncorrect.delete()
+	return HttpResponseRedirect('/close_window/')
