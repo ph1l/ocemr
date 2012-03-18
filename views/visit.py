@@ -606,7 +606,7 @@ def visit_vacs(request,id):
 	v = Visit.objects.get(pk=id)
 	p = v.patient
 	menu = get_visit_menu('vacs',p)
-	vacs = Vac.objects.filter(patient=p)
+	vacs = Vac.objects.filter(patient=p).order_by("-addedDateTime")
 
 
 	return render_to_response('visit_vacs.html', locals(),context_instance=RequestContext(request))

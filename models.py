@@ -533,7 +533,7 @@ class Vac(models.Model):
 		"""
 		"""
 		from models import VacNote
-		return VacNote.objects.filter(vac=self).order_by('-startedDateTime')
+		return VacNote.objects.filter(vac=self).order_by('-addedDateTime')
 	def __unicode__(self):
 		return "%s: %s"%(self.id, self.type.title)
 
