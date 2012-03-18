@@ -3,7 +3,7 @@
 """
 
 import os, popen2, time
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 
 class Command(BaseCommand):
     help = "Backup database. Only Mysql and Postgresql engines are implemented"
@@ -12,6 +12,7 @@ class Command(BaseCommand):
         from django.db import connection
         from django.conf import settings
 
+        self.var_path = settings.VAR_PATH
         self.engine = settings.DATABASE_ENGINE
         self.db = settings.DATABASE_NAME
         self.user = settings.DATABASE_USER
@@ -19,11 +20,18 @@ class Command(BaseCommand):
         self.host = settings.DATABASE_HOST
         self.port = settings.DATABASE_PORT
 
-        backup_dir = '%s/backups'%(settings.VAR_PATH)
-        if not os.path.exists(backup_dir):
-            os.makedirs(backup_dir)
-        outfile = os.path.join(backup_dir, 'backup_%s.sql' % time.strftime('%y%m%d%S'))
+        self.encrypt = settings.DB_BACKUP_ENCRYPT
+        self.encrypt_to = settings.DB_BACKUP_ENCRYPT_TO
 
+        if len(args) == 0:
+                backup_dir = '%s/backups'%(self.var_path)
+                if not os.path.exists(backup_dir):
+                        os.makedirs(backup_dir)
+                outfile = os.path.join(backup_dir, 'backup_%s.sql' % time.strftime('%y%m%d-%H%M%S'))
+        elif len(args) == 1:
+                outfile = args[0]
+        else:
+                raise Exception("backupdb: Too many args.")
         if self.engine == 'mysql':
             print 'Doing Mysql backup to database %s into %s' % (self.db, outfile)
             self.do_mysql_backup(outfile)
@@ -32,6 +40,9 @@ class Command(BaseCommand):
             self.do_postgresql_backup(outfile)
         else:
             print 'Backup in %s engine not implemented' % self.engine
+        if self.encrypt:
+            print 'Encrypting %s to %s %s.gpg'%(outfile, self.encrypt_to, outfile)
+            self.do_encrypt_backup(outfile)
 
     def do_mysql_backup(self, outfile):
         args = []
@@ -45,7 +56,10 @@ class Command(BaseCommand):
             args += ["--port=%s" % self.port]
         args += [self.db]
 
-        os.system('mysqldump %s > %s' % (' '.join(args), outfile))
+        cmd = 'mysqldump %s > %s' % (' '.join(args), outfile)
+        exit_status = os.system(cmd)
+        if exit_status != 0:
+                raise Exception("Dump command (%s) failed with %s."%(cmd,exit_status))
 
     def do_postgresql_backup(self, outfile):
         args = []
@@ -63,3 +77,21 @@ class Command(BaseCommand):
         if self.passwd:
             pipe.tochild.write('%s\n' % self.passwd)
             pipe.tochild.close()
+        
+
+    def do_encrypt_backup(self, outfile):
+        args = ["--encrypt", "--batch", "--yes",
+                "--homedir", "%s/gnupg"%(self.var_path),
+                "--output", "%s.gpg"%(outfile)
+                ]
+        if self.encrypt_to.strip() == "":
+            raise Exception("DB_BACKUP_ENCRYPT_TO empty (see settings.py)")
+        args += ["--recipient", self.encrypt_to, outfile]
+        cmd = 'gpg %s'%(' '.join(args))
+        exit_status = os.system(cmd)
+        os.unlink(outfile)
+        #This assumes you run unix (you do run unix, don't you?)
+        if exit_status != 0:
+                raise Exception("Encrypt command (%s) failed with %s."%(cmd,exit_status))
+        
+
