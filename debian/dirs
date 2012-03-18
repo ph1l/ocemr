@@ -1,3 +1,5 @@
-var/lib/ocemr
+var/lib/ocemr/db
+var/lib/ocemr/gnupg
+var/lib/ocemr/backups
 var/log/apache2/ocemr
 etc/apache2/sites-available

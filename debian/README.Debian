@@ -1,8 +1,23 @@
 ocemr for Debian
 ----------------
 
-QUICKSTART -
+New Install - setup a database: 
 
-$ sudo python /usr/share/ocemr/apps/ocemr/manage.py createsuperuser --username admin --email=admin@example.com
+	- SQLite -
+
+	-- settings.py --
+	DATABASE_ENGINE = 'sqlite3'
+	DATABASE_NAME = '/var/lib/ocemr/db/ocemr.db'
+	-----------------
+
+	$ sudo -u www-data /usr/share/ocemr/util/initialize_sqlite_db.sh
+
+
+	- MySQL -
+
+
+	- PostgreSQL -
+
+
 
  -- Philip Freeman <philip.freeman@gmail.com>  Sat, 17 Mar 2012 00:43:18 -0500

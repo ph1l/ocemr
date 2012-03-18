@@ -13,7 +13,7 @@ Architecture: all
 Depends: ${python:Depends}, ${misc:Depends}, python-django, python-sqlite,
  python-matplotlib, python-mysqldb, python-django-registration,
  apache2, libapache2-mod-python,
- cups, enscript
+ cups, enscript, gnupg
 Recommends: mysql-server, mysql-client
 Description: Open Clinic Electonic Medical Records
  This is a Python, Django based webapp for managing medical records in a
