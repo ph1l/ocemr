@@ -12,6 +12,8 @@ def post_syncdb_auto_upgrade(sender, **kwargs):
 
 
 	DEBUG=False
+	biggest_major=0
+	biggest_minor=0
 
 	if DATABASE_ENGINE not in ('mysql', 'sqlite3'):
 		print "Skipping post_syncdb_auto_upgrade because %s is an unsupported DATABASE_ENGINE."%(DATABASE_ENGINE)
@@ -24,16 +26,19 @@ def post_syncdb_auto_upgrade(sender, **kwargs):
 	else:
 		latest_version=versions[0]
 
-	re_match_filename=re.compile("^(\d+)-(\d+)-%s.sql$"%(DATABASE_ENGINE))
+	re_match_filename_sql=re.compile("^(\d+)-(\d+)-%s.sql$"%(DATABASE_ENGINE))
+	re_match_filename_cmd=re.compile("^(\d+)-(\d+).cmd$")
 	for fname in sorted(os.listdir("%s/schema_updates"%CONTRIB_PATH)):
 		if DEBUG: print "checking %s"%(fname)
-		m = re_match_filename.match(fname)
+		m = re_match_filename_sql.match(fname)
 		if m:
 			f_major=int(m.group(1))
 			f_minor=int(m.group(2))
 			if DEBUG: print "found %s: major=%d, minor=%d"%(fname,f_major,f_minor)
 			if f_major > latest_version.major or ( f_major == latest_version.major and f_minor > latest_version.minor ):
 				print "applying %s..."%(fname)
+				if f_major > biggest_major: biggest_major = f_major
+				if f_minor > biggest_minor: biggest_minor = f_minor
 				cmd="cat %s/schema_updates/%s | "%(CONTRIB_PATH,fname)
 				if DATABASE_ENGINE=='mysql':
 					cmd += "mysql --force "
@@ -50,11 +55,20 @@ def post_syncdb_auto_upgrade(sender, **kwargs):
 					cmd += "sqlite3 %s"%(DATABASE_NAME)
 				else:
 					raise Exception("WTF")
-				exit_status = os.system(cmd)
-				dbv = DBVersion.objects.create(major=f_major,minor=f_minor)
-				dbv.save()
-				if exit_status != 0:
-					raise Exception("Command (%s) failed with %s."%(cmd,exit_status))
+				os.system(cmd)
+		m = re_match_filename_cmd.match(fname)
+		if m:
+			f_major=int(m.group(1))
+			f_minor=int(m.group(2))
+			if f_major > latest_version.major or ( f_major == latest_version.major and f_minor > latest_version.minor ):
+				print "applying %s..."%(fname)
+				if f_major > biggest_major: biggest_major = f_major
+				if f_minor > biggest_minor: biggest_minor = f_minor
+				cmd = "sh %s/schema_updates/%s"%(CONTRIB_PATH,fname)
+				os.system(cmd)
+	if biggest_major > latest_version.major or ( biggest_major == latest_version.major and biggest_minor > latest_version.minor):
+		dbv = DBVersion.objects.create(major=f_major,minor=f_minor)
+		dbv.save()
 	return
 
 post_syncdb.connect(post_syncdb_auto_upgrade, sender=ocemr.models)
