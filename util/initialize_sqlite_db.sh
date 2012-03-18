@@ -21,45 +21,30 @@
 #########################################################################
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
-echo
-echo This will DESTROY and re-create the Databse. Type 'YES' to continue...
-echo
+VAR=/var/lib/ocemr
+APP=/usr/share/ocemr/apps/ocemr
+UTIL=/usr/share/ocemr/util
 
-read FOO
-
-if [ "${FOO}" != "YES" ]; then
-	echo Canceled
-	exit
+if [ -e ${VAR}/db/ocemr.db ]; then
+	echo SQLite database present, aborting execution...
+	exit 10
 fi
 
 
-
-if [ -d /var/lib/mysql/ocemr ]; then
-	/etc/init.d/apache2 stop
-	echo Resetting MySQL
-	echo "drop database ocemr ; create database ocemr;" | mysql -p
-elif [ -e ${HOME}/ocemr.db ]; then
-	echo Resetting SQLite3
-	rm -v ${HOME}/ocemr.db
-fi
-
-
-python manage.py syncdb
+python ${APP}/manage.py syncdb
 
 #----------
 
-python ./util/import_symptom_csv.py
-python ./util/import_vital_csv.py
-python ./util/import_examnotes_csv.py
-python ./util/import_labs_csv.py
-python ./util/import_dx_csv.py
-python ./util/import_rx_csv.py
+python ${UTIL}/import_symptom_csv.py
+python ${UTIL}/import_vital_csv.py
+python ${UTIL}/import_examnotes_csv.py
+python ${UTIL}/import_labs_csv.py
+python ${UTIL}/import_dx_csv.py
+python ${UTIL}/import_rx_csv.py
 
 #----------
 #
 # python ./util/import_test_patients_csv.py
 #
 
-if [ -d /var/lib/mysql/ocemr ]; then
-	/etc/init.d/apache2 start
-fi
+echo "all done initializing in ${VAR}/db/ocemr.db"
