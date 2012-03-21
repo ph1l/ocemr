@@ -778,12 +778,12 @@ class MergePatientForm(forms.Form):
 	duplicateID = forms.IntegerField()
 
 class MergeVillageForm(forms.Form):
-        villageIncorrect = forms.CharField(
+        villageIncorrect = forms.CharField(label="Incorrect Village",
 			widget=widgets.JQueryAutoComplete(
 				'/autocomplete_name/ocemr/Village/'
 				)
 			)
-        villageCorrect = forms.CharField(
+        villageCorrect = forms.CharField(label="Correct Village",
 			widget=widgets.JQueryAutoComplete(
 				'/autocomplete_name/ocemr/Village/'
 				)
