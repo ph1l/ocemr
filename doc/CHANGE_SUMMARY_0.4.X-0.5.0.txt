@@ -1,0 +1,76 @@
+User Change Summary v0.4.X -> v0.5.0
+====================================
+
+* Bugs Fixed - since 0.4.1.2 *
+------------------------------
+
+  * Duplicate Diagnosis records added  when multiple users "claim" the
+	same visit.
+  * Addressed printing issues where long lines would get cutoff in
+	patient's printed record.
+  * The Daily Patient report in December was not tracking patient number
+	per month correctly.
+  * The Date printed out on a patient record is now taken from when the
+	visit is marked finished, not when it was scheduled.
+
+
+* New Vitals - Pulse Oxymetry and Oxygen *
+------------------------------------------
+
+  Two new vital statistics were added to the system, %spO2 and %oxygen. %spO2
+measure the patient's pulse oxymetry and %oxygen measure how much oxygen (if
+any) the patient is on. Use percentages -- real numbers are supported (as
+opposed to only integers) -- %oxygen should be Zero unless patient is on
+extra oxygen.
+
+
+* New Patient Fields *
+----------------------
+  Added two text fields to Patient table, labeled alternate contact. You can
+find them on the New Patient pop-up and the patient details page.
+
+
+* Cost Estimation *
+-------------------
+  Each MedType and LabType will now have a base cost in the database. In the
+checkout process, after the meds have been marked dispensed, the MedQueue
+will display a cost estimate. The cost estimate is calculated as follows.
+
+	Completed Labs * Each Lab Type's cost
+	+ Dispensed Meds * Each Med Type's cost * dispense amount.
+
+  So, in order for this feature to work, You'll need to come up with an
+appropriate cost for each lab and each med type.
+
+
+* Vaccination Tracking *
+------------------------
+  Vaccination tracking is added as a separate function in a patient's chart.
+The purpose is to track when and what vaccinations a patient has received.
+Adding records to this page does not order any medication.
+
+
+* Staff User Changes *
+----------------------
+
+  * Admin
+
+  The previously labeled "Admin" link from the main menu has been moved
+to a sub-menu on the "User Preferences" page. User administrative tasks
+will now be available there under the heading "Staff Functions." The link
+has been renamed to "Data Admin Panel."
+  
+  * Merge Village Wizard
+
+  This is a new utility to correct misspellings of Villages. Click here, select the incorrect village in the first box, the correct in the second, and hit
+"submit!"
+
+  * Backup the Database
+
+  This automates the database backup functionality and makes it available
+to staff users. Clicking this link will generate a new backup and provide it
+for download right through the web interface!
+  *NOTE*: This actually does the backup in real time on the server. Using this
+function may impact performance of a running system, use with caution.
+
+

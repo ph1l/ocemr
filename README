@@ -23,16 +23,24 @@ Project Links
  * Author		: Philip Freeman <philip.freeman@gmail.com>
 
 
-More Documentation
+User Documentation
 ------------------
 
- * doc/INSTALL.testing
-	 The basic steps to setting up the software for testing, more work
-	needs to be done before we document a production INSTALL process.
+ * debian/README.Debian
+	HOWTO use the Debian package. (see /usr/share/doc/ocemr/README.Debian)
+ * doc/CHANGE_SUMMARY_*
+	A summary of changes from the user's point of view.
  * doc/CHANGELOG
-	 A bullet list of changes between versions.
+	A bullet list of changes between versions.
+
+Development Documentation
+-------------------------
+ * doc/SETUP_TESTING
+	How-To setup a test environment for OCEMR
  * doc/dbchanges.txt
-	 A list of commands for upgrading databases between minor releases.
+	A list of commands for upgrading databases between minor releases.
+	(as of version 5.0, Database changes are managed internally 
+	via manage.py syncdb)
  * doc/ROADMAP
 	 An outline for future versions.
 
