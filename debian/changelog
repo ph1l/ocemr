@@ -1,8 +1,10 @@
 ocemr (0.5.0) unstable; urgency=low
 
+  * add vaccination tracking tab on chart.
   * cost estimation (assign cost in labtype and medtype)
   * track alternate contact info for patients
   * add pulse oximetry and oxygen vitals
+  * add "Merge Village" utility
   * patient navigation and search enahancements
   * "Admin" panel moved to user prefs page
   * disable types (lab, med, diagnosis) in Data Admin Panel
@@ -11,7 +13,7 @@ ocemr (0.5.0) unstable; urgency=low
   * FIX: dupe Diags with multiple user claim of visit.
   * FIX: word wrap issue in view/print record
   * FIX: daily pt report: pt # of month wrong in dec
-  * FIX: record uses visit finished date 
+  * FIX: record uses visit finished date
 
 
  -- Philip Freeman <philip.freeman@gmail.com>  Sat, 17 Mar 2012 00:43:18 -0500
