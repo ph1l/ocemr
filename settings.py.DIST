@@ -1,34 +1,31 @@
 #
 # OCEMR - settings.py
 #
-
-#
-# DATABASE_ENGINE -
-#       'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'
-#
+# 	This is the main django settings file and must be valid python.
 #
 
+# DATABASE_ENGINE ('postgresql_psycopg2', 'postgresql', 'mysql',
+#			 'sqlite3' or 'oracle')
+#
 DATABASE_ENGINE = 'sqlite3'
 
+# DATABASE_NAME ('/path/to/sqlite_db_file.db', 'mysql_db_name' )
+#	  The directory that sqlite file resides in must be writable by the
+#	user that OCEMR runs as.
 #
-# DATABASE_NAME -
-#       database name OR path to database file if using sqlite3.
-#
-
 DATABASE_NAME = '/var/lib/ocemr/db/ocemr.db'
 
-#
 # DATABASE_* -
-#       other database connection options (Not used with sqlite3.)
-#
+#       if DATABASE_ENGINE is sqlite3, these settings are ignored.
 #
 DATABASE_USER = ''
 DATABASE_PASSWORD = ''
 DATABASE_HOST = ''             # Set to empty string for localhost.
 DATABASE_PORT = ''             # Set to empty string for default.
 
-#
 # DB_BACKUP_*
+#
+# TODO: Document this...
 #
 
 DB_BACKUP_ENCRYPT=False
@@ -36,38 +33,28 @@ DB_BACKUP_ENCRYPT_TO=( "ocemr@localhost" )
 
 #
 # DEBUG -
-#       set debug mode on?
-#
+#	Set DEBUG = True in development
 #
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-#
-# Session Security
-#
-
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
-#
 # ADMINS-
-#       set name and email addresses of administrators
-#
-#
-
+#         Set name and email addresses of administrators. Site error reports
+#	get emailed here.
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
 MANAGERS = ADMINS
+
+# SERVER_EMAIL -
+#	  Address from which the server sends email.
 SERVER_EMAIL = 'ocemr@example.com'
 
-#
-# APP_PATH -
+# *_PATH -
 #       Location the software is installed.
 #
-#
-
 APP_PATH="/usr/share/ocemr/apps/ocemr"
 CONTRIB_PATH="/usr/share/ocemr/contrib"
 VAR_PATH="/var/lib/ocemr"
@@ -93,75 +80,48 @@ PAPER_SIZE = "Letter"
 # system time zone.
 TIME_ZONE = 'America/Chicago'
 
-# TIME / DATE FORMATS
-#
-#
-
-USE_L10N = True
-
-
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
-# LANGUAGE_CODE = 'en-us'
-
-SITE_ID = 1
-
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
-USE_I18N = True
-
-# Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
-
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash if there is a path component (optional in other cases).
-# Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
-
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/admin/'
-
 # Make this unique, and don't share it with anybody.
 #
 #  python -c 'import random; print "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)])'
 #
-SECRET_KEY = '3hsqn3d=zerhs33dn-drs6^5ptexq@+_7y0k8$4nw1e^3g%2(n'
+SECRET_KEY = '5!&)hu8!_=l-*y2gwm9z9z&qro+m7%wswqpzk1)hlt_nxi)k_x'
 
-# List of callables that know how to import templates from various sources.
+##############################################################################
+#
+# Settings beyond this point should, in most cases, be left untouched.
+#
+##############################################################################
+
+
+# Session Security
+#
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+USE_L10N = True
+# LANGUAGE_CODE = 'en-us'
+SITE_ID = 1
+USE_I18N = True
+MEDIA_ROOT = ''
+MEDIA_URL = ''
+ADMIN_MEDIA_PREFIX = '/media/admin/'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
 )
-
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.auth",
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.request",
-    #"django.contrib.staticfiles.context_processors.staticfiles",
-    #"django.contrib.messages.context_processors.messages",
 )
-
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
-
 ROOT_URLCONF = 'ocemr.urls'
 FORMAT_MODULE_PATH='ocemr.formats'
-
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
-
+TEMPLATE_DIRS = ()
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -174,4 +134,3 @@ INSTALLED_APPS = (
 
 import version
 OCEMR_VERSION=version.OCEMR_VERSION
-
