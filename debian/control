@@ -16,5 +16,7 @@ Depends: ${python:Depends}, ${misc:Depends}, python-django, python-sqlite,
  cups, enscript, gnupg, sqlite3
 Recommends: mysql-server, mysql-client
 Description: Open Clinic Electonic Medical Records
- This is a Python, Django based webapp for managing medical records in a
- remote clinic.
+  OCEMR is a web based electronic medical records system designed for the
+ clinic environment. Designed for small clinics in rural parts of the world,
+ this web-based EMR is portable and straightforward to use. Apache2, python,
+ and Django App.
