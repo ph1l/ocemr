@@ -34,9 +34,43 @@ New Install -
 
     2). Enable the website:
 
+	$ sudo vi /etc/ocemr/apache2.conf
 	$ sudo a2dissite default
 	$ sudo a2ensite ocemr
 	$ sudo /etc/init.d/apache2 reload
+
+Upgrade Notes - 
+
+    from >= v0.5.0:
+
+	  Upgrading from versions 0.5.0 and beyond should all be managed
+	by the Debian package. The database will be backed up via the
+	pre-install script, and then migated in the post-install. The only
+	thing the administrator should have to worry about is merging in
+	changes to the configuration files.
+
+    from v0.4.X:
+
+	  Upgrading from an install previous to v0.5.0 will be more
+	complicated.  Since Debian packaging was not introduced until
+	v0.5.0, you will need to do the following:
+
+		1). Backup your database and configuration!
+			( mysqldump or sqlite3> .dump)
+
+		2). Disable the old site.
+
+		3). Install the package.
+
+		4). Configure your /etc/ocemr/* config files.
+
+		5). Enable the debianized site.
+			(see step #2 in the new install instructions above)
+
+		6). upgrade the DB schema.
+		    - login to the Django Admin with a superuser account
+		    - Modify the record for version 0.5 to reference 0.4
+		    - $ python /usr/share/ocemr/apps/ocemr/manage.py syncdb
 
 
  -- Philip Freeman <philip.freeman@gmail.com>  Sat, 17 Mar 2012 00:43:18 -0500
