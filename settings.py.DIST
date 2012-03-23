@@ -57,6 +57,7 @@ SERVER_EMAIL = 'ocemr@example.com'
 #
 APP_PATH="/usr/share/ocemr/apps/ocemr"
 CONTRIB_PATH="/usr/share/ocemr/contrib"
+UTIL_PATH="/usr/share/ocemr/util"
 VAR_PATH="/var/lib/ocemr"
 
 #

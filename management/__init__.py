@@ -8,7 +8,7 @@ def post_syncdb_auto_upgrade(sender, **kwargs):
 	"""
 	import os, re
 	from ocemr.models import DBVersion
-	from ocemr.settings import DATABASE_ENGINE, CONTRIB_PATH, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT
+	from ocemr.settings import UTIL_PATH, CONTRIB_PATH, DATABASE_ENGINE, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT
 
 
 	DEBUG=False
@@ -64,6 +64,10 @@ def post_syncdb_auto_upgrade(sender, **kwargs):
 				print "applying %s..."%(fname)
 				if f_major > biggest_major: biggest_major = f_major
 				if f_minor > biggest_minor: biggest_minor = f_minor
+				my_set_env = {}
+				my_set_env['UTIL_PATH']=UTIL_PATH
+				for key in my_set_env.keys():
+					os.environ['OCEMR_%s'%key]=my_set_env[key]
 				cmd = "sh %s/schema_updates/%s"%(CONTRIB_PATH,fname)
 				os.system(cmd)
 	if biggest_major > latest_version.major or ( biggest_major == latest_version.major and biggest_minor > latest_version.minor):
