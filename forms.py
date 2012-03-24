@@ -84,6 +84,12 @@ class EditPatientPhoneForm(forms.Form):
 class EditPatientEmailForm(forms.Form):
 	email = forms.EmailField(label='e-mail')
 
+class EditPatientAltContactNameForm(forms.Form):
+	alt_contact_name = forms.CharField(label='Name')
+
+class EditPatientAltContactPhoneForm(forms.Form):
+	alt_contact_phone = forms.CharField(label='Phone')
+
 class NewScheduledVisitForm(forms.ModelForm):
 	from models import Patient
 	from models import Visit
@@ -233,6 +239,7 @@ class PatientSearchForm(forms.Form):
 				),
 			required=False,
 			)
+	pid = forms.IntegerField(label='Patient ID#', required=False)
 
 
 class NewVisitSymptomForm(forms.ModelForm):
@@ -304,6 +311,16 @@ required=False
 	weight_in = forms.CharField(
 		label="Weight",
 		help_text="in kilograms or pounds. (valid examples \"77.5 kg\" or \"150lb\".)",
+		required=False
+		)
+	spo2_in = forms.CharField(
+		label="SpO2",
+		help_text="in percent. (valid examples \"80\" or \"98%\".)",
+		required=False
+		)
+	oxygen_in = forms.CharField(
+		label="% Oxygen",
+		help_text="in percent. (valid examples \"20\" or \"30%\".)",
 		required=False
 		)
 
@@ -380,7 +397,40 @@ required=False
 		else:
 			raise forms.ValidationError(message)
 		return d
-
+	def clean_spo2_in(self):
+		message="Must be a percentage."
+		data = str(self.cleaned_data['spo2_in']).strip()
+		if len(data) == 0:
+			return ""
+		else:
+			if data[-1].lower() == '%':
+				try:
+					d = float(data[0:-1])
+				except:
+					raise forms.ValidationError(message)
+			else:
+				try:
+					d = float(data)
+				except:
+					raise forms.ValidationError(message)
+		return d
+	def clean_oxygen_in(self):
+		message="Must be a percentage."
+		data = str(self.cleaned_data['oxygen_in']).strip()
+		if len(data) == 0:
+			return ""
+		else:
+			if data[-1].lower() == '%':
+				try:
+					d = float(data[0:-1])
+				except:
+					raise forms.ValidationError(message)
+			else:
+				try:
+					d = float(data)
+				except:
+					raise forms.ValidationError(message)
+		return d
 #class NewVitalForm(forms.ModelForm):
 #	from models import Visit, VitalType, Patient
 #	type = forms.ModelChoiceField(queryset=VitalType.objects.all(),widget=forms.HiddenInput)
@@ -592,6 +642,41 @@ class NewMedForm(forms.ModelForm):
 		d = MedType.objects.get(title=data)
 		return d
 
+class NewVacForm(forms.ModelForm):
+	from models import Visit, Patient, VacType
+	receivedDate = forms.DateField(required=False,widget=widgets.CalendarWidget)
+        type = forms.ModelChoiceField(queryset=VacType.objects.all(),widget=forms.HiddenInput)
+	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
+	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+
+	def __init__(self, patient, vactype, user, *args, **kwargs):
+
+		super(NewVacForm, self).__init__(*args, **kwargs)
+		#raise(" | ".join(dir(self.fields['createdBy'])))
+		self.fields['type'].initial=vactype.id
+		self.fields['addedBy'].initial=user.id
+		self.fields['patient'].initial=patient.id
+
+        class Meta:
+                model = get_model('ocemr','Vac')
+                exclude = [ 'addedDateTime' ]
+
+	def clean_receivedDate(self):
+		data = self.cleaned_data['receivedDate']
+		if data == "" or data == None:
+			from datetime import datetime
+			return datetime.now().date()
+		return data
+
+class EditVacReceivedForm(forms.Form):
+        receivedDate = forms.DateField(widget=widgets.CalendarWidget)
+
+	def __init__(self, v, user, *args, **kwargs):
+		
+		super(EditVacReceivedForm, self).__init__(*args, **kwargs)
+		#raise(" | ".join(dir(self.fields['createdBy'])))
+		self.fields['receivedDate'].initial = v.receivedDate
+
 class NewMedNoteForm(forms.ModelForm):
 	from models import Med
 	med = forms.ModelChoiceField(queryset=Med.objects.all(),widget=forms.HiddenInput)
@@ -604,6 +689,22 @@ class NewMedNoteForm(forms.ModelForm):
 
 	class Meta:
 		model = get_model('ocemr','MedNote')
+                exclude = [ 'addedDateTime']
+
+class NewVacNoteForm(forms.ModelForm):
+	from models import Patient, VacType
+	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
+	type = forms.ModelChoiceField(queryset=VacType.objects.all(),widget=forms.HiddenInput)
+	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
+	def __init__(self, p, vt, user, *args, **kwargs):
+		
+		super(NewVacNoteForm, self).__init__(*args, **kwargs)
+		self.fields['patient'].initial=p.id
+		self.fields['type'].initial=vt.id
+		self.fields['addedBy'].initial=user.id
+
+	class Meta:
+		model = get_model('ocemr','VacNote')
                 exclude = [ 'addedDateTime']
 
 class NewCashLogForm(forms.ModelForm):
@@ -675,3 +776,29 @@ class EditMedForm(forms.Form):
 
 class MergePatientForm(forms.Form):
 	duplicateID = forms.IntegerField()
+
+class MergeVillageForm(forms.Form):
+        villageIncorrect = forms.CharField(label="Incorrect Village",
+			widget=widgets.JQueryAutoComplete(
+				'/autocomplete_name/ocemr/Village/'
+				)
+			)
+        villageCorrect = forms.CharField(label="Correct Village",
+			widget=widgets.JQueryAutoComplete(
+				'/autocomplete_name/ocemr/Village/'
+				)
+			)
+	def clean_villageIncorrect(self):
+		data = self.cleaned_data['villageIncorrect']
+		from models import Village
+		v, is_new = Village.objects.get_or_create(name=data)
+		if is_new:
+			raise forms.ValidationError("The Incorrect Village name must exist!")
+		return v
+	def clean_villageCorrect(self):
+		data = self.cleaned_data['villageCorrect']
+		from models import Village
+		v, is_new = Village.objects.get_or_create(name=data)
+		if is_new:
+			v.save()
+		return v

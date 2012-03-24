@@ -39,6 +39,7 @@ from django.contrib.auth.models import User
 class Village(models.Model):
 	name = models.CharField(max_length=128)
 	quick = models.BooleanField(default=False)
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return self.name
 	
@@ -60,6 +61,8 @@ class Patient(models.Model):
 	scratchNote = models.TextField(blank=True)
 	phone = models.CharField(max_length=32, blank=True)
 	email = models.EmailField(blank=True)
+	altContactName = models.CharField(max_length=32, blank=True)
+	altContactPhone = models.CharField(max_length=32, blank=True)
 	def __unicode__(self):
 		return '%s (%s-%d) %s' % (self.fullName, self.gender, self.age, self.village.name)
 	def _get_age(self):
@@ -163,6 +166,43 @@ class Visit(models.Model):
 	is_checking_out = property(_is_checking_out)
 	is_finished = property(_is_finished)
 	get_num_meds = property(_get_num_meds)
+
+	def get_estimated_visit_cost_detail(self):
+		"""
+		Returns an array of estimated cost items
+		each array item is a list:
+			( description, base cost, quantity, total )
+		"""
+		cost_detail =[]
+		labs = Lab.objects.filter(visit=self)
+		if len(labs) > 0:
+			for l in labs:
+				if l.status != "COM":
+					continue
+				cost_detail.append( (
+					( "Lab: %s"%(l.type.title), l.type.cost , float(1), l.type.cost)
+					) )
+		meds = Med.objects.filter(visit=self)
+		if len(meds) > 0:
+			for m in meds:
+				if m.status == "DIS":
+					#Set m_dispenseAmount to zero if it's not valid
+					try:
+						m_dispenseAmount=float(m.dispenseAmount)
+					except:
+						m_dispenseAmount=float(0)
+					cost_detail.append(
+						( "Med: %s"%(m.type.title), m.type.cost, m.dispenseAmount, m.type.cost * m_dispenseAmount )
+						)
+		return cost_detail
+
+	def get_estimated_visit_cost(self):
+		cost_estimate = float(0)
+		cost_detail = self.get_estimated_visit_cost_detail()
+		for row in cost_detail:
+			cost_estimate += row[3]
+		return cost_estimate
+
 	def get_lab_status(self):
 		"""
 			returns an INT indicated the following statuses:
@@ -281,27 +321,26 @@ class Visit(models.Model):
 		
 		symptoms = VisitSymptom.objects.filter(visit=self)
 		for symptom in symptoms:
-			out_txt += "   %s: %s\n"%(symptom.type.title,symptom.notes)
+			out_txt += "\t%s: %s\n"%(symptom.type.title,symptom.notes)
 		vitals = Vital.objects.filter(visit=self)
 		out_txt += "O:"
 		for vital in vitals:
-			out_txt += " %s: %s" %(vital.type.title, vital.get_display_data())
+			out_txt += "\t%s: %s" %(vital.type.title, vital.get_display_data())
 		out_txt += "\n"
 		examNotes = ExamNote.objects.filter(visit=self)
 		for examNote in examNotes:
-			out_txt += "   %s: %s\n"%(examNote.type.title, examNote.note)
+			out_txt += "\t%s: %s\n"%(examNote.type.title, examNote.note)
 		diagnoses = Diagnosis.objects.filter(visit=self)
 		for diagnosis in diagnoses:
 			out_txt +="AP: %s:%s - %s\n"%(diagnosis.displayStatus,diagnosis.type.title, diagnosis.notes)
 			meds = Med.objects.filter(diagnosis=diagnosis, status='DIS')
 			for med in meds:
-				out_txt +="    Med: %s - %s\n"%(med.type.title,med.dosage)
+				out_txt +="\tMed: %s - %s\n"%(med.type.title,med.dosage)
 		referrals = Referral.objects.filter(visit=self)
 		for referral in referrals:
 			out_txt +="Referral: %s - %s"%(referral.to, referral.reason)
 		out_txt += "\n\nSeen By: %s %s\n\n" %( self.claimedBy.first_name, self.claimedBy.last_name)
 		return out_txt
-
 
 class SymptomType(models.Model):
 	title = models.CharField(max_length=128)
@@ -346,6 +385,8 @@ class Vital(models.Model):
 
 class LabType(models.Model):
 	title = models.CharField(max_length=128)
+	cost = models.FloatField(default=0)
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s"%(self.title)
 
@@ -389,6 +430,7 @@ class DiagnosisType(models.Model):
 	title = models.CharField(max_length=128)
 	chronic = models.BooleanField(default=False)
 	icpc2Code = models.CharField(max_length=5,default="")
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s {%s}"%(self.title,self.icpc2Code)
 
@@ -424,6 +466,8 @@ class Diagnosis(models.Model):
 
 class MedType(models.Model):
 	title = models.CharField(max_length=128)
+	cost = models.FloatField(default=0)
+	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return "%s"%(self.title)
 
@@ -462,6 +506,34 @@ class Med(models.Model):
 
 class MedNote(models.Model):
 	med = models.ForeignKey(Med)
+	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	addedBy = models.ForeignKey(User)
+	note = models.TextField(default="")
+
+
+class VacType(models.Model):
+	title = models.CharField(max_length=128)
+	active = models.BooleanField(default=True)
+	def __unicode__(self):
+		return "%s"%(self.title)
+
+class Vac(models.Model):
+	type = models.ForeignKey(VacType)
+	patient = models.ForeignKey(Patient)
+	receivedDate = models.DateField()
+	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	addedBy = models.ForeignKey(User,related_name="vac_added_by")
+	def get_notes(self):
+		"""
+		"""
+		from models import VacNote
+		return VacNote.objects.filter(type=self.type,patient=self.patient).order_by('-addedDateTime')
+	def __unicode__(self):
+		return "%s: %s"%(self.id, self.type.title)
+
+class VacNote(models.Model):
+	type = models.ForeignKey(VacType)
+	patient = models.ForeignKey(Patient)
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	addedBy = models.ForeignKey(User)
 	note = models.TextField(default="")
@@ -516,3 +588,9 @@ class CashLog(models.Model):
 	def __unicode__(self):
 		return "%s: CashLog"%(self.id)
 
+class DBVersion(models.Model):
+	major = models.IntegerField()
+	minor = models.IntegerField()
+	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	def __unicode__(self):
+		return "Version %d.%d.x"%(self.major,self.minor)

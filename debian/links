@@ -1,0 +1,4 @@
+etc/ocemr/settings.py usr/share/ocemr/apps/ocemr/settings.py
+etc/ocemr/util_conf.py usr/share/ocemr/util/util_conf.py
+etc/ocemr/apache2.conf etc/apache2/sites-available/ocemr
+usr/share/pyshared/django/contrib/admin/media usr/share/ocemr/www/media/admin

@@ -19,6 +19,7 @@
 	<TH># of Meds</TH>
 	<TH>Med Status</TH>
 	<TH>Visit Status</TH>
+	<TH>Cost Estimate</TH>
 	<TH>Billed</TH>
 	<TH>Collected</TH>
 	<TH>Actions</TH>
@@ -44,6 +45,7 @@
         {% endifequal %}
 {{v.displayStatus}}</SPAN>
 </TD>
+<TD>{{v.get_estimated_visit_cost}} (<A HREF=# onClick='window.open("/visit/{{v.id}}/cost_estimate_detail/","Cost Estimate Detail","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>detail</A>)</TD>
 <TD>{{v.cost}}(<A HREF=# onClick='window.open("/visit/{{v.id}}/bill_amount/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)</TD>
 <TD>
 {% ifequal v.get_med_status 2 %}
@@ -89,6 +91,7 @@ Resolved:
 	<TH>Resolved By</TH>
 	<TH>Patient Id</TH>
 	<TH># of Meds</TH>
+	<TH>Cost Estimate</TH>
 	<TH>Billed</TH>
 	<TH>Collected</TH>
 	<TH>Actions</TH>
@@ -99,6 +102,7 @@ Resolved:
 <TD>{{v.resolvedBy}}
 <TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
 <TD>{{ v.get_num_meds }}</TD>
+<TD>{{v.get_estimated_visit_cost}} (<A HREF=# onClick='window.open("/visit/{{v.id}}/cost_estimate_detail/","Cost Estimate Detail","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>detail</A>)</TD>
 <TD>{{v.cost}}(<A HREF=# onClick='window.open("/visit/{{v.id}}/bill_amount/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)</TD>
 <TD>
 	{% if v.has_collected %}

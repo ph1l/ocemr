@@ -1,0 +1,77 @@
+ocemr for Debian
+----------------
+
+New Install -
+
+    1). Setup a Database: (select one)
+
+	- SQLite -
+
+	-- /etc/ocemr/settings.py --
+	DATABASE_ENGINE = 'sqlite3'
+	DATABASE_NAME = '/var/lib/ocemr/db/ocemr.db'
+	----------------------------
+
+	$ sudo -u www-data /usr/share/ocemr/util/initialize_sqlite_db.sh
+
+
+	- MySQL -
+
+	-- /etc/ocemr/settings.py --
+	DATABASE_ENGINE = 'mysql'
+	DATABASE_NAME = 'ocemr'
+	DATABASE_USER = 'ocemr'
+	DATABASE_PASSWORD = 'password'
+	----------------------------
+
+	$ sudo apt-get install mysql-server
+	$ sudo -u www-data /usr/share/ocemr/util/initialize_mysql_db.sh
+
+
+	- PostgreSQL -
+
+	(should work, not scripted, or supported by backup yet...)
+
+    2). Enable the website:
+
+	$ sudo vi /etc/ocemr/apache2.conf
+	$ sudo a2dissite default
+	$ sudo a2ensite ocemr
+	$ sudo /etc/init.d/apache2 reload
+
+Upgrade Notes - 
+
+    from >= v0.5.0:
+
+	  Upgrading from versions 0.5.0 and beyond should all be managed
+	by the Debian package. The database will be backed up via the
+	pre-install script, and then migated in the post-install. The only
+	thing the administrator should have to worry about is merging in
+	changes to the configuration files.
+
+    from v0.4.X:
+
+	  Upgrading from an install previous to v0.5.0 will be more
+	complicated.  Since Debian packaging was not introduced until
+	v0.5.0, you will need to do the following:
+
+		1). Backup your database and configuration!
+			( mysqldump or sqlite3> .dump)
+
+		2). Disable the old site.
+
+		3). Install the package.
+
+		4). Configure your /etc/ocemr/* config files.
+
+		5). Enable the debianized site.
+			(see step #2 in the new install instructions above)
+
+		6). upgrade the DB schema.
+		    - # python /usr/share/ocemr/apps/ocemr/manage.py syncdb
+		    - login to the Django Admin with a superuser account
+		    - Modify the record for version 0.5 to reference 0.4
+		    - # python /usr/share/ocemr/apps/ocemr/manage.py syncdb
+
+
+ -- Philip Freeman <philip.freeman@gmail.com>  Sat, 17 Mar 2012 00:43:18 -0500

@@ -58,28 +58,39 @@ admin.site.register(VitalType,VitalTypeAdmin)
 
 
 class LabTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title' ]
+	list_display = [ 'id', 'title', 'cost', 'active' ]
 	search_fields = [ 'title' ]
 
 admin.site.register(LabType,LabTypeAdmin)
 
 class DiagnosisTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'icpc2Code', 'title' ]
+	list_display = [ 'id', 'icpc2Code', 'title', 'active' ]
 	search_fields = [ 'icpc2Code', 'title' ]
 
 admin.site.register(DiagnosisType, DiagnosisTypeAdmin)
 
 class MedTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title' ]
+	list_display = [ 'id', 'title', 'cost', 'active' ]
 	search_fields = [ 'title' ]
 
 admin.site.register(MedType,MedTypeAdmin)
+
+class VacTypeAdmin(admin.ModelAdmin):
+	list_display = [ 'id', 'title', 'active' ]
+	search_fields = [ 'title' ]
+
+admin.site.register(VacType,VacTypeAdmin)
 
 class ExamNoteTypeAdmin(admin.ModelAdmin):
 	list_display = [ 'id', 'title' ]
 	search_fields = [ 'title' ]
 
 admin.site.register(ExamNoteType,ExamNoteTypeAdmin)
+
+class DBVerisionAdmin(admin.ModelAdmin):
+	list_display = [ 'id', 'major', 'minor', 'addedDateTime' ]
+
+admin.site.register(DBVersion,DBVerisionAdmin)
 
 #admin.site.register(Referral)
 #admin.site.register(VisitSymptom)

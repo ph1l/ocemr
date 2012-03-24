@@ -3,7 +3,8 @@
 {% block title %}User Preferences{% endblock %}
 
 {% block content %}
-<H1>Language</H1>
+<H1>User Settings</H1>
+<H2>Language</H2>
 <form class=inlineform action="/i18n/setlang/" method="post">
 {% csrf_token %}
 <input name="next" type="hidden" value="{{request.path}}" />
@@ -13,6 +14,14 @@
 {% endfor %}
 </select>
 <input type="submit" value="Go" />
+{% if request.user.is_staff %}
+<H1>Staff Functions</H1>
+<UL>
+<LI> <A HREF=# onClick='window.open("/village_merge_wizard/","Merge Village Wizard","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Merge Village Wizard</A> - NEW
+<LI> <A HREF=/admin/>Data Admin Panel</A>
+<LI> <A HREF=/get_backup/>Backup the Database</A> Click this only once, and be patient!
+</UL>
+{% endif %}
 </form>
 {% endblock %}
 

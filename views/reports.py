@@ -503,10 +503,12 @@ def legacy_patient_daily(request):
 	}
 	if date_in.month == 12:
 		next_month=1
+		next_year=date_in.year+1
 	else:
 		next_month=date_in.month+1
+		next_year=date_in.year
 	dt_month_start = datetime(date_in.year,date_in.month,1,0,0,0)
-	dt_month_end = datetime(date_in.year,next_month,1,0,0,0)
+	dt_month_end = datetime(next_year,next_month,1,0,0,0)
 	dt_start = datetime(date_in.year,date_in.month,date_in.day,0,0,0)
 	dt_end = datetime(date_in.year,date_in.month,date_in.day,23,59,59)
 	q_this_month = ( Q(finishedDateTime__gte=dt_month_start) &
