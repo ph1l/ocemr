@@ -7,7 +7,7 @@
 # DATABASE_ENGINE ('postgresql_psycopg2', 'postgresql', 'mysql',
 #			 'sqlite3' or 'oracle')
 #
-DATABASE_ENGINE = 'sqlite3'
+DATABASE_ENGINE = ''
 
 # DATABASE_NAME ('/path/to/sqlite_db_file.db', 'mysql_db_name' )
 #	  The directory that sqlite file resides in must be writable by the
