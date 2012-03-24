@@ -25,7 +25,27 @@ reload_apache()
         echo "Your apache2 configuration is broken, so we're not restarting it for you."
     fi
 }
-
+check_enable_apache_mod()
+{
+    if [ -z ${1} ]; then
+	echo "Error: must pass a module name to check_enable_apache_mod()"
+	return 2
+    fi
+    MOD=${1}
+    if [ -e /etc/apache2/mods-enabled/${MOD}.load ]; then
+	#already enabled, silently return true
+	return 0
+    elif [ -e /etc/apache2/mods-available/${MOD}.load ]; then
+	# present but not enabled, enable it
+	a2enmod python
+	return 0
+    else
+	# not present, Error out loud
+	echo "Error: check_enable_apache_mod() tried to enable module that does not exist."
+	echo "        ${MOD}"
+	return 3
+    fi
+}
 
 case "$1" in
     configure)
@@ -45,6 +65,8 @@ case "$1" in
                 sudo -u www-data python ./manage.py syncdb 2>&1 \
 			| tee -a /var/log/ocemr/update.log || true
         )
+	check_enable_apache_mod "alias"
+	check_enable_apache_mod "python"
 	reload_apache
 
 		
