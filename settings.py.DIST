@@ -25,8 +25,15 @@ DATABASE_PORT = ''             # Set to empty string for default.
 
 # DB_BACKUP_*
 #
-# TODO: Document this...
+# To Encrypt Backups, you need to:
 #
+#  1). Generate a server key:
+#
+#      $ sudo /usr/share/ocemr/util/setup_gpg_server_key.sh
+#
+#  2). Set DB_BACKUP_ENCRYPT to "True".
+#
+#  TODO: document adding a personal key to the server keyring.
 
 DB_BACKUP_ENCRYPT=False
 DB_BACKUP_ENCRYPT_TO=( "ocemr@localhost" )
