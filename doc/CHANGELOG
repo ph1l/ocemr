@@ -1,3 +1,7 @@
+v0.5.0.1 -
+  * recipient list for backup encryption fix.
+  * GPG Server Key Generation moved out of postinst.
+  * Type doesn't exist form errors in Diagnosis and Med forms.
 v0.5.0 -
   * add vaccination tracking tab on chart.
   * cost estimation (assign cost in labtype and medtype)

@@ -96,9 +96,11 @@ class Command(BaseCommand):
                 "--homedir", "%s/gnupg"%(self.var_path),
                 "--output", "%s.gpg"%(outfile)
                 ]
-        if self.encrypt_to.strip() == "":
+        if len(self.encrypt_to) == 0:
             raise Exception("DB_BACKUP_ENCRYPT_TO empty (see settings.py)")
-        args += ["--recipient", self.encrypt_to, outfile]
+	for r in self.encrypt_to:
+	    args += ["--recipient", r]
+	args += [ outfile ]
         cmd = 'gpg %s'%(' '.join(args))
         exit_status = os.system(cmd)
         os.unlink(outfile)

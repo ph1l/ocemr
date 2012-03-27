@@ -598,7 +598,10 @@ class NewDiagnosisForm(forms.ModelForm):
 	def clean_type(self):
 		data = self.cleaned_data['type']
 		from models import DiagnosisType
-		d = DiagnosisType.objects.get(title=data)
+		try:
+			d = DiagnosisType.objects.get(title=data)
+		except Diagnosis.DoesNotExist:
+			raise forms.ValidationError("The DiagnosisType must exist!")
 		return d
 
 class EditDiagnosisNotesForm(forms.Form):
@@ -639,7 +642,10 @@ class NewMedForm(forms.ModelForm):
 	def clean_type(self):
 		data = self.cleaned_data['type']
 		from models import MedType
-		d = MedType.objects.get(title=data)
+		try:
+			d = MedType.objects.get(title=data)
+		except MedType.DoesNotExist:
+			raise forms.ValidationError("The MedType must exist!")
 		return d
 
 class NewVacForm(forms.ModelForm):
@@ -771,7 +777,10 @@ class EditMedForm(forms.Form):
 	def clean_type(self):
 		data = self.cleaned_data['type']
 		from models import MedType
-		d = MedType.objects.get(title=data)
+		try:
+			d = MedType.objects.get(title=data)
+		except MedType.DoesNotExist:
+			raise forms.ValidationError("The MedType must exist!")
 		return d
 
 class MergePatientForm(forms.Form):
