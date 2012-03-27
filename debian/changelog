@@ -1,4 +1,4 @@
-ocemr (0.5.0+nmu1) unstable; urgency=low
+ocemr (0.5.0.1) unstable; urgency=low
 
   * BUG: recipient list for backup encryption fix.
   * BUG: GPG Server Key Generation moved out of postinst.
