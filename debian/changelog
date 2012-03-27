@@ -1,3 +1,11 @@
+ocemr (0.5.0+nmu1) unstable; urgency=low
+
+  * BUG: recipient list for backup encryption fix.
+  * BUG: GPG Server Key Generation moved out of postinst.
+  * document GPG settings in settings.py
+
+ -- Philip Freeman <philip.freeman@gmail.com>  Mon, 26 Mar 2012 22:56:41 -0500
+
 ocemr (0.5.0) unstable; urgency=low
 
   * add vaccination tracking tab on chart.
