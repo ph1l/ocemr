@@ -31,7 +31,7 @@ import widgets
 class EditPatientNoteForm(forms.Form):
 	from models import Patient
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
-	NoteText = forms.CharField(widget=forms.Textarea)
+	NoteText = forms.CharField(widget=forms.Textarea,required=False)
 	def __init__(self, p, *args, **kwargs):
 		
 		super(EditPatientNoteForm, self).__init__(*args, **kwargs)
