@@ -765,6 +765,20 @@ class DiagnosisTallyReportForm(forms.Form):
 			)
 		)
 
+class DiagnosisPatientReportForm(forms.Form):
+	from models import DiagnosisType
+	diagnosis = forms.ModelMultipleChoiceField(
+		queryset=DiagnosisType.objects.all().order_by("title"))
+	date_start = forms.DateField(widget=widgets.CalendarWidget)
+	date_end = forms.DateField(widget=widgets.CalendarWidget)
+	age_min = forms.IntegerField(required=False)
+	age_max = forms.IntegerField(required=False)
+	dump_type = forms.ChoiceField(choices=(
+				('TABLE', 'display'),
+				('CSV', 'csv'),
+			)
+		)
+
 class EditMedForm(forms.Form):
         type = forms.CharField(
 			widget=widgets.JQueryAutoContains(
