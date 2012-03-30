@@ -32,7 +32,7 @@ def dump_table(field_names,headers,data_rows):
 	out_txt="<TABLE>\n"
 	out_txt += "<TR>"
 	for f in field_names:
-		out_txt += "<TH>" + f
+		out_txt += "<TH>" + headers[f]
 	out_txt += "</TR>\n"
 	for r in data_rows:
 		out_txt += "<TR>"
@@ -400,10 +400,10 @@ def diagnosis_tally(request):
 		'diag',
 		'tally',
 		]
-	headers={}
-	#	'diag': 'Diagnosis',
-	#	'tally': 'Tally',
-	#	}
+	headers={
+		'diag': 'Diagnosis',
+		'tally': 'Tally',
+		}
 	from ocemr.models import Visit, Diagnosis
 	q_this_day = ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & (Q(status="CHOT") | Q(status="RESO"))
 	days_visits = Visit.objects.filter(q_this_day)
