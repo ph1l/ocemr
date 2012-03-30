@@ -1,3 +1,6 @@
+v0.5.1 -
+  * update patient note form to allow blank note.
+  * add report for diagnosis patient report.
 v0.5.0.1 -
   * recipient list for backup encryption fix.
   * GPG Server Key Generation moved out of postinst.
