@@ -1,3 +1,10 @@
+ocemr (0.5.1) unstable; urgency=low
+
+  * update patient note form to allow blank note.
+  * add report for diagnosis patient report.
+
+ -- Philip Freeman <philip.freeman@gmail.com>  Fri, 30 Mar 2012 10:24:39 -0500
+
 ocemr (0.5.0.1) unstable; urgency=low
 
   * BUG: recipient list for backup encryption fix.
