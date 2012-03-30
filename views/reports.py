@@ -32,7 +32,7 @@ def dump_table(field_names,headers,data_rows):
 	out_txt="<TABLE>\n"
 	out_txt += "<TR>"
 	for f in field_names:
-		out_txt += "<TH>" + f
+		out_txt += "<TH>" + headers[f]
 	out_txt += "</TR>\n"
 	for r in data_rows:
 		out_txt += "<TR>"
@@ -400,10 +400,10 @@ def diagnosis_tally(request):
 		'diag',
 		'tally',
 		]
-	headers={}
-	#	'diag': 'Diagnosis',
-	#	'tally': 'Tally',
-	#	}
+	headers={
+		'diag': 'Diagnosis',
+		'tally': 'Tally',
+		}
 	from ocemr.models import Visit, Diagnosis
 	q_this_day = ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & (Q(status="CHOT") | Q(status="RESO"))
 	days_visits = Visit.objects.filter(q_this_day)
@@ -682,3 +682,82 @@ def accounts_outstanding(request):
 		if collected < billed:
 			summary_rows.append({'patient': p, 'billed': billed, 'collected':collected, 'owed':billed-collected})
 	return dump_csv( "outstanding_accounts-%s-%s.csv"%(date_start_in.strftime("%Y%m%d"), date_end_in.strftime("%Y%m%d")),field_names, headers, summary_rows )
+
+@login_required
+def diagnosis_patient(request):
+	"""
+	"""
+	from ocemr.forms import DiagnosisPatientReportForm
+	form_valid=0
+	if request.method == 'POST':
+		form = DiagnosisPatientReportForm(request.POST)
+		if form.is_valid():
+			diagnosis_types = form.cleaned_data['diagnosis']
+			date_start_in = form.cleaned_data['date_start']
+			if form.cleaned_data['date_end']==None:
+				date_end_in = form.cleaned_data['date_start']
+			else:
+				date_end_in = form.cleaned_data['date_end']
+			age_min = form.cleaned_data['age_min']
+			age_max = form.cleaned_data['age_max']
+			dump_type = form.cleaned_data['dump_type']
+			form_valid=1
+	else:
+		form = DiagnosisPatientReportForm()
+	if not form_valid:
+		return render_to_response('popup_form.html', {
+			'title': 'Enter Details For Report',
+			'form_action': '/reports/diagnosis_patient/',
+			'form': form,
+		},context_instance=RequestContext(request))
+	dt_start = datetime(
+		date_start_in.year,date_start_in.month,date_start_in.day,
+		0,0,0
+		)
+	dt_end = datetime(
+		date_end_in.year,date_end_in.month,date_end_in.day,
+		23,59,59
+		)
+	#(Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end))
+
+	field_names=[
+		'pid',
+		'pname',
+		'diag',
+		'diagdate',
+		]
+	headers={
+		'pid': 'Id',
+		'pname': 'Name',
+		'diag': 'Diagnosis',
+		'diagdate': 'Diagnosis Date',
+		}
+	from ocemr.models import Diagnosis
+	q = ( Q(diagnosedDateTime__gte=dt_start) & Q(diagnosedDateTime__lte=dt_end) ) & Q(status="NEW")
+	diags = Diagnosis.objects.filter(q)
+	subq=Q(type__in=diagnosis_types)
+	diags = diags.filter( subq )
+	currentYear = datetime.now().year
+	if age_min != None:
+		maxYear = currentYear-age_min
+		q_age_range = Q(patient__birthYear__lte=maxYear)
+		diags = diags.filter(q_age_range)
+	if age_max != None:
+		minYear = currentYear-age_max
+		q_age_range = Q(patient__birthYear__gte=minYear)
+		diags = diags.filter(q_age_range)
+	summary_rows=[]
+	summary_rows.append(headers)
+	for d in diags:
+		summary_rows.append({
+			'pid': d.patient.id,
+			'pname': d.patient,
+			'diag': d.type,
+			'diagdate': d.diagnosedDateTime,
+			})
+	if dump_type == "CSV":
+		return dump_csv( "diagnosis-patient-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
+	elif dump_type == "TABLE":
+		return dump_table(field_names, headers, summary_rows )
+	else:
+		raise "Invalid Dump Type"

@@ -31,7 +31,7 @@ import widgets
 class EditPatientNoteForm(forms.Form):
 	from models import Patient
 	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
-	NoteText = forms.CharField(widget=forms.Textarea)
+	NoteText = forms.CharField(widget=forms.Textarea,required=False)
 	def __init__(self, p, *args, **kwargs):
 		
 		super(EditPatientNoteForm, self).__init__(*args, **kwargs)
@@ -762,6 +762,20 @@ class DiagnosisTallyReportForm(forms.Form):
 				('TABLE', 'display'),
 				('CSV', 'csv'),
 				('G_PIE', 'Pie Graph'),
+			)
+		)
+
+class DiagnosisPatientReportForm(forms.Form):
+	from models import DiagnosisType
+	diagnosis = forms.ModelMultipleChoiceField(
+		queryset=DiagnosisType.objects.all().order_by("title"))
+	date_start = forms.DateField(widget=widgets.CalendarWidget)
+	date_end = forms.DateField(widget=widgets.CalendarWidget)
+	age_min = forms.IntegerField(required=False)
+	age_max = forms.IntegerField(required=False)
+	dump_type = forms.ChoiceField(choices=(
+				('TABLE', 'display'),
+				('CSV', 'csv'),
 			)
 		)
 
