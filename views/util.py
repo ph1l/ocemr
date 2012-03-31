@@ -69,6 +69,8 @@ def get_backup(request):
 		return render_to_response('popup_lines.html', {'lines': CommandError, 'link_text': """<a href="#" onclick="window.print();return false;">Print</a>"""})
 	if DB_BACKUP_ENCRYPT:
 		outfile += ".gpg"
+	else:
+		outfile += ".bz2"
 	wrapper = FileWrapper(file(outfile))
 	response = HttpResponse(wrapper, content_type='text/plain')
 	response['Content-Length'] = os.path.getsize(outfile)

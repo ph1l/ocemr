@@ -47,6 +47,9 @@ class Command(BaseCommand):
         if self.encrypt:
             print 'Encrypting %s to %s %s.gpg'%(outfile, self.encrypt_to, outfile)
             self.do_encrypt_backup(outfile)
+	else:
+	    print 'Compressing %s to %s.bz2'%(outfile, outfile)
+            self.do_compress_backup(outfile)
 
     def do_sqlite3_backup(self, outfile):
         args = [self.db, ".dump"]
@@ -91,6 +94,13 @@ class Command(BaseCommand):
             p.stdin.write('%s\n' % self.passwd)
         print p.stdout.read()
 
+    def do_compress_backup(self, outfile):
+	cmd = 'bzip2 -9 %s'%( outfile )
+	exit_status = os.system(cmd)
+        #This assumes you run unix (you do run unix, don't you?)
+        if exit_status != 0:
+                raise Exception("Encrypt command (%s) failed with %s."%(cmd,exit_status))
+	
     def do_encrypt_backup(self, outfile):
         args = ["--encrypt", "--batch", "--yes",
                 "--homedir", "%s/gnupg"%(self.var_path),
