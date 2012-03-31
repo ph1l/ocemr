@@ -58,11 +58,11 @@ def get_backup(request):
 	from django.http import HttpResponse
 	from django.core.servers.basehttp import FileWrapper
 	from django.core.management import call_command, CommandError
-	from ocemr.settings import VAR_PATH, DB_BACKUP_ENCRYPT
+	from ocemr.settings import VAR_PATH, DB_BACKUP_ENCRYPT, DATABASE_ENGINE
 	backup_dir = '%s/backups'%(VAR_PATH)
 	if not os.path.exists(backup_dir):
 		os.makedirs(backup_dir)
-	outfile = os.path.join(backup_dir, 'backup_%s.sql' % time.strftime('%y%m%d-%H%M%S'))
+	outfile = os.path.join(backup_dir, 'backup_%s.%s' % (time.strftime('%y%m%d-%H%M%S'),DATABASE_ENGINE))
 	try:
 		call_command('backupdb', outfile)
 	except CommandError:

@@ -28,7 +28,7 @@ class Command(BaseCommand):
                 backup_dir = '%s/backups'%(self.var_path)
                 if not os.path.exists(backup_dir):
                         os.makedirs(backup_dir)
-                outfile = os.path.join(backup_dir, 'backup_%s.sql' % time.strftime('%y%m%d-%H%M%S'))
+                outfile = os.path.join(backup_dir, 'backup_%s.%s' % (time.strftime('%y%m%d-%H%M%S'),self.engine))
         elif len(args) == 1:
                 outfile = args[0]
         else:
