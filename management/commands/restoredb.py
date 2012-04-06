@@ -32,10 +32,10 @@ class Command(BaseCommand):
         if not os.path.exists(infile):
 		raise Exception("restoredb can't find file(%s)"%infile)
 	if infile[-4:] == ".bz2":
-		self.uncompress(infile)
+		self.do_decompress_backup(infile)
 		infile = infile[:-4]
 	elif infile[-4:] == ".gpg":
-		self.decrypt(infile)
+		self.do_decrypt_backup(infile)
 		infile = infile[:-4]
 	else:
 		raise Exception("restoredb doesn't understand file(%s)"%infile)
@@ -51,3 +51,22 @@ class Command(BaseCommand):
 		self.do_sqlite3_restore
         else:
 		raise Exception("restoredb doesn't understand file(%s)"%infile)
+
+    def do_decompress_backup(self, infile):
+	"""
+	"""
+	cmd = 'bunzip2 %s'%( infile )
+	exit_status = os.system(cmd)
+	if exit_status != 0:
+		raise Exception("Encrypt command (%s) failed with %s."%(cmd,exit_status))
+
+    def do_decrypt_backup(self, infile):
+	"""
+	"""
+
+    def do_mysql_restore(self, infile):
+	"""
+	"""
+    def do_sqlite3_restore(self, infile):
+	"""
+	"""
