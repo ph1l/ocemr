@@ -31,42 +31,70 @@ class Command(BaseCommand):
 	infile = args[0]
         if not os.path.exists(infile):
 		raise Exception("restoredb can't find file(%s)"%infile)
+
 	if infile[-4:] == ".bz2":
-		self.do_decompress_backup(infile)
-		infile = infile[:-4]
+		outfile = infile[:-4]
+		print "Decompressing \"%s\" to \"%s\"..."%(infile, outfile)
+		self.do_decompress_backup(infile, outfile)
+		print "\tdone."
+		infile = outfile
 	elif infile[-4:] == ".gpg":
-		self.do_decrypt_backup(infile)
-		infile = infile[:-4]
-	else:
-		raise Exception("restoredb doesn't understand file(%s)"%infile)
+		outfile = infile[:-4]
+		print "Decrypting \"%s\" to \"%s\" ..."%(infile, outfile)
+		self.do_decrypt_backup(infile, outfile)
+		infile = outfile
+		print "\tdone."
+
 	if infile[-6:] == ".mysql":
 		if self.engine != 'mysql':
 			raise Exception("Backup from MySQL, but current engine is not!")
-		print 'Doing MySQL restore to database %s from %s' % (self.db, infile)
+		print 'Doing MySQL restore to database %s from %s...' % (self.db, infile)
 		self.do_mysql_restore(infile)
+		print "\tdone."
 	elif infile[-8:] == ".sqlite3":
 		if self.engine != 'sqlite3':
 			raise Exception("Backup from SqLite3, but current engine is not!")
 		print 'Doing sqlite3 restore to database %s from %s' % (self.db, infile)
 		self.do_sqlite3_restore
+		print "\tdone."
         else:
 		raise Exception("restoredb doesn't understand file(%s)"%infile)
 
-    def do_decompress_backup(self, infile):
+    def do_decompress_backup(self, infile, outfile):
 	"""
 	"""
-	cmd = 'bunzip2 %s'%( infile )
+	cmd = 'bunzip2 -c "%s" > "%s"'%( infile, outfile )
 	exit_status = os.system(cmd)
 	if exit_status != 0:
 		raise Exception("Encrypt command (%s) failed with %s."%(cmd,exit_status))
 
-    def do_decrypt_backup(self, infile):
+    def do_decrypt_backup(self, infile, outfile):
 	"""
 	"""
+	raise Exception("decrypt backup unimplemented")
 
     def do_mysql_restore(self, infile):
 	"""
 	"""
+	args = []
+	if self.user:
+		args += ["--user=%s" % self.user]
+	if self.passwd:
+		args += ["--password=%s" % self.passwd]
+	if self.host:
+		args += ["--host=%s" % self.host]
+	if self.port:
+		args += ["--port=%s" % self.port]
+	args += [self.db]
+
+	cmd = 'mysql %s < %s' % (' '.join(args), infile)
+	exit_status = os.system(cmd)
+	os.unlink(infile)
+	if exit_status != 0:
+		raise Exception("restore command (%s) failed with %s."%(cmd,exit_status))
+
+
     def do_sqlite3_restore(self, infile):
 	"""
 	"""
+	raise Exception("sqlite3 restore unimplemented")
