@@ -71,7 +71,15 @@ class Command(BaseCommand):
     def do_decrypt_backup(self, infile, outfile):
 	"""
 	"""
-	raise Exception("decrypt backup unimplemented")
+	args = ["--decrypt", "--batch", "--yes",
+		"--homedir", "%s/gnupg"%(self.var_path),
+		"--output", "%s"%(outfile), infile
+		]
+	cmd = 'gpg %s'%(' '.join(args))
+	exit_status = os.system(cmd)
+	if exit_status != 0:
+		raise Exception("Decrypt command (%s) failed with %s."%(cmd,exit_status))
+
 
     def do_mysql_restore(self, infile):
 	"""
