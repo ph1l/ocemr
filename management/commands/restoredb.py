@@ -105,4 +105,7 @@ class Command(BaseCommand):
     def do_sqlite3_restore(self, infile):
 	"""
 	"""
-	raise Exception("sqlite3 restore unimplemented")
+	cmd = 'sqlite3 %s < %s' % (self.db, infile)
+	exit_status = os.system(cmd)
+	if exit_status != 0:
+		raise Exception("Restore command (%s) failed with %s."%(cmd,exit_status))
