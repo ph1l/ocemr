@@ -58,17 +58,19 @@ def get_backup(request):
 	from django.http import HttpResponse
 	from django.core.servers.basehttp import FileWrapper
 	from django.core.management import call_command, CommandError
-	from ocemr.settings import VAR_PATH, DB_BACKUP_ENCRYPT
+	from ocemr.settings import VAR_PATH, DB_BACKUP_ENCRYPT, DATABASE_ENGINE
 	backup_dir = '%s/backups'%(VAR_PATH)
 	if not os.path.exists(backup_dir):
 		os.makedirs(backup_dir)
-	outfile = os.path.join(backup_dir, 'backup_%s.sql' % time.strftime('%y%m%d-%H%M%S'))
+	outfile = os.path.join(backup_dir, 'backup_%s.%s' % (time.strftime('%y%m%d-%H%M%S'),DATABASE_ENGINE))
 	try:
 		call_command('backupdb', outfile)
 	except CommandError:
 		return render_to_response('popup_lines.html', {'lines': CommandError, 'link_text': """<a href="#" onclick="window.print();return false;">Print</a>"""})
 	if DB_BACKUP_ENCRYPT:
 		outfile += ".gpg"
+	else:
+		outfile += ".bz2"
 	wrapper = FileWrapper(file(outfile))
 	response = HttpResponse(wrapper, content_type='text/plain')
 	response['Content-Length'] = os.path.getsize(outfile)
