@@ -1,3 +1,14 @@
+ocemr (0.5.2) stable; urgency=low
+
+  * fix unhandled form error DiagnosisType Doesn't exist
+  * added quantity (dispenseAmount) to medqueue medview
+  * Backup/Restore
+    - compress unencrypted backups
+    - change backup file default naming to include db_backend type
+    - added restoredb command to manage.py
+
+ -- Philip Freeman <philip.freeman@gmail.com>  Wed, 25 Apr 2012 20:36:36 -0500
+
 ocemr (0.5.1) unstable; urgency=low
 
   * update patient note form to allow blank note.
