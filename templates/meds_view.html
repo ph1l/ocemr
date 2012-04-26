@@ -17,12 +17,13 @@
 	<TH>by</TH>
 	<TH>Type</TH>
 	<TH>Dosage</TH>
+	<TH>Quantity</TH>
 	<TH>Med Status</TH>
 	<TH>Actions</TH>
 </TR>
 <TR>	
 	<TH>
-	<TH COLSPAN=5>Notes
+	<TH COLSPAN=6>Notes
 </TR>
 {% for m in v.get_meds %}
 <TR>
@@ -30,6 +31,7 @@
 <TD>{{m.addedBy}}</TD>
 <TD>{{ m.type.title }}</A></TD>
 <TD>{{ m.dosage }}</A></TD>
+<TD>{{ m.dispenseAmount }}</A></TD>
         {% ifequal m.status "ORD" %}
                 <TD STYLE='background-color:#FFFF55;'>
         {% endifequal %}
