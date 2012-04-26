@@ -58,7 +58,10 @@ def get_backup(request):
 	from django.http import HttpResponse
 	from django.core.servers.basehttp import FileWrapper
 	from django.core.management import call_command, CommandError
-	from ocemr.settings import VAR_PATH, DB_BACKUP_ENCRYPT, DATABASE_ENGINE
+	from ocemr.settings import VAR_PATH, DB_BACKUP_ENCRYPT, DATABASES
+
+	DATABASE_ENGINE=DATABASES['default']['ENGINE'].split(".")[-1]
+
 	backup_dir = '%s/backups'%(VAR_PATH)
 	if not os.path.exists(backup_dir):
 		os.makedirs(backup_dir)

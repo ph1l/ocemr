@@ -11,7 +11,7 @@ def post_syncdb_auto_upgrade(sender, **kwargs):
 	from ocemr.settings import UTIL_PATH, CONTRIB_PATH, DATABASES
 	
 	defaultdb=DATABASES['default']
-	DATABASE_ENGINE=defaultdb['ENGINE']
+	DATABASE_ENGINE=defaultdb['ENGINE'].split(".")[-1]
 	DATABASE_NAME=defaultdb['NAME']
 	DATABASE_USER=defaultdb['USER']
 	DATABASE_PASSWORD=defaultdb['PASSWORD']

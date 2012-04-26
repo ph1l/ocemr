@@ -14,7 +14,7 @@ class Command(BaseCommand):
         from django.conf import settings
 
         self.var_path = settings.VAR_PATH
-        self.engine = settings.DATABASES['default']['ENGINE']
+        self.engine = settings.DATABASES['default']['ENGINE'].split(".")[-1]
         self.db = settings.DATABASES['default']['NAME']
         self.user = settings.DATABASES['default']['USER']
         self.passwd = settings.DATABASES['default']['PASSWORD']
