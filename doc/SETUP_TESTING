@@ -29,8 +29,8 @@ Preparing the Environment
  -  Edit the config file:
 
     -- ./settings.py --
-    DATABASE_ENGINE = 'sqlite3'
-    DATABASE_NAME = '/home/user/var/db/ocemr.db'
+    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
+    DATABASES['default']['NAME'] = '/home/user/var/db/ocemr.db'
     APP_PATH=/home/user/ocemr
     CONTRIB_PATH=/home/user/ocemr/contrib
     VAR_PATH=/home/user/var

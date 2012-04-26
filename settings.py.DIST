@@ -5,16 +5,30 @@
 #
 
 # DATABASES
-DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': '/home/phil/var/lib/ocemr.db',
-		'USER': '',
-		'PASSWORD': '',
-		'HOST': '',
-		'PORT': '',
-		}
-	}
+DATABASES = { }
+
+# sqlite3 example
+#DATABASES = {
+#	'default': {
+#		'ENGINE': 'django.db.backends.sqlite3',
+#		'NAME': '/home/phil/var/lib/ocemr.db',
+#		'USER': '',
+#		'PASSWORD': '',
+#		'HOST': '',
+#		'PORT': '',
+#		}
+
+# mysql example
+#DATABASES = {
+#	'default': {
+#		'ENGINE': 'django.db.backends.mysql',
+#		'NAME': 'ocemr',
+#		'USER': 'ocemr',
+#		'PASSWORD': 'password',
+#		'HOST': '',
+#		'PORT': '',
+#		}
+#	}
 
 # DB_BACKUP_*
 #
