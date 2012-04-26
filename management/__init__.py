@@ -8,8 +8,15 @@ def post_syncdb_auto_upgrade(sender, **kwargs):
 	"""
 	import os, re
 	from ocemr.models import DBVersion
-	from ocemr.settings import UTIL_PATH, CONTRIB_PATH, DATABASE_ENGINE, DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT
-
+	from ocemr.settings import UTIL_PATH, CONTRIB_PATH, DATABASES
+	
+	defaultdb=DATABASES['default']
+	DATABASE_ENGINE=defaultdb['ENGINE']
+	DATABASE_NAME=defaultdb['NAME']
+	DATABASE_USER=defaultdb['USER']
+	DATABASE_PASSWORD=defaultdb['PASSWORD']
+	DATABASE_HOST=defaultdb['HOST']
+	DATABASE_PORT=defaultdb['PORT']
 
 	DEBUG=False
 	biggest_major=0
