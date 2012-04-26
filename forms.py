@@ -600,7 +600,7 @@ class NewDiagnosisForm(forms.ModelForm):
 		from models import DiagnosisType
 		try:
 			d = DiagnosisType.objects.get(title=data)
-		except Diagnosis.DoesNotExist:
+		except DiagnosisType.DoesNotExist:
 			raise forms.ValidationError("The DiagnosisType must exist!")
 		return d
 

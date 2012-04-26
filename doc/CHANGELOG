@@ -1,3 +1,10 @@
+v0.5.2 -
+  * fix unhandled form error DiagnosisType Doesn't exist
+  * added quantity (dispenseAmount) to medqueue medview
+  * Backup/Restore
+    - compress unencrypted backups
+    - change backup file default naming to include db_backend type
+    - added restoredb command to manage.py
 v0.5.1 -
   * update patient note form to allow blank note.
   * add report for diagnosis patient report.
