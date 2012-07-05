@@ -84,7 +84,8 @@ class Command(BaseCommand):
     def do_mysql_restore(self, infile):
 	"""
 	"""
-	args = []
+	#args = [ "--force", "--verbose",  ]
+	args = [ ]
 	if self.user:
 		args += ["--user=%s" % self.user]
 	if self.passwd:

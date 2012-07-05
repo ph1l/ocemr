@@ -825,3 +825,6 @@ class MergeVillageForm(forms.Form):
 		if is_new:
 			v.save()
 		return v
+
+class UploadBackupForm(forms.Form):
+    file  = forms.FileField()
