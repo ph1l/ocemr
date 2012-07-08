@@ -1,3 +1,10 @@
+ocemr (0.5.3.1) stable; urgency=low
+
+  * don't backup the session table
+  * packaging cleanup
+
+ -- Philip J Freeman <philip.freeman@gmail.com>  Sun, 08 Jul 2012 12:08:16 -0500
+
 ocemr (0.5.3) stable; urgency=low
 
   * Updated settings.py DATABSE config otions
