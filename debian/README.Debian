@@ -74,4 +74,4 @@ Upgrade Notes -
 		    - # python /usr/share/ocemr/apps/ocemr/manage.py syncdb
 
 
- -- Philip Freeman <philip.freeman@gmail.com>  Sat, 17 Mar 2012 00:43:18 -0500
+ -- Philip J Freeman <philip.freeman@gmail.com>  Sat, 17 Mar 2012 00:43:18 -0500
