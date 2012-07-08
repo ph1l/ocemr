@@ -15,7 +15,12 @@ window.onload = formfocus;
 
 {% block content %}
 <SPAN>{{title}}</SPAN>
-<form ID=popupForm action="{{ form_action }}" method="POST">{% csrf_token %}
+{% if form.is_multipart %}
+    <form enctype="multipart/form-data" ID=popupForm action="{{ form_action }}" method="POST">{% csrf_token %}
+{% else %}
+    <form ID=popupForm action="{{ form_action }}" method="POST">{% csrf_token %}
+{% endif %}
+
 <TABLE>
 {{ form.as_table }}
 </TABLE>
