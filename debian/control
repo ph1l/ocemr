@@ -1,7 +1,7 @@
 Source: ocemr
 Section: misc
 Priority: extra
-Maintainer: Philip Freeman <philip.freeman@gmail.com>
+Maintainer: Philip J Freeman <philip.freeman@gmail.com>
 Build-Depends: debhelper (>= 7.0.50~), python-all
 Standards-Version: 3.8.4
 Homepage: http://kremlor.net/projects/ocemr
