@@ -1,3 +1,10 @@
+ocemr (0.5.3) stable; urgency=low
+
+  * Updated settings.py DATABSE config otions
+  * added restore_backup function to web interface
+
+ -- Philip J Freeman <philip.freeman@gmail.com>  Sat, 07 Jul 2012 23:45:43 -0500
+
 ocemr (0.5.2) stable; urgency=low
 
   * fix unhandled form error DiagnosisType Doesn't exist

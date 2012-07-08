@@ -58,7 +58,10 @@ def get_backup(request):
 	from django.http import HttpResponse
 	from django.core.servers.basehttp import FileWrapper
 	from django.core.management import call_command, CommandError
-	from ocemr.settings import VAR_PATH, DB_BACKUP_ENCRYPT, DATABASE_ENGINE
+	from ocemr.settings import VAR_PATH, DB_BACKUP_ENCRYPT, DATABASES
+
+	DATABASE_ENGINE=DATABASES['default']['ENGINE'].split(".")[-1]
+
 	backup_dir = '%s/backups'%(VAR_PATH)
 	if not os.path.exists(backup_dir):
 		os.makedirs(backup_dir)
@@ -76,6 +79,40 @@ def get_backup(request):
 	response['Content-Length'] = os.path.getsize(outfile)
 	response['Content-Disposition'] = 'attachment; filename=%s'%(os.path.basename(outfile))
 	return response
+
+@login_required
+def restore_backup(request):
+	"""
+	allow admin user to upload a restore file and have the system use it.
+	"""
+
+	from ocemr.forms import UploadBackupForm
+	from django.core.management import call_command, CommandError
+
+	if request.method == 'POST':
+		form = UploadBackupForm(request.POST, request.FILES)
+		if form.is_valid():
+			f = request.FILES['file']
+			try:
+				with open('/tmp/%s'%(f), 'wb+') as destination:
+					for chunk in f.chunks():
+						destination.write(chunk)
+				call_command('restoredb', "/tmp/%s"%(f))
+					
+			except Exception, err:
+				return render_to_response('popup_lines.html', {'lines': "ERROR: %s"%err})
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = UploadBackupForm()
+
+	return render_to_response( 'popup_form.html',
+			{
+			'title': 'Restore from a backup',
+			'form_action': '/restore_backup/',
+			'form': form
+			},
+		context_instance=RequestContext(request) )
+
 
 def autocomplete_name(request, inapp, inmodel):
 	"""

@@ -8,8 +8,8 @@ New Install -
 	- SQLite -
 
 	-- /etc/ocemr/settings.py --
-	DATABASE_ENGINE = 'sqlite3'
-	DATABASE_NAME = '/var/lib/ocemr/db/ocemr.db'
+	DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
+	DATABASES['default']['NAME'] = '/var/lib/ocemr/db/ocemr.db'
 	----------------------------
 
 	$ sudo -u www-data /usr/share/ocemr/util/initialize_sqlite_db.sh
@@ -18,10 +18,10 @@ New Install -
 	- MySQL -
 
 	-- /etc/ocemr/settings.py --
-	DATABASE_ENGINE = 'mysql'
-	DATABASE_NAME = 'ocemr'
-	DATABASE_USER = 'ocemr'
-	DATABASE_PASSWORD = 'password'
+	DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
+	DATABASES['default']['NAME'] = 'ocemr'
+	DATABASES['default']['USER'] = 'ocemr'
+	DATABASES['default']['PASSWORD'] = 'password'
 	----------------------------
 
 	$ sudo apt-get install mysql-server
@@ -30,7 +30,7 @@ New Install -
 
 	- PostgreSQL -
 
-	(should work, not scripted, or supported by backup yet...)
+	(should work, not scripted, or supported by backup/restore yet...)
 
     2). Enable the website:
 

@@ -30,7 +30,7 @@ MYSQL_USER=ocemr
 MYSQL_HOST=localhost
 MYSQL_DBNAME=ocemr
 
-if ! cat /etc/ocemr/settings.py  | grep -v ^# | grep DATABASE_ENGINE | grep mysql >/dev/null; then
+if ! cat /etc/ocemr/settings.py  | grep -v ^# | grep ENGINE | grep mysql >/dev/null; then
 	echo "set \"DATABASE_ENGINE\" in /etc/ocemr/settings.py to \"mysql\""
 	exit 1
 fi

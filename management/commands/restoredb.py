@@ -14,12 +14,12 @@ class Command(BaseCommand):
         from django.conf import settings
 
         self.var_path = settings.VAR_PATH
-        self.engine = settings.DATABASE_ENGINE
-        self.db = settings.DATABASE_NAME
-        self.user = settings.DATABASE_USER
-        self.passwd = settings.DATABASE_PASSWORD
-        self.host = settings.DATABASE_HOST
-        self.port = settings.DATABASE_PORT
+        self.engine = settings.DATABASES['default']['ENGINE'].split(".")[-1]
+        self.db = settings.DATABASES['default']['NAME']
+        self.user = settings.DATABASES['default']['USER']
+        self.passwd = settings.DATABASES['default']['PASSWORD']
+        self.host = settings.DATABASES['default']['HOST']
+        self.port = settings.DATABASES['default']['PORT']
 
         self.encrypt = settings.DB_BACKUP_ENCRYPT
         self.encrypt_to = settings.DB_BACKUP_ENCRYPT_TO
@@ -84,7 +84,8 @@ class Command(BaseCommand):
     def do_mysql_restore(self, infile):
 	"""
 	"""
-	args = []
+	#args = [ "--force", "--verbose",  ]
+	args = [ ]
 	if self.user:
 		args += ["--user=%s" % self.user]
 	if self.passwd:
