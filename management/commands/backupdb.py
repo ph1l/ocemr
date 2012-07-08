@@ -69,6 +69,10 @@ class Command(BaseCommand):
             args += ["--host=%s" % self.host]
         if self.port:
             args += ["--port=%s" % self.port]
+
+	# ignore the session table (no need to back that shit up)
+	args += ["--ignore-table=%s.django_session"%(self.db)]
+
         args += [self.db]
 
         cmd = 'mysqldump %s > %s' % (' '.join(args), outfile)
