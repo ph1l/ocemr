@@ -97,10 +97,10 @@ def restore_backup(request):
 				with open('/tmp/%s'%(f), 'wb+') as destination:
 					for chunk in f.chunks():
 						destination.write(chunk)
-
 				call_command('restoredb', "/tmp/%s"%(f))
-			except CommandError:
-				return render_to_response('popup_lines.html', {'lines': CommandError, 'link_text': """<a href="#" onclick="window.print();return false;">Print</a>"""})
+					
+			except Exception, err:
+				return render_to_response('popup_lines.html', {'lines': "ERROR: %s"%err})
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = UploadBackupForm()
