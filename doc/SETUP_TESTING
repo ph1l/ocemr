@@ -18,23 +18,12 @@ Preparing the Environment
 
     $ git clone git://github.com/ph1l/ocemr.git
 
- -  Checkout the development branch:
-
-    $ git checkout develop
-
- -  Copy the config File:
+ -  Setup the main config File:
 
     $ cp settings.py.DIST settings.py
 
- -  Edit the config file:
-
-    -- ./settings.py --
-    DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-    DATABASES['default']['NAME'] = '/home/user/var/db/ocemr.db'
-    APP_PATH=/home/user/ocemr
-    CONTRIB_PATH=/home/user/ocemr/contrib
-    VAR_PATH=/home/user/var
-    -------------------
+    - Uncomment a database section
+    - configure *_PATH settings to point to development directory
 
  -  Setup version.py:
 
@@ -44,9 +33,7 @@ Preparing the Environment
 
     $ cp ./util/util_conf.py.DIST ./util/util_conf.py
 
-    -- ./util/util_conf.py --
-    APP_PATH=/home/user/ocemr
-    -------------------------
+    - Change APP_PATH
 
 Setting up the Database
 -----------------------
