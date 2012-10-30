@@ -168,10 +168,12 @@ def autosearch_title(request, inapp, inmodel):
 
 autosearch_title = cache_page(autosearch_title, 60 * 60)
 
-@login_required
 def village_merge_wizard(request):
 	"""
 	"""
+	if not request.user.is_staff:
+		return HttpResponse( "Permission Denied." )
+
 	from ocemr.models import Village, Patient
 	from ocemr.forms import MergeVillageForm
 
@@ -210,6 +212,9 @@ def village_merge_wizard(request):
 def village_merge_wizard_go(request,villageId,villageIncorrectId):
 	"""
 	"""
+	if not request.user.is_staff:
+		return HttpResponse( "Permission Denied." )
+
 	from ocemr.models import Village, Patient
 
 	village = Village.objects.get(pk=int(villageId))
