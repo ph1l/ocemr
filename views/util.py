@@ -120,6 +120,7 @@ def restore_backup(request):
 		context_instance=RequestContext(request) )
 
 
+@login_required
 def autocomplete_name(request, inapp, inmodel):
 	"""
 	"""
@@ -143,6 +144,7 @@ def autocomplete_name(request, inapp, inmodel):
 
 autocomplete_name = cache_page(autocomplete_name, 60 * 60)
 
+@login_required
 def autosearch_title(request, inapp, inmodel):
 	"""
 	"""
