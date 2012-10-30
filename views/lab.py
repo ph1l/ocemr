@@ -42,8 +42,8 @@ def lab_queue(request):
 	active_q = Q(status='ORD' ) | Q(status='PEN' )
 	inactive_q = Q(orderedDateTime__gte=d_midnight) & ( Q(status='CAN' ) | Q(status='COM' ) | Q(status='FAI') )
 
-	labs_active = Lab.objects.filter(active_q).order_by('-orderedDateTime', '-id')
-	labs_inactive = Lab.objects.filter(inactive_q).order_by('-orderedDateTime', '-id')
+	labs_active = Lab.objects.filter(active_q).order_by('orderedDateTime', '-id')
+	labs_inactive = Lab.objects.filter(inactive_q).order_by('orderedDateTime', '-id')
 	return render_to_response('lab_queue.html', locals(),context_instance=RequestContext(request))
 
 @login_required
