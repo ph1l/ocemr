@@ -54,6 +54,9 @@ def user_prefs(request):
 def get_backup(request):
 	"""
 	"""
+	if not request.user.is_staff:
+		return HttpResponse( "Permission Denied." )
+
 	import os, time
 	from django.http import HttpResponse
 	from django.core.servers.basehttp import FileWrapper
@@ -85,6 +88,9 @@ def restore_backup(request):
 	"""
 	allow admin user to upload a restore file and have the system use it.
 	"""
+
+	if not request.user.is_staff:
+		return HttpResponse( "Permission Denied." )
 
 	from ocemr.forms import UploadBackupForm
 	from django.core.management import call_command, CommandError
