@@ -22,14 +22,13 @@
 #       Copyright 2012 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 
-"""
-dbck.py
+"""Database Check
 
- a utility to scan the OCEMR database for inconsistencies and
-optionally clean tem up where possible.
+This utility scans the OCEMR database for inconsistencies and
+optionally clean them up where possible.
 """
 
-import sys
+import sys, getopt
 import util_conf
 sys.path.append( util_conf.APP_PATH )
 
@@ -38,16 +37,58 @@ from django.core.management import setup_environ
 
 setup_environ( settings )
 
-#TODO: Add getopt
+def usage():
+	"""
+	Print Usage
+	"""
+	print """
+Usage Summary: %(PROGNAME)s [ OPTS ]
 
-OPT_FORCE = False
+%(DESCRIPTION)s
 
-def ask_do( question, default= True, force= False ):
+OPTS:
+	-f	force cleanup. don't ask for confirmation.
+	-n	dry-run. print only.
+""" % { 'DESCRIPTION': __doc__, 'PROGNAME': sys.argv[0], }
+
+try:
+	opts, args = getopt.getopt(sys.argv[1:],
+			"hfn",
+			[
+				"help",
+				"force",
+				"dry-run",
+				]
+			)
+
+except getopt.GetoptError, err:
+	print str(err)
+	usage()
+	sys.exit(2)
+
+OPT_FORCE	= False
+OPT_DRY		= False
+
+for o, a in opts:
+	if o in ( "-h", "--help" ):
+		usage()
+		sys.exit()
+	elif o in ( "-f", "--force" ):
+		OPT_FORCE=True
+	elif o in ( "-n", "--dry-run" ):
+		OPT_DRY=True
+	else:
+		assert False, "unhandled option"
+
+def ask_do( question, default= True, force= False, dry_run= False ):
 	"""promt the user to see if we should do something...
 	"""
 	if force:
 		print "Forced: %s" %( question )
-		return True
+		if dry_run:
+			return False
+		else:
+			return True
 
 	if default: choices="Y/n"
 	else: choices="y/N"
@@ -58,7 +99,10 @@ def ask_do( question, default= True, force= False ):
 		if answer[0].lower() == '\n':
 			return default
 		if answer[0].lower() == 'y':
-			return True
+			if dry_run:
+				return False
+			else:
+				return True
 		if answer[0].lower() == 'n':
 			return False
 		print "invalid answer '%s', use %s" %( answer.strip(), choices )
@@ -144,7 +188,7 @@ if num_diagnosis_orphan_from_visits > 0:
 
 		d= Diagnosis.objects.get( pk= i )
 
-		if ask_do("remove orphan diag: %s"%( d ),force=OPT_FORCE):
+		if ask_do("remove orphan diag: %s"%( d ),force=OPT_FORCE,dry_run=OPT_DRY):
 			d.delete()
 
 # diagnosis records orphaned from a diagnosis type
@@ -160,7 +204,7 @@ if num_diagnosis_orphan_from_diagnosis_type > 0:
 
 		d= Diagnosis.objects.get( pk= i )
 
-		if ask_do("remove orphan diag: %s"%( d ),force=OPT_FORCE):
+		if ask_do("remove orphan diag: %s"%( d ),force=OPT_FORCE,dry_run=OPT_DRY):
 			d.delete()
 
 # diagnosis records in duplicate
@@ -201,12 +245,12 @@ if num_duplicate_diagnosis > 0:
 
 			if m.diagnosis != d_primary:
 
-				if ask_do("reparent med: %s"%( m ),force=OPT_FORCE):
+				if ask_do("reparent med: %s"%( m ),force=OPT_FORCE,dry_run=OPT_DRY):
 
 					m.diagnosis = d_primary
 					m.save()
 		for d in d_dupes:
 
-			if ask_do("remove dupe diag: %s"%( d ),force=OPT_FORCE):
+			if ask_do("remove dupe diag: %s"%( d ),force=OPT_FORCE,dry_run=OPT_DRY):
 				d.delete()
 #__EOF__
