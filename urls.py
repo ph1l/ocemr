@@ -42,6 +42,7 @@ urlpatterns += patterns('ocemr.views.util',
 
     (r'^$', 'index'),
     (r'^user_prefs/$', 'user_prefs'),
+    (r'^user_prefs/change_password/$', 'change_password'),
     (r'^get_backup/$', 'get_backup'),
     (r'^restore_backup/$', 'restore_backup'),
     (r'^village_merge_wizard/$', 'village_merge_wizard'),
