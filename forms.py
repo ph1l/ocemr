@@ -828,3 +828,47 @@ class MergeVillageForm(forms.Form):
 
 class UploadBackupForm(forms.Form):
     file  = forms.FileField()
+
+
+class ChangePasswordForm(forms.Form):
+
+	oldPassword = forms.CharField(
+			widget=forms.PasswordInput,
+			label='Old Password'
+		)
+	newPassword = forms.CharField(
+			widget=forms.PasswordInput,
+			label='New Password'
+		)
+	newPasswordAgain = forms.CharField(
+			widget=forms.PasswordInput,
+			label='New Password Again'
+		)
+
+
+	def __init__(self, user, *args, **kwargs):
+
+		super(ChangePasswordForm, self).__init__(*args, **kwargs)
+		self.user=user
+
+
+	def clean(self):
+
+		cleaned_data = super(ChangePasswordForm, self).clean()
+
+		# Check the old Password
+
+		if not self.user.check_password(cleaned_data['oldPassword']):
+			raise forms.ValidationError("Old password incorrect")
+
+		# Check Length of new password
+
+		if len(cleaned_data['newPassword']) < 6:
+			raise forms.ValidationError("New password must be greater than 6 characters.")
+
+		# Check that new passwords match.
+
+		if cleaned_data['newPassword'] != cleaned_data['newPasswordAgain']:
+			raise forms.ValidationError("new passwords didn't match.")
+
+		return cleaned_data

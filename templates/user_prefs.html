@@ -4,7 +4,8 @@
 
 {% block content %}
 <H1>User Settings</H1>
-<H2>Language</H2>
+<UL>
+<LI>Language:
 <form class=inlineform action="/i18n/setlang/" method="post">
 {% csrf_token %}
 <input name="next" type="hidden" value="{{request.path}}" />
@@ -13,10 +14,12 @@
 <option value="{{ lang.0 }}"{% ifequal LANGUAGE_CODE lang.0 %} SELECTED{% endifequal %}>{{ lang.1 }}</option>
 {% endfor %}
 </select>
-<input type="submit" value="Go" />
+<input type="submit" value="Go" /></LI>
+<LI><A HREF=# onClick='window.open("/user_prefs/change_password/","Change Password","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Change Password</A></LI>
 {% if request.user.is_staff %}
 <H1>Staff Functions</H1>
 <UL>
+<LI> <A HREF=/reports/>Reports</A>
 <LI> <A HREF=# onClick='window.open("/village_merge_wizard/","Merge Village Wizard","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Merge Village Wizard</A> - NEW
 <LI> <A HREF=/admin/>Data Admin Panel</A>
 <LI> <A HREF=/get_backup/>Backup the Database</A> Click this only once, and be patient!

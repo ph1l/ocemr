@@ -51,9 +51,31 @@ def user_prefs(request):
 		context_instance=RequestContext(request))
 
 @login_required
+def change_password(request):
+	"""
+	"""
+	from ocemr.forms import ChangePasswordForm
+	if request.method == 'POST':
+		form = ChangePasswordForm(request.user, request.POST)
+		if form.is_valid():
+			request.user.set_password(form.cleaned_data['newPassword'])
+			request.user.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = ChangePasswordForm(request.user)
+	return render_to_response('popup_form.html', {
+		'title': 'Change Password',
+		'form_action': '/user_prefs/change_password/',
+		'form': form,
+	},context_instance=RequestContext(request))
+
+@login_required
 def get_backup(request):
 	"""
 	"""
+	if not request.user.is_staff:
+		return HttpResponse( "Permission Denied." )
+
 	import os, time
 	from django.http import HttpResponse
 	from django.core.servers.basehttp import FileWrapper
@@ -86,6 +108,9 @@ def restore_backup(request):
 	allow admin user to upload a restore file and have the system use it.
 	"""
 
+	if not request.user.is_staff:
+		return HttpResponse( "Permission Denied." )
+
 	from ocemr.forms import UploadBackupForm
 	from django.core.management import call_command, CommandError
 
@@ -114,6 +139,7 @@ def restore_backup(request):
 		context_instance=RequestContext(request) )
 
 
+@login_required
 def autocomplete_name(request, inapp, inmodel):
 	"""
 	"""
@@ -137,6 +163,7 @@ def autocomplete_name(request, inapp, inmodel):
 
 autocomplete_name = cache_page(autocomplete_name, 60 * 60)
 
+@login_required
 def autosearch_title(request, inapp, inmodel):
 	"""
 	"""
@@ -160,10 +187,12 @@ def autosearch_title(request, inapp, inmodel):
 
 autosearch_title = cache_page(autosearch_title, 60 * 60)
 
-@login_required
 def village_merge_wizard(request):
 	"""
 	"""
+	if not request.user.is_staff:
+		return HttpResponse( "Permission Denied." )
+
 	from ocemr.models import Village, Patient
 	from ocemr.forms import MergeVillageForm
 
@@ -202,6 +231,9 @@ def village_merge_wizard(request):
 def village_merge_wizard_go(request,villageId,villageIncorrectId):
 	"""
 	"""
+	if not request.user.is_staff:
+		return HttpResponse( "Permission Denied." )
+
 	from ocemr.models import Village, Patient
 
 	village = Village.objects.get(pk=int(villageId))
