@@ -51,6 +51,25 @@ def user_prefs(request):
 		context_instance=RequestContext(request))
 
 @login_required
+def change_password(request):
+	"""
+	"""
+	from ocemr.forms import ChangePasswordForm
+	if request.method == 'POST':
+		form = ChangePasswordForm(request.user, request.POST)
+		if form.is_valid():
+			request.user.set_password(form.cleaned_data['newPassword'])
+			request.user.save()
+			return HttpResponseRedirect('/close_window/')
+	else:
+		form = ChangePasswordForm(request.user)
+	return render_to_response('popup_form.html', {
+		'title': 'Change Password',
+		'form_action': '/user_prefs/change_password/',
+		'form': form,
+	},context_instance=RequestContext(request))
+
+@login_required
 def get_backup(request):
 	"""
 	"""
