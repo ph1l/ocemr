@@ -136,9 +136,6 @@ def index(request):
 def lab_tally(request):
 	"""
 	"""
-	if not request.user.is_staff:
-		return HttpResponse( "Permission Denied." )
-
 	from ocemr.forms import TallyReportForm
 
 	form_valid=0
@@ -223,9 +220,6 @@ def lab_tally(request):
 def med_tally(request):
 	"""
 	"""
-	if not request.user.is_staff:
-		return HttpResponse( "Permission Denied." )
-
 	from ocemr.forms import TallyReportForm
 
 	form_valid=0
@@ -311,9 +305,6 @@ def med_tally(request):
 def clinician_tally(request):
 	"""
 	"""
-	if not request.user.is_staff:
-		return HttpResponse( "Permission Denied." )
-
 	from ocemr.forms import TallyReportForm
 
 	form_valid=0
@@ -373,9 +364,6 @@ def clinician_tally(request):
 def diagnosis_tally(request):
 	"""
 	"""
-	if not request.user.is_staff:
-		return HttpResponse( "Permission Denied." )
-
 	from ocemr.forms import DiagnosisTallyReportForm
 	form_valid=0
         if request.method == 'POST':
@@ -472,9 +460,6 @@ def diagnosis_tally(request):
 def legacy_patient_daily(request):
 	"""
 	"""
-	if not request.user.is_staff:
-		return HttpResponse( "Permission Denied." )
-
 	from ocemr.forms import SelectDateForm
 
 	form_valid=0
@@ -651,9 +636,6 @@ def cashflow(request):
 def accounts_outstanding(request):
 	"""
 	"""
-	if not request.user.is_staff:
-		return HttpResponse( "Permission Denied." )
-
 
 	from ocemr.forms import SelectDateRangeForm
 	form_valid=0
@@ -708,9 +690,6 @@ def accounts_outstanding(request):
 def diagnosis_patient(request):
 	"""
 	"""
-	if not request.user.is_staff:
-		return HttpResponse( "Permission Denied." )
-
 	from ocemr.forms import DiagnosisPatientReportForm
 	form_valid=0
 	if request.method == 'POST':
