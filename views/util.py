@@ -187,6 +187,7 @@ def autosearch_title(request, inapp, inmodel):
 
 autosearch_title = cache_page(autosearch_title, 60 * 60)
 
+@login_required
 def village_merge_wizard(request):
 	"""
 	"""
