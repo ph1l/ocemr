@@ -19,7 +19,10 @@
 {% if request.user.is_staff %}
 <H1>Staff Functions</H1>
 <UL>
-<LI> <A HREF=/reports/>Reports</A>
+<LI>Reports
+<UL>
+ <LI><A HREF="#" onClick='window.open("/reports/cashflow/","Get Cashflow Report","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Cashflow Report</A>
+</UL>
 <LI> <A HREF=# onClick='window.open("/village_merge_wizard/","Merge Village Wizard","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Merge Village Wizard</A> - NEW
 <LI> <A HREF=/admin/>Data Admin Panel</A>
 <LI> <A HREF=/get_backup/>Backup the Database</A> Click this only once, and be patient!
