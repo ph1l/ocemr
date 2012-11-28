@@ -872,3 +872,12 @@ class ChangePasswordForm(forms.Form):
 			raise forms.ValidationError("new passwords didn't match.")
 
 		return cleaned_data
+
+class Hmis105Form(forms.Form):
+	date_start = forms.DateField(widget=widgets.CalendarWidget)
+	date_end = forms.DateField(widget=widgets.CalendarWidget)
+	dump_type = forms.ChoiceField(choices=(
+				('TABLE', 'display'),
+				('CSV', 'csv'),
+			)
+		)

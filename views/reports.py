@@ -764,3 +764,97 @@ def diagnosis_patient(request):
 		return dump_table(field_names, headers, summary_rows )
 	else:
 		raise "Invalid Dump Type"
+
+@login_required
+def hmis105(request):
+	"""
+	"""
+
+	from ocemr.forms import Hmis105Form
+
+	form_valid=0
+	if request.method == 'POST':
+		form = Hmis105Form(request.POST)
+		if form.is_valid():
+			date_start_in = form.cleaned_data['date_start']
+			if form.cleaned_data['date_end']==None:
+				date_end_in = form.cleaned_data['date_start']
+			else:
+				date_end_in = form.cleaned_data['date_end']
+			dump_type = form.cleaned_data['dump_type']
+			form_valid=1
+	else:
+		form = Hmis105Form()
+	if not form_valid:
+		return render_to_response('popup_form.html', {
+			'title': 'Enter Details For Report',
+			'form_action': '/reports/hmis105/',
+			'form': form,
+		},context_instance=RequestContext(request))
+	dt_start = datetime(
+		date_start_in.year,date_start_in.month,date_start_in.day,
+		0,0,0
+		)
+	dt_end = datetime(
+		date_end_in.year,date_end_in.month,date_end_in.day,
+		23,59,59
+		)
+	#(Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end))
+	field_names=[
+		'cat',
+		'lt4m',
+		'lt4f',
+		'gt4m',
+		'gt4f',
+		]
+	headers={
+		'cat': 'Category',
+		'lt4m': '0-4 years, Male',
+		'lt4f': '0-4 years, Female',
+		'gt4m': '5 and over, Male',
+		'gt4f': '5 and over, Female',
+		}
+	from ocemr.models import Visit
+
+	summary_rows=[]
+	new_patient_visits=[0,0,0,0]
+	old_patient_visits=[0,0,0,0]
+	total_visits=[0,0,0,0]
+	visits = Visit.objects.filter(Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) & (Q(status="CHOT") | Q(status="RESO")) )
+	for v in visits:
+		index = 0
+		if v.patient.birthYear > v.finishedDateTime.year - 4:
+			index += 2
+		if v.patient.gender == "F":
+			index += 1
+		total_visits[index] += 1
+		if Visit.objects.filter(Q(patient=v.patient) & Q(finishedDateTime__lte=dt_end)).count() > 1:
+			old_patient_visits[index] += 1
+		else:
+			new_patient_visits[index] += 1
+
+	summary_rows.append({	'cat': "New Attendance",
+				'lt4m': new_patient_visits[0],
+				'lt4f': new_patient_visits[1],
+				'gt4m': new_patient_visits[2],
+				'gt4f': new_patient_visits[3],
+				})
+	summary_rows.append({	'cat': "Re-Attendance",
+				'lt4m': old_patient_visits[0],
+				'lt4f': old_patient_visits[1],
+				'gt4m': old_patient_visits[2],
+				'gt4f': old_patient_visits[3],
+				})
+	summary_rows.append({	'cat': "Total Attendance",
+				'lt4m': total_visits[0],
+				'lt4f': total_visits[1],
+				'gt4m': total_visits[2],
+				'gt4f': total_visits[3],
+				})
+
+	if dump_type == "CSV":
+		return dump_csv( "hmis-105-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
+	elif dump_type == "TABLE":
+		return dump_table(field_names, headers, summary_rows )
+	else:
+		raise "Invalid Dump Type"
