@@ -10,7 +10,8 @@ install:
 	install -d $(DESTDIR)$(SITE)
 	install -d $(DESTDIR)$(CONF)
 	install -m 644 $(SITE_FILES) $(DESTDIR)$(SITE)
-	./util/make_version.sh > version.py
+	# Don't build the version in build, use the one checked in
+	#./util/make_version.sh > version.py
 	install -m 644 version.py $(DESTDIR)$(SITE)
 	for subdir in $(SITE_DIRS); do \
 		install -d $(DESTDIR)$(SITE)/$$subdir; \
