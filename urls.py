@@ -163,6 +163,7 @@ urlpatterns += patterns('ocemr.views.reports',
     (r'^reports/med/tally/$', 'med_tally'),
     (r'^reports/cashflow/$', 'cashflow'),
     (r'^reports/accounts_outstanding/$', 'accounts_outstanding'),
+    (r'^reports/hmis105/$', 'hmis105'),
 )
 
 urlpatterns += patterns('ocemr.views.graphs',
