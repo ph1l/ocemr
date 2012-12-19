@@ -23,6 +23,8 @@
 ##########################################################################
 import sys, csv, re, json, datetime
 
+import enchant
+
 import util_conf
 sys.path = [ util_conf.APP_PATH ] + sys.path
 
@@ -37,6 +39,11 @@ from ocemr.models import Patient, Village, Visit
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 import random
+
+village_dict = enchant.Dict()
+
+for v in Village.objects.all():
+	village_dict.add(v.name)
 
 reader = csv.reader(open("%s"%(sys.argv[1]), "rb"))
 
@@ -90,6 +97,9 @@ for row in reader:
 			continue
 		patient['birthYear']=current_year-age
 		patient['village']=row[3]
+		if not village_dict.check(patient['village']):
+			sys.stderr.write("Warning: Village (%s) doesn't exist, maybe one of:%s\n"%(patient['village'],village_dict.suggest(patient['village'])))
+
 	else: # following rows
 		if patient_row_num == 2:
 			try:
