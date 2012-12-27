@@ -929,7 +929,7 @@ def hmis105(request):
 		if not v.finishedDateTime:
 			print "Warning: skipping unfinished visit: %s"%v
 		index = 0
-		if v.patient.birthYear > v.finishedDateTime.year - 4:
+		if v.patient.birthYear < v.finishedDateTime.year - 4:
 			index += 2
 		if v.patient.gender == "F":
 			index += 1
