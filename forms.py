@@ -67,7 +67,7 @@ class EditPatientAgeForm(forms.Form):
 class EditPatientVillageForm(forms.Form):
         village = forms.CharField(
 			widget=widgets.JQueryAutoComplete(
-				'/autocomplete_name/ocemr/Village/'
+				'/autospel_name/ocemr/Village/'
 				)
 			)
 	def clean_village(self):
@@ -194,7 +194,7 @@ class NewPatientForm(forms.ModelForm):
         birthDate = forms.DateField(required=False,widget=widgets.CalendarWidget)
         village = forms.CharField(
 			widget=widgets.JQueryAutoComplete(
-				'/autocomplete_name/ocemr/Village/'
+				'/autospel_name/ocemr/Village/'
 				)
 			)
 	createdBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
@@ -235,7 +235,7 @@ class PatientSearchForm(forms.Form):
 	name = forms.CharField(label='Name', required=False)
         village = forms.CharField(
 			widget=widgets.JQueryAutoComplete(
-				'/autocomplete_name/ocemr/Village/'
+				'/autospel_name/ocemr/Village/'
 				),
 			required=False,
 			)
@@ -803,12 +803,12 @@ class MergePatientForm(forms.Form):
 class MergeVillageForm(forms.Form):
         villageIncorrect = forms.CharField(label="Incorrect Village",
 			widget=widgets.JQueryAutoComplete(
-				'/autocomplete_name/ocemr/Village/'
+				'/autospel_name/ocemr/Village/'
 				)
 			)
         villageCorrect = forms.CharField(label="Correct Village",
 			widget=widgets.JQueryAutoComplete(
-				'/autocomplete_name/ocemr/Village/'
+				'/autospel_name/ocemr/Village/'
 				)
 			)
 	def clean_villageIncorrect(self):
@@ -872,3 +872,12 @@ class ChangePasswordForm(forms.Form):
 			raise forms.ValidationError("new passwords didn't match.")
 
 		return cleaned_data
+
+class Hmis105Form(forms.Form):
+	date_start = forms.DateField(widget=widgets.CalendarWidget)
+	date_end = forms.DateField(widget=widgets.CalendarWidget)
+	dump_type = forms.ChoiceField(choices=(
+				('TABLE', 'display'),
+				('CSV', 'csv'),
+			)
+		)

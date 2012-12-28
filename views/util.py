@@ -28,6 +28,12 @@ from django.db.models import get_model
 from django.views.decorators.cache import cache_page
 from django.template import RequestContext
 
+
+# Setup Spell-Checker for autocomplete
+import time
+import enchant
+DICT={}
+
 def close_window(request):
 	return render_to_response('close_window.html', {})
 
@@ -138,6 +144,45 @@ def restore_backup(request):
 			},
 		context_instance=RequestContext(request) )
 
+@login_required
+def autospel_name(request, inapp, inmodel):
+	"""
+	"""
+	if not request.GET.get('q'):
+		return HttpResponse(mimetype='text/plain')
+
+	q = request.GET.get('q')
+	limit = request.GET.get('limit', 15)
+	try:
+		limit = int(limit)
+	except ValueError:
+		return HttpResponseBadRequest()
+	Foo = get_model( inapp, inmodel )
+	# Initialize Dictionary
+	dict_key = '%s:%s:name'%(inapp, inmodel)
+	CACHE_TIMEOUT=15
+	if DICT.has_key(dict_key):
+		# Check if cached dictionary is sufficiently fresh
+		if time.time() - DICT[dict_key]['last_refresh'] > CACHE_TIMEOUT:
+			for o in Foo.objects.all():
+				if not DICT[dict_key]['dict'].is_added(o.name):
+					DICT[dict_key]['dict'].add(o.name)
+			DICT[dict_key]['last_refresh'] = time.time()
+	else:
+		# Create a dict with all possibilities
+		DICT[dict_key] = { 'last_refresh': None, 'dict': None }
+		dict_broker = enchant.Broker()
+		# Start with a blank dict
+		DICT[dict_key]['dict'] = dict_broker.request_pwl_dict(None)
+		# Add all the names from the database
+		for o in Foo.objects.all():
+			DICT[dict_key]['dict'].add(o.name)
+		DICT[dict_key]['last_refresh'] = time.time()
+
+	foos = DICT[dict_key]['dict'].suggest(q)
+	return HttpResponse("%s|\n"%("|\n".join(foos)), mimetype='text/plain')
+
+autospel_name = cache_page(autospel_name, 60 * 60)
 
 @login_required
 def autocomplete_name(request, inapp, inmodel):

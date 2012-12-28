@@ -1,0 +1,40 @@
+2) HMIS Reports - we have to make reports on special forms that would
+be a lot easier if either (a) a program could generate the report, or
+(b) a couple of feature points were added to existing reports.
+   Ex. Form 105 - 6 page report - needs:
+      - "New or Re-attendance" for each patient seen, then M/F, 0-5y or >5y
+      - Then we need to tally for all the diagnoses on their list by
+M/F and age 0-5 or >5y
+      - some diagnosis aren't on our list but could either be added
+for the sake of the reporting, or could existing diagnoses be pulled
+into a new generated report?
+      - Lab report also needs sex/age and positive results for the report...
+      - searching for some diagnoses doesn't give a full list when we
+try the diagnosis tally report - For ex. "family planning" -will show
+4 out of 6 patients (on one day that I checked), which all carry the
+right diagnosis and are even "New" instead of "Follow-up" when I
+search them individually from a written list.
+
+Form 033B - weekly reports on 17 major communicable diseases, weekly
+attendance, and specifics on malaria testing/treatment.
+      - have been starting to keep a paper log of results because
+there's no easy way to go back and make the report - needs M/F, age
+4m-2y, 3-6y, 7-11y, 12+y, type of test, positive result or not.
+
+-------
+
+Questions:
+
+  - This is a monthly report only? or is there a use in manually specifying a date range? like for getting the yearly numbers or weekly numbers too?
+
+  - These are all just counts, correct? (i.e. number of patient diagnosis per age and sex range?)
+
+
+Work Items (for you):
+
+  - Please provide an example of the diagnosis searching bug mentioned above.
+  Just a Diagnosis and a list of patient ids that should match but don't would
+  be super helpful. thanks!
+
+  - Please add the missing diagnoses to the system and provide me a list of
+  what you've added.

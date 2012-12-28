@@ -1,9 +1,16 @@
-ocemr (0.5.3.2) stable; urgency=low
+ocemr (0.5.6) stable; urgency=low
 
+  * finish hmis105 report
+
+ -- Philip J Freeman <philip.freeman@gmail.com>  Sun, 16 Dec 2012 14:23:58 -0600
+
+ocemr (0.5.5) stable; urgency=low
+
+  * Version update
   * Re-arrange reports
   * fix versioning
 
- -- Philip J Freeman <philip.freeman@gmail.com>  Thu, 13 Dec 2012 14:15:12 -0600
+ -- Philip J Freeman <philip.freeman@gmail.com>  Thu, 13 Dec 2012 14:57:01 -0600
 
 ocemr (0.5.3.1) stable; urgency=low
 
