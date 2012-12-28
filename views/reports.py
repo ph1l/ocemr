@@ -35,7 +35,7 @@ def dump_table(field_names,headers,data_rows):
 		out_txt += "<TH>" + headers[f]
 	out_txt += "</TR>\n"
 	for r in data_rows:
-		out_txt += "<TR>"
+		out_txt += "<TR CLASS=results>"
 		for f in field_names:
 			out_txt += "<TD>%s</TD>"%r[f]
 		out_txt += "</TR>\n"
