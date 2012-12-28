@@ -93,6 +93,15 @@ tr
         margin: 0em;
         padding: 0em;
 }
+
+tr.results:nth-child(even) {
+    background-color: #FFFFFF;
+}
+
+tr.results:nth-child(odd) {
+    background-color: #E6E6E6;
+}
+
 td
 {
 	border: 1px solid #000000;

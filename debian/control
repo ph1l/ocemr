@@ -11,7 +11,7 @@ Homepage: http://kremlor.net/projects/ocemr
 Package: ocemr
 Architecture: all
 Depends: ${python:Depends}, ${misc:Depends}, python-django, python-sqlite,
- python-matplotlib, python-mysqldb,
+ python-matplotlib, python-mysqldb, python-enchant
  apache2, libapache2-mod-python,
  cups, enscript, gnupg, sqlite3, bzip2
 Recommends: mysql-server, mysql-client
