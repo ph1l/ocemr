@@ -1,6 +1,10 @@
 Installing OCEMR for Development or Testing
 ===========================================
 
+NOTE: This has been tested on Debian Squeeze and Wheezy only. Newer
+Releases of Debian, other distros of Linux, and other Operating
+Systems are not guaranteed to work.
+
 Preparing the Environment
 -------------------------
 
@@ -24,10 +28,6 @@ Preparing the Environment
 
     - Uncomment a database section
     - configure *_PATH settings to point to development directory
-
- -  Setup version.py:
-
-    $ ./util/make_version.sh  > version.py
 
  -  Setup Utilities Configuration:
 
