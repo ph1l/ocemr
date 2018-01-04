@@ -19,7 +19,9 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 
-from django.conf.urls.defaults import *
+from django.conf.urls import include, patterns, url
+
+from . import views
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
