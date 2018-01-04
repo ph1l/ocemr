@@ -10,13 +10,7 @@ Preparing the Environment
 
  -  Install Prerequisites:
 
-    $ sudo apt-get install python-django python-sqlite python-matplotlib 
-
- -  Install a Database:
-
-    $ sudo apt-get install python-sqlite 
-
-    $ sudo apt-get install python-mysqldb mysql-server mysql-client
+    $ sudo apt-get install git python-django python-sqlite python-matplotlib python-enchant
 
  -  Git a copy of the software:
 
@@ -24,10 +18,33 @@ Preparing the Environment
 
  -  Setup the main config File:
 
+    $ cd ~/ocemr
     $ cp settings.py.DIST settings.py
 
-    - Uncomment a database section
+    - Uncomment the sqlite3 database section (and tweak the DB NAME.)
+
+	DATABASES = {
+	      'default': {
+	              'ENGINE': 'django.db.backends.sqlite3',
+	              'NAME': '/home/USER/var/ocemr/db',
+	              'USER': '',
+	              'PASSWORD': '',
+	              'HOST': '',
+	              'PORT': '',
+	              }
+	      }
+
+    - set DEBUG to True
+
     - configure *_PATH settings to point to development directory
+
+	APP_PATH="/home/USER/ocemr"
+	CONTRIB_PATH="/home/USER/ocemr/contrib"
+	UTIL_PATH="/home/USER/ocemr/util"
+	VAR_PATH="/home/USER/var/ocemr"
+
+    $ mkdir -p ~/var/ocemr
+
 
  -  Setup Utilities Configuration:
 
@@ -56,7 +73,7 @@ Running the Testing Server
 
  -  Run the server 
 
-    $ python ./manage.py runserver
+    $ python ./manage.py runserver 0.0.0.0:8000
     Validating models...
     0 errors found
     
@@ -64,5 +81,5 @@ Running the Testing Server
     Development server is running at http://127.0.0.1:8000/
     Quit the server with CONTROL-C.
 
- -  Goto http://127.0.0.1:8000/ in your browser.
+ -  Goto http://HOSTNAME_OR_IP_ADDRESS:8000/ in your browser.
 
