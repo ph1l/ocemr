@@ -17,6 +17,7 @@ DATABASES = { }
 #		'HOST': '',
 #		'PORT': '',
 #		}
+#	}
 
 # mysql example
 #DATABASES = {
