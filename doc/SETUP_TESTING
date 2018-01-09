@@ -1,16 +1,24 @@
 Installing OCEMR for Development or Testing
 ===========================================
 
-NOTE: This has been tested on Debian Squeeze and Wheezy only. Newer
-Releases of Debian, other distros of Linux, and other Operating
-Systems are not guaranteed to work.
+NOTE: This is currently fucked.
+
+Start with Debian 9 (Stretch).
+
+Add backports repo:
+
+    echo "deb http://ftp.debian.org/debian stretch-backports main" | \
+        sudo tee /etc/apt/sources.list.d/backports.list
+
+    sudo apt-get update
 
 Preparing the Environment
 -------------------------
 
  -  Install Prerequisites:
 
-    $ sudo apt-get install git python-django python-sqlite python-matplotlib python-enchant
+    $ sudo apt-get install git python-sqlite python-matplotlib python-enchant
+    $ sudo apt-get install -t stretch-backports python-django
 
  -  Git a copy of the software:
 
@@ -52,34 +60,9 @@ Preparing the Environment
 
     - Change APP_PATH
 
-Setting up the Database
------------------------
 
- -  Reset the database:
+ - Attempt to setup the database and fail miserably:
 
-    $ ./util/initialize_test_db.sh
-    ...
-    You just installed Django's auth system, which means you don't have any superusers defined.
-    Would you like to create one now? (yes/no): yes 
-    Username (Leave blank to use 'phil'): admin
-    E-mail address: philip.freeman@gmail.com
-    Password: 
-    Password (again): 
-    Superuser created successfully.
-    ...
+    $ python manage.py check
 
-Running the Testing Server
----------------------------
-
- -  Run the server 
-
-    $ python ./manage.py runserver 0.0.0.0:8000
-    Validating models...
-    0 errors found
-    
-    Django version 1.2.3, using settings 'ocemr.settings'
-    Development server is running at http://127.0.0.1:8000/
-    Quit the server with CONTROL-C.
-
- -  Goto http://HOSTNAME_OR_IP_ADDRESS:8000/ in your browser.
-
+ - Start porting!
