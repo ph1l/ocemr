@@ -19,27 +19,27 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 
-from django.conf.urls import include, patterns, url
+from django.conf.urls import include, url
 
 from . import views
 
 # Uncomment the next two lines to enable the admin:
-from django.contrib import admin
+from django.contrib import admin, auth
 admin.autodiscover()
 
 import settings
 
-urlpatterns = patterns('',
-    (r'^i18n/', include('django.conf.urls.i18n')),
-    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    (r'^admin/', include(admin.site.urls)),
+urlpatterns = [
+    url(r'^i18n/', include('django.conf.urls.i18n')),
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    url(r'^admin/', include(admin.site.urls)),
 
-    (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
-    (r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'template_name': 'logout.html'}),
+    url(r'^accounts/login/$', auth.login, {'template_name': 'login.html'}),
+    url(r'^accounts/logout/$', auth.logout, {'template_name': 'logout.html'}),
     #Development
-    (r'^media/ocemr/(?P<path>.*)$', 'django.views.static.serve',
+    url(r'^media/ocemr/(?P<path>.*)$', 'django.views.static.serve',
 	{'document_root': settings.APP_PATH+'/static_media'}),
-)
+]
 urlpatterns += patterns('ocemr.views.util',
 
     (r'^$', 'index'),

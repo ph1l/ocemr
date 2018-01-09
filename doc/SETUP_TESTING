@@ -19,7 +19,7 @@ Preparing the Environment
  -  Setup the main config File:
 
     $ cd ~/ocemr
-    $ cp settings.py.DIST settings.py
+    $ cp ocemr/settings.py.DIST ocemr/settings.py
 
     - Uncomment the sqlite3 database section (and tweak the DB NAME.)
 
