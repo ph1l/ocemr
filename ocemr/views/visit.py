@@ -26,7 +26,7 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 
 
-from django.db.models import get_model, Q
+from django.db.models import Q
 
 def get_visit_menu(current,patient):
 	

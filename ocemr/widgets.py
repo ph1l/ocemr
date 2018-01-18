@@ -22,10 +22,10 @@
 
 from django import forms
 from django.utils.safestring import mark_safe
-from django.forms.widgets import flatatt
+from django.forms.utils import flatatt
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
-from django.utils.simplejson import JSONEncoder
+from simplejson import JSONEncoder
 
 class JQueryAutoComplete(forms.TextInput):
 	class Media:

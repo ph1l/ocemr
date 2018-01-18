@@ -21,7 +21,7 @@
 ##########################################################################
 
 from django import forms
-from django.db.models import get_model
+from django.apps import apps
 
 from django.contrib.auth.models import User
 
@@ -108,7 +108,7 @@ class NewScheduledVisitForm(forms.ModelForm):
 		
 
         class Meta:
-                model = get_model('ocemr','Visit')
+                model = apps.get_model('ocemr','Visit')
                 exclude = [ 'followupTo',
 				'seenDateTime',
 				'claimedDateTime', 'claimedBy',
@@ -175,7 +175,7 @@ class NewWalkinVisitForm(forms.ModelForm):
 		
 
         class Meta:
-                model = get_model('ocemr','Visit')
+                model = apps.get_model('ocemr','Visit')
                 exclude = [ 'followupTo',
 				'claimedDateTime', 'claimedBy',
 				'finishedDateTime', 'finishedBy',
@@ -207,7 +207,7 @@ class NewPatientForm(forms.ModelForm):
 		
 
         class Meta:
-                model = get_model('ocemr','Patient')
+                model = apps.get_model('ocemr','Patient')
                 exclude = [ 'createdDateTime', 'status', 'scratchNote',]
 
 	def clean_birthYear(self):
@@ -255,7 +255,8 @@ class NewVisitSymptomForm(forms.ModelForm):
 		
 
         class Meta:
-                model = get_model('ocemr','VisitSymptom')
+                model = apps.get_model('ocemr','VisitSymptom')
+                fields = "__all__"
 class EditVisitSymptomForm(forms.Form):
 	notes = forms.CharField(widget=forms.Textarea)
 
@@ -447,7 +448,7 @@ required=False
 #		self.fields['observedBy'].initial=user.id
 #
 #	class Meta:
-#		model = get_model('ocemr','Vital')
+#		model = apps.get_model('ocemr','Vital')
 #                exclude = [ 'observedDateTime', 'data']
 #
 #	def clean_data_in(self):
@@ -498,7 +499,7 @@ class NewExamNoteForm(forms.ModelForm):
 		self.fields['addedBy'].initial=user.id
 
 	class Meta:
-		model = get_model('ocemr','ExamNote')
+		model = apps.get_model('ocemr','ExamNote')
                 exclude = [ 'addedDateTime']
 
 class NewReferralForm(forms.ModelForm):
@@ -514,7 +515,7 @@ class NewReferralForm(forms.ModelForm):
 		self.fields['addedBy'].initial=user.id
 
 	class Meta:
-		model = get_model('ocemr','Referral')
+		model = apps.get_model('ocemr','Referral')
                 exclude = [ 'addedDateTime']
 
 class EditReferralForm(forms.Form):
@@ -535,7 +536,7 @@ class NewAllergyForm(forms.ModelForm):
 		self.fields['addedBy'].initial=user.id
 
 	class Meta:
-		model = get_model('ocemr','Allergy')
+		model = apps.get_model('ocemr','Allergy')
                 exclude = [ 'addedDateTime']
 
 class NewImmunizationLogForm(forms.ModelForm):
@@ -549,7 +550,7 @@ class NewImmunizationLogForm(forms.ModelForm):
 		self.fields['addedBy'].initial=user.id
 
 	class Meta:
-		model = get_model('ocemr','ImmunizationLog')
+		model = apps.get_model('ocemr','ImmunizationLog')
                 exclude = [ 'addedDateTime']
 
 class NewLabNoteForm(forms.ModelForm):
@@ -563,7 +564,7 @@ class NewLabNoteForm(forms.ModelForm):
 		self.fields['addedBy'].initial=user.id
 
 	class Meta:
-		model = get_model('ocemr','LabNote')
+		model = apps.get_model('ocemr','LabNote')
                 exclude = [ 'addedDateTime']
 
 class CompleteLabForm(forms.Form):
@@ -592,7 +593,7 @@ class NewDiagnosisForm(forms.ModelForm):
 		
 
         class Meta:
-                model = get_model('ocemr','Diagnosis')
+                model = apps.get_model('ocemr','Diagnosis')
                 exclude = [ 'diagnosedDateTime' ]
 
 	def clean_type(self):
@@ -636,7 +637,7 @@ class NewMedForm(forms.ModelForm):
 		
 
         class Meta:
-                model = get_model('ocemr','Med')
+                model = apps.get_model('ocemr','Med')
                 exclude = [ 'addedDateTime', 'dispensedDateTime', 'dispensedBy' ]
 
 	def clean_type(self):
@@ -664,7 +665,7 @@ class NewVacForm(forms.ModelForm):
 		self.fields['patient'].initial=patient.id
 
         class Meta:
-                model = get_model('ocemr','Vac')
+                model = apps.get_model('ocemr','Vac')
                 exclude = [ 'addedDateTime' ]
 
 	def clean_receivedDate(self):
@@ -694,7 +695,7 @@ class NewMedNoteForm(forms.ModelForm):
 		self.fields['addedBy'].initial=user.id
 
 	class Meta:
-		model = get_model('ocemr','MedNote')
+		model = apps.get_model('ocemr','MedNote')
                 exclude = [ 'addedDateTime']
 
 class NewVacNoteForm(forms.ModelForm):
@@ -710,7 +711,7 @@ class NewVacNoteForm(forms.ModelForm):
 		self.fields['addedBy'].initial=user.id
 
 	class Meta:
-		model = get_model('ocemr','VacNote')
+		model = apps.get_model('ocemr','VacNote')
                 exclude = [ 'addedDateTime']
 
 class NewCashLogForm(forms.ModelForm):
@@ -726,7 +727,7 @@ class NewCashLogForm(forms.ModelForm):
 		self.fields['addedBy'].initial=user.id
 
 	class Meta:
-		model = get_model('ocemr','CashLog')
+		model = apps.get_model('ocemr','CashLog')
                 exclude = [ 'addedDateTime']
 
 class EditBillAmountForm(forms.Form):

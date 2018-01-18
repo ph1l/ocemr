@@ -25,7 +25,7 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from ocemr.forms import *
 
-from django.db.models import get_model, Q
+from django.db.models import Q
 
 @login_required
 def med_queue(request):

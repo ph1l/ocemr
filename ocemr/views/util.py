@@ -24,7 +24,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 
-from django.db.models import get_model
+from django.apps import apps
 from django.views.decorators.cache import cache_page
 from django.template import RequestContext
 
@@ -157,7 +157,7 @@ def autospel_name(request, inapp, inmodel):
 		limit = int(limit)
 	except ValueError:
 		return HttpResponseBadRequest()
-	Foo = get_model( inapp, inmodel )
+	Foo = apps.get_model( inapp, inmodel )
 	# Initialize Dictionary
 	dict_key = '%s:%s:name'%(inapp, inmodel)
 	CACHE_TIMEOUT=15
@@ -182,7 +182,7 @@ def autospel_name(request, inapp, inmodel):
 	foos = DICT[dict_key]['dict'].suggest(q)
 	return HttpResponse("%s|\n"%("|\n".join(foos)), mimetype='text/plain')
 
-autospel_name = cache_page(autospel_name, 60 * 60)
+autospel_name = cache_page(60 * 60)
 
 @login_required
 def autocomplete_name(request, inapp, inmodel):
@@ -202,11 +202,11 @@ def autocomplete_name(request, inapp, inmodel):
 		limit = int(limit)
 	except ValueError:
 		return HttpResponseBadRequest() 
-	Foo = get_model( inapp, inmodel )
+	Foo = apps.get_model( inapp, inmodel )
 	foos = Foo.objects.filter(name__istartswith=q,active=True)[:limit]
 	return HttpResponse(iter_results(foos), mimetype='text/plain')
 
-autocomplete_name = cache_page(autocomplete_name, 60 * 60)
+autocomplete_name = cache_page(60 * 60)
 
 @login_required
 def autosearch_title(request, inapp, inmodel):
@@ -226,11 +226,11 @@ def autosearch_title(request, inapp, inmodel):
 		limit = int(limit)
 	except ValueError:
 		return HttpResponseBadRequest() 
-	Foo = get_model( inapp, inmodel )
+	Foo = apps.get_model( inapp, inmodel )
 	foos = Foo.objects.filter(title__icontains=q,active=True) #[:limit]
 	return HttpResponse(iter_results(foos), mimetype='text/plain')
 
-autosearch_title = cache_page(autosearch_title, 60 * 60)
+autosearch_title = cache_page(60 * 60)
 
 @login_required
 def village_merge_wizard(request):
