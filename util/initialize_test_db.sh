@@ -17,7 +17,7 @@ if [ -e ${VAR}/db/ocemr.db ]; then
 fi
 
 
-python ${APP}/manage.py syncdb
+python ${APP}/manage.py migrate
 
 #----------
 
