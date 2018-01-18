@@ -8,7 +8,7 @@ mkdir -p ${VAR}/{db,backups,gnupg}
 chmod 700 ${VAR}/gnupg
 
 if [ ! -e ${VAR}/gnupg/secring.gpg ]; then
-	cat source_data/gpg_server_key.options  | gpg --home ${VAR}/gnupg --gen-key --batch
+	cat contrib/gpg_server_key.options  | gpg --home ${VAR}/gnupg --gen-key --batch
 fi
 
 if [ -e ${VAR}/db/ocemr.db ]; then

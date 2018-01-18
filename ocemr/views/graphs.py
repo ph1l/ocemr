@@ -23,7 +23,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
-from django.db.models import get_model, Q
+#from django.db.models import get_model, Q
 from datetime import datetime, timedelta
 
 def test_matplotlib(request):

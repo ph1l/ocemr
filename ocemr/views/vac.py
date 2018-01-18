@@ -25,7 +25,6 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from ocemr.forms import *
 from ocemr.models import Patient, VacType, VacNote, Vac
-from django.db.models import get_model, Q
 
 @login_required
 def vac_del(request,pid, vtid):

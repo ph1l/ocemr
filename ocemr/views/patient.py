@@ -26,7 +26,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadReque
 from django.template import RequestContext
 from ocemr.forms import *
 
-from django.db.models import get_model, Q
+from django.db.models import Q
 from django.views.decorators.cache import cache_page
 
 @login_required

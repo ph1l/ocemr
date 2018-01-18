@@ -1,4 +1,4 @@
-from django.db.models.signals import post_syncdb
+from django.db.models.signals import post_migrate
 import ocemr.models
 
 
@@ -82,4 +82,4 @@ def post_syncdb_auto_upgrade(sender, **kwargs):
 		dbv.save()
 	return
 
-post_syncdb.connect(post_syncdb_auto_upgrade, sender=ocemr.models)
+post_migrate.connect(post_syncdb_auto_upgrade, sender=ocemr.models)
