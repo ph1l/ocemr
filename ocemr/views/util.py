@@ -21,7 +21,7 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 
 from django.apps import apps
@@ -35,10 +35,10 @@ import enchant
 DICT={}
 
 def close_window(request):
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 def blank(request):
-	return render_to_response('blank.html', {})
+	return render(request, 'blank.html', {})
 
 @login_required
 def index(request):
@@ -52,9 +52,7 @@ def index(request):
 def user_prefs(request):
 	"""
 	"""
-	return render_to_response(
-		'user_prefs.html', locals(),
-		context_instance=RequestContext(request))
+	return render(request, 'user_prefs.html', locals())
 
 @login_required
 def change_password(request):
@@ -69,11 +67,11 @@ def change_password(request):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = ChangePasswordForm(request.user)
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Change Password',
 		'form_action': '/user_prefs/change_password/',
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def get_backup(request):
@@ -97,7 +95,7 @@ def get_backup(request):
 	try:
 		call_command('backupdb', outfile)
 	except CommandError:
-		return render_to_response('popup_lines.html', {'lines': CommandError, 'link_text': """<a href="#" onclick="window.print();return false;">Print</a>"""})
+		return render(request, 'popup_lines.html', {'lines': CommandError, 'link_text': """<a href="#" onclick="window.print();return false;">Print</a>"""})
 	if DB_BACKUP_ENCRYPT:
 		outfile += ".gpg"
 	else:
@@ -131,18 +129,17 @@ def restore_backup(request):
 				call_command('restoredb', "/tmp/%s"%(f))
 					
 			except Exception, err:
-				return render_to_response('popup_lines.html', {'lines': "ERROR: %s"%err})
+				return render(request, 'popup_lines.html', {'lines': "ERROR: %s"%err})
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = UploadBackupForm()
 
-	return render_to_response( 'popup_form.html',
+	return render(request, 'popup_form.html',
 			{
 			'title': 'Restore from a backup',
 			'form_action': '/restore_backup/',
 			'form': form
-			},
-		context_instance=RequestContext(request) )
+			})
 
 @login_required
 def autospel_name(request, inapp, inmodel):
@@ -253,11 +250,11 @@ def village_merge_wizard(request):
 	else:
 		form = MergeVillageForm() # An unbound form
 	if not valid_form:
-		return render_to_response('popup_form.html', {
+		return render(request, 'popup_form.html', {
 			'title': 'Merge Patient Records',
 			'form_action': '/village_merge_wizard/',
 			'form': form,
-		},context_instance=RequestContext(request))
+		})
 	out_txt="Merge %s: %s\n  into %s: %s\n\n"%(villageIncorrect.id, villageIncorrect, villageCorrect.id, villageCorrect)
 
 	patients=	Patient.objects.filter(village=villageIncorrect)
@@ -267,7 +264,7 @@ def village_merge_wizard(request):
 	out_txt += "\n\nThere is NO UNDO function to reverse this change.\n"
 	out_txt += "Please be sure this is what you want before continuing...\n"
 	out_link = "<A HREF=/village_merge_wizard/%d/%d/>Do the merge!</A> or "%(villageCorrect.id,villageIncorrect.id)
-	return render_to_response('popup_info.html', {
+	return render(request, 'popup_info.html', {
 		'title': 'Schedule Patient Visit',
 		'info': out_txt,
 		'link_text': out_link,

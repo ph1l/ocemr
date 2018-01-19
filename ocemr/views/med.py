@@ -20,7 +20,7 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from ocemr.forms import *
@@ -42,7 +42,7 @@ def med_queue(request):
 	from ocemr.models import Visit
 	visits_active = Visit.objects.filter(q_active).order_by('finishedDateTime')
 	visits_inactive = Visit.objects.filter(q_inactive).order_by('-resolvedDateTime')
-	return render_to_response('med_queue.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'med_queue.html', locals())
 
 @login_required
 def meds_view(request,vid):
@@ -54,7 +54,7 @@ def meds_view(request,vid):
 	v = Visit.objects.get(pk=vid)
 	p = v.patient
 
-	return render_to_response('meds_view.html',locals(),context_instance=RequestContext(request))
+	return render(request, 'meds_view.html',locals())
 
 @login_required
 def med_dispense(request,id):
@@ -67,7 +67,7 @@ def med_dispense(request,id):
         m.save()
 	mn = MedNote( med=m, addedBy=request.user, note="Dispensed" )
 	mn.save()
-        return render_to_response('close_window.html', {})
+        return render(request, 'close_window.html', {})
 
 @login_required
 def med_substitute(request,id):
@@ -93,7 +93,7 @@ def med_cancel(request,id):
         m.save()
 	mn = MedNote( med=m, addedBy=request.user, note="Canceled" )
 	mn.save()
-        return render_to_response('close_window.html', {})
+        return render(request, 'close_window.html', {})
 
 @login_required
 def med_undo_dispense(request,id):
@@ -106,7 +106,7 @@ def med_undo_dispense(request,id):
         m.save()
 	mn = MedNote( med=m, addedBy=request.user, note="Undo Dispense" )
 	mn.save()
-        return render_to_response('close_window.html', {})
+        return render(request, 'close_window.html', {})
 
 @login_required
 def med_undo_cancel(request,id):
@@ -119,18 +119,7 @@ def med_undo_cancel(request,id):
         m.save()
 	mn = MedNote( med=m, addedBy=request.user, note="Undo Cancel" )
 	mn.save()
-        return render_to_response('close_window.html', {})
-
-#@login_required
-#def med_(request,id):
-#        """
-#        """
-#        from ocemr.models import Med
-#
-#        m = Med.objects.get(pk=id)
-#        m.status = ''
-#        m.save()
-#        return render_to_response('close_window.html', {})
+        return render(request, 'close_window.html', {})
 
 @login_required
 def med_notate(request, id):
@@ -149,11 +138,11 @@ def med_notate(request, id):
                         return HttpResponseRedirect('/close_window/')
         else:
                 form = NewMedNoteForm(m, request.user) # An unbound form
-        return render_to_response('popup_form.html', {
+        return render(request, 'popup_form.html', {
                 'title': 'Add a Med Note: %s'%(m.type.title),
                 'form_action': '/med/%d/notate/'%(m.id),
                 'form': form,
-        },context_instance=RequestContext(request))
+        })
 
 @login_required
 def med_edit(request,id):
@@ -164,7 +153,7 @@ def med_edit(request,id):
 	m = Med.objects.get(pk=id)
 	
 	if request.user != m.addedBy:
-		return render_to_response('popup_info.html', {
+		return render(request, 'popup_info.html', {
 			'title': 'Error',
 			'info': 'You cannot edit This Med, cancel it and re-add instead.',
 			})
@@ -179,9 +168,9 @@ def med_edit(request,id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditMedForm(initial={'type': m.type.title, 'dosage': m.dosage, 'dispenseAmount':m.dispenseAmount})
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Med',
 		'form_action': '/med/%s/edit/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 

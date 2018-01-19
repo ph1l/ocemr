@@ -21,7 +21,7 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 
@@ -42,7 +42,7 @@ def diag_stat_change(request,id,newstat):
 	if newstat in valid_statuses:
 		d.status = newstat
 		d.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def diag_patienttypehistory(request,pid,dtid):
@@ -55,7 +55,7 @@ def diag_patienttypehistory(request,pid,dtid):
 	p = Patient.objects.get(pk=pid)
 	dt = DiagnosisType.objects.get(pk=dtid)
 	diags = Diagnosis.objects.filter(patient=p,type=dt)
-	return render_to_response('diag_view.html', locals())
+	return render(request, 'diag_view.html', locals())
 
 @login_required
 def diag_history(request,id):
@@ -66,7 +66,7 @@ def diag_history(request,id):
 	d = Diagnosis.objects.get(pk=id)
 	dt = d.type
 	diags = Diagnosis.objects.filter(patient=d.patient,type=d.type)
-	return render_to_response('diag_view.html', locals())
+	return render(request, 'diag_view.html', locals())
 
 @login_required
 def diag_edit_notes(request, id):
@@ -89,12 +89,11 @@ def diag_edit_notes(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditDiagnosisNotesForm(d) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Diagnosis Notes: %s'%(d.type.title),
 		'form_action': '/diag/%d/edit/notes/'%(d.id),
 		'form': form,
-		} ,context_instance=RequestContext(request)
-	)
+		})
 
 @login_required
 def diag_delete(request,id):
@@ -113,9 +112,9 @@ def diag_delete(request,id):
                         return HttpResponseRedirect('/close_window/')
         else:
                 form = ConfirmDeleteForm()
-        return render_to_response('popup_form.html', {
+        return render(request, 'popup_form.html', {
                 'title': 'Delete Diagnosis: %s'%(o),
                 'form_action': '/diag/%s/delete/'%(id),
                 'form': form,
-        },context_instance=RequestContext(request))
+        })
 

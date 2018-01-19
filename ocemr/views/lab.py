@@ -21,7 +21,7 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 
@@ -44,7 +44,7 @@ def lab_queue(request):
 
 	labs_active = Lab.objects.filter(active_q).order_by('orderedDateTime', '-id')
 	labs_inactive = Lab.objects.filter(inactive_q).order_by('orderedDateTime', '-id')
-	return render_to_response('lab_queue.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'lab_queue.html', locals())
 
 @login_required
 def lab_start(request,id):
@@ -57,7 +57,7 @@ def lab_start(request,id):
 	l.save()
 	ln = LabNote(lab=l, addedBy=request.user, note="Lab Started")
 	ln.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def lab_cancel(request,id):
@@ -70,7 +70,7 @@ def lab_cancel(request,id):
 	l.save()
 	ln = LabNote(lab=l, addedBy=request.user, note="Lab Canceled")
 	ln.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def lab_fail(request,id):
@@ -83,7 +83,7 @@ def lab_fail(request,id):
 	l.save()
 	ln = LabNote(lab=l, addedBy=request.user, note="Lab Failed")
 	ln.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 @login_required
 def lab_reorder(request,id):
 	"""
@@ -93,7 +93,7 @@ def lab_reorder(request,id):
 	l = Lab.objects.get(pk=id)
 	newl = Lab(type = l.type, patient = l.patient, visit=l.visit, orderedBy=request.user, status='ORD')
 	newl.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def lab_notate(request, id):
@@ -112,11 +112,11 @@ def lab_notate(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = NewLabNoteForm(l, request.user) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Add an Lab Note: %s'%(l.type.title),
 		'form_action': '/lab/%d/notate/'%(l.id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def lab_complete(request, id):
@@ -135,8 +135,8 @@ def lab_complete(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = CompleteLabForm()
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Complete Lab: %s'%(l),
 		'form_action': '/lab/%s/complete/'%(l.id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})

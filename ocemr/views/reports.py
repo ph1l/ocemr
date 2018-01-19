@@ -20,7 +20,7 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.db.models import Q
@@ -41,7 +41,7 @@ def dump_table(field_names,headers,data_rows):
 		out_txt += "</TR>\n"
 	out_txt += "</TABLE>\n"
 
-	return render_to_response('popup_table.html', {'table': out_txt})
+	return render(request, 'popup_table.html', {'table': out_txt})
 	
 def dump_csv(filename,field_names,headers,data_rows):
 	"""
@@ -130,7 +130,7 @@ def index(request):
         """
         Reports Landing Page
         """
-        return render_to_response('reports.html',context_instance=RequestContext(request))
+        return render(request, 'reports.html')
 
 @login_required
 def lab_tally(request):
@@ -153,11 +153,11 @@ def lab_tally(request):
 	else:
 		form = TallyReportForm()
 	if not form_valid:
-		return render_to_response('popup_form.html', {
+		return render(request, 'popup_form.html', {
 	                'title': 'Enter Date For Report',
 	                'form_action': '/reports/lab/tally/',
 	                'form': form,
-	        },context_instance=RequestContext(request))
+	        })
 
 	dt_start = datetime(date_start_in.year,date_start_in.month,date_start_in.day,0,0,0)
 	dt_end = datetime(date_end_in.year,date_end_in.month,date_end_in.day,23,59,59)
@@ -237,11 +237,11 @@ def med_tally(request):
 	else:
 		form = TallyReportForm()
 	if not form_valid:
-		return render_to_response('popup_form.html', {
+		return render(request, 'popup_form.html', {
 	                'title': 'Enter Date For Report',
 	                'form_action': '/reports/med/tally/',
 	                'form': form,
-	        },context_instance=RequestContext(request))
+	        })
 
 	dt_start = datetime(date_start_in.year,date_start_in.month,date_start_in.day,0,0,0)
 	dt_end = datetime(date_end_in.year,date_end_in.month,date_end_in.day,23,59,59)
@@ -322,11 +322,11 @@ def clinician_tally(request):
 	else:
 		form = TallyReportForm()
 	if not form_valid:
-		return render_to_response('popup_form.html', {
+		return render(request, 'popup_form.html', {
 	                'title': 'Enter Date For Report',
 	                'form_action': '/reports/clinician/tally/',
 	                'form': form,
-	        },context_instance=RequestContext(request))
+	        })
 	from ocemr.models import Visit
 	dt_start = datetime(date_start_in.year,date_start_in.month,date_start_in.day,0,0,0)
 	dt_end = datetime(date_end_in.year,date_end_in.month,date_end_in.day,23,59,59)
@@ -381,11 +381,11 @@ def diagnosis_tally(request):
         else:
                 form = DiagnosisTallyReportForm()
 	if not form_valid:
-	        return render_to_response('popup_form.html', {
+	        return render(request, 'popup_form.html', {
 	                'title': 'Enter Date Range For Report',
 	                'form_action': '/reports/diagnosis/tally/',
 	                'form': form,
-	        },context_instance=RequestContext(request))
+	        })
 	dt_start = datetime(
 		date_start_in.year,date_start_in.month,date_start_in.day,
 		0,0,0
@@ -471,11 +471,11 @@ def legacy_patient_daily(request):
         else:
                 form = SelectDateForm()
 	if not form_valid:
-	        return render_to_response('popup_form.html', {
+	        return render(request, 'popup_form.html', {
 	                'title': 'Enter Date For Report',
 	                'form_action': '/reports/legacy/patient/daily/',
 	                'form': form,
-	        },context_instance=RequestContext(request))
+	        })
 
 
 	from ocemr.models import Visit, Diagnosis, Med, Referral
@@ -590,11 +590,11 @@ def cashflow(request):
         else:
                 form = SelectDateRangeForm()
 	if not form_valid:
-	        return render_to_response('popup_form.html', {
+	        return render(request, 'popup_form.html', {
 	                'title': 'Enter Date Range For Report',
 	                'form_action': '/reports/cashflow/',
 	                'form': form,
-	        },context_instance=RequestContext(request))
+	        })
 
 	
 	field_names=[
@@ -651,11 +651,11 @@ def accounts_outstanding(request):
         else:
                 form = SelectDateRangeForm()
 	if not form_valid:
-	        return render_to_response('popup_form.html', {
+	        return render(request, 'popup_form.html', {
 	                'title': 'Enter Date Range For Report',
 	                'form_action': '/reports/accounts_outstanding/',
 	                'form': form,
-	        },context_instance=RequestContext(request))
+	        })
 
 
 	from ocemr.models import Patient, Visit, CashLog
@@ -708,11 +708,11 @@ def diagnosis_patient(request):
 	else:
 		form = DiagnosisPatientReportForm()
 	if not form_valid:
-		return render_to_response('popup_form.html', {
+		return render(request, 'popup_form.html', {
 			'title': 'Enter Details For Report',
 			'form_action': '/reports/diagnosis_patient/',
 			'form': form,
-		},context_instance=RequestContext(request))
+		})
 	dt_start = datetime(
 		date_start_in.year,date_start_in.month,date_start_in.day,
 		0,0,0
@@ -786,11 +786,11 @@ def hmis105(request):
 	else:
 		form = Hmis105Form()
 	if not form_valid:
-		return render_to_response('popup_form.html', {
+		return render(request, 'popup_form.html', {
 			'title': 'Enter Details For Report',
 			'form_action': '/reports/hmis105/',
 			'form': form,
-		},context_instance=RequestContext(request))
+		})
 	dt_start = datetime(
 		date_start_in.year,date_start_in.month,date_start_in.day,
 		0,0,0
