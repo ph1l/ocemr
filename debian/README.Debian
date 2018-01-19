@@ -68,10 +68,10 @@ Upgrade Notes -
 			(see step #2 in the new install instructions above)
 
 		6). upgrade the DB schema.
-		    - # python /usr/share/ocemr/apps/ocemr/manage.py syncdb
+		    - # python /usr/share/ocemr/apps/ocemr/manage.py migrate
 		    - login to the Django Admin with a superuser account
 		    - Modify the record for version 0.5 to reference 0.4
-		    - # python /usr/share/ocemr/apps/ocemr/manage.py syncdb
+		    - # python /usr/share/ocemr/apps/ocemr/manage.py migrate
 
 
  -- Philip J Freeman <philip.freeman@gmail.com>  Sat, 17 Mar 2012 00:43:18 -0500

@@ -40,7 +40,7 @@ Development Documentation
  * doc/dbchanges.txt
 	A list of commands for upgrading databases between minor releases.
 	(as of version 5.0, Database changes are managed internally 
-	via manage.py syncdb)
+	via manage.py migrate)
  * doc/ROADMAP
 	 An outline for future versions.
 
