@@ -11,7 +11,7 @@ DATABASES = { }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/home/elektron/var/lib/ocemr.db',
+        'NAME': '/home/elektron/var/ocemr/db',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',

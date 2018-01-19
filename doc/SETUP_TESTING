@@ -1,7 +1,7 @@
 Installing OCEMR for Development or Testing
 ===========================================
 
-NOTE: This is currently fucked.
+NOTE: This is getting there...
 
 Start with Debian 9 (Stretch).
 
@@ -30,7 +30,7 @@ Preparing the Environment
 
     $ cp ocemr/settings.py.DIST ocemr/settings.py
 
-    - Uncomment the sqlite3 database section (and tweak the DB NAME.)
+    - Tweak the sqlite3 database section (set `NAME` to a location for the db):
 
 	DATABASES = {
 	      'default': {
@@ -42,8 +42,6 @@ Preparing the Environment
 	              'PORT': '',
 	              }
 	      }
-
-    - set DEBUG to True
 
     - configure *_PATH settings to point to development directory
 
@@ -62,12 +60,24 @@ Preparing the Environment
     - Change APP_PATH
 
 
- - Setup testing DB:
+Setting up the Database
+-----------------------
+
+ -  Reset the database:
 
     $ ./util/initialize_test_db.sh
 
- - Run the server:
+ -  Add a super user:
 
-    $ python ./manage.py runserver 8080
+    $ python ./manage.py createsuperuser
 
- - Start porting!
+Running the Testing Server
+---------------------------
+
+ -  Run the server
+
+    $ python ./manage.py runserver
+
+ - Goto http://localhost:8000/ in your browser.
+
+ - Start Testing!
