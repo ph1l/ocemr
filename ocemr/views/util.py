@@ -142,11 +142,12 @@ def restore_backup(request):
 			})
 
 @login_required
+@cache_page(60 * 60)
 def autospel_name(request, inapp, inmodel):
 	"""
 	"""
 	if not request.GET.get('q'):
-		return HttpResponse(mimetype='text/plain')
+		return HttpResponse(content_type='text/plain')
 
 	q = request.GET.get('q')
 	limit = request.GET.get('limit', 15)
@@ -177,11 +178,11 @@ def autospel_name(request, inapp, inmodel):
 		DICT[dict_key]['last_refresh'] = time.time()
 
 	foos = DICT[dict_key]['dict'].suggest(q)
-	return HttpResponse("%s|\n"%("|\n".join(foos)), mimetype='text/plain')
+	return HttpResponse("%s|\n"%("|\n".join(foos)), content_type='text/plain')
 
-autospel_name = cache_page(60 * 60)
 
 @login_required
+@cache_page(60 * 60)
 def autocomplete_name(request, inapp, inmodel):
 	"""
 	"""
@@ -191,7 +192,7 @@ def autocomplete_name(request, inapp, inmodel):
 				yield '%s|%s\n' % (r.name, r.id)
 	
 	if not request.GET.get('q'):
-		return HttpResponse(mimetype='text/plain')
+		return HttpResponse(content_type='text/plain')
 	
 	q = request.GET.get('q')
 	limit = request.GET.get('limit', 15)
@@ -201,11 +202,11 @@ def autocomplete_name(request, inapp, inmodel):
 		return HttpResponseBadRequest() 
 	Foo = apps.get_model( inapp, inmodel )
 	foos = Foo.objects.filter(name__istartswith=q,active=True)[:limit]
-	return HttpResponse(iter_results(foos), mimetype='text/plain')
+	return HttpResponse(iter_results(foos), content_type='text/plain')
 
-autocomplete_name = cache_page(60 * 60)
 
 @login_required
+@cache_page(60 * 60)
 def autosearch_title(request, inapp, inmodel):
 	"""
 	"""
@@ -215,7 +216,7 @@ def autosearch_title(request, inapp, inmodel):
 				yield '%s|%s\n' % (r.title, r.id)
 	
 	if not request.GET.get('q'):
-		return HttpResponse(mimetype='text/plain')
+		return HttpResponse(content_type='text/plain')
 	
 	q = request.GET.get('q')
 	limit = request.GET.get('limit', 15)
@@ -225,7 +226,7 @@ def autosearch_title(request, inapp, inmodel):
 		return HttpResponseBadRequest() 
 	Foo = apps.get_model( inapp, inmodel )
 	foos = Foo.objects.filter(title__icontains=q,active=True) #[:limit]
-	return HttpResponse(iter_results(foos), mimetype='text/plain')
+	return HttpResponse(iter_results(foos), content_type='text/plain')
 
 autosearch_title = cache_page(60 * 60)
 
