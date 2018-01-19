@@ -24,8 +24,10 @@ from django.conf.urls import include, url, static
 from . import views
 
 # Uncomment the next two lines to enable the admin:
-from django.contrib import admin, auth
+from django.contrib import admin
 admin.autodiscover()
+
+from django.contrib.auth import views as auth_views
 
 import settings
 
@@ -34,8 +36,8 @@ urlpatterns = [
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^accounts/login/$', auth.login, {'template_name': 'login.html'}),
-    url(r'^accounts/logout/$', auth.logout, {'template_name': 'logout.html'}),
+    url(r'^accounts/login/$', auth_views.LoginView.as_view(template_name='login.html')),
+    url(r'^accounts/logout/$', auth_views.LogoutView.as_view(template_name='logout.html')),
     url(r'^user_prefs/$', views.util.user_prefs),
     #Development
 #    static('/media/ocemr/',

@@ -21,9 +21,6 @@
 ##########################################################################
 
 from django import template
-from django.db.models import get_model
-from django.template.defaultfilters import stringfilter
-
 
 register = template.Library()
 
@@ -31,4 +28,3 @@ register = template.Library()
 def get_version_tag():
         from ocemr.settings import OCEMR_VERSION
         return OCEMR_VERSION
-
