@@ -17,7 +17,7 @@ Preparing the Environment
 
  -  Install Prerequisites:
 
-    $ sudo apt-get install git python-sqlite python-matplotlib python-enchant python-simplejson
+    $ sudo apt-get install git python-sqlite python-matplotlib python-enchant python-simplejson sqlite3
     $ sudo apt-get install -t stretch-backports python-django
 
  -  Git a copy of the software:

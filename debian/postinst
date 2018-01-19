@@ -58,8 +58,8 @@ case "$1" in
 	chown -R www-data:www-data /var/lib/ocemr/*
 
         ( cd  /usr/share/ocemr/apps/ocemr;
-		echo "python ./manage.py syncdb --noinput" >> /var/log/ocemr/update.log
-                sudo -u www-data python ./manage.py syncdb --noinput 2>&1 \
+		echo "python ./manage.py migrate --noinput" >> /var/log/ocemr/update.log
+                sudo -u www-data python ./manage.py migrate --noinput 2>&1 \
 			| tee -a /var/log/ocemr/update.log || true
         )
 	check_enable_apache_mod "alias"
