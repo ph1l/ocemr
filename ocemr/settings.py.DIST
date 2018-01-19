@@ -118,6 +118,8 @@ USE_I18N = True
 MEDIA_ROOT = ''
 MEDIA_URL = ''
 ADMIN_MEDIA_PREFIX = '/media/admin/'
+STATIC_URL = '/media/ocemr/'
+STATIC_ROOT = APP_PATH+'/static_media/'
 TEMPLATES = [
     {
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -152,6 +154,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'ocemr',
 )
+
 
 import version
 OCEMR_VERSION=version.OCEMR_VERSION

@@ -19,7 +19,8 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 
-from django.conf.urls import include, url, static
+from django.conf.urls import include, url
+from django.conf.urls.static import static
 
 from . import views
 
@@ -39,9 +40,6 @@ urlpatterns = [
     url(r'^accounts/login/$', auth_views.LoginView.as_view(template_name='login.html')),
     url(r'^accounts/logout/$', auth_views.LogoutView.as_view(template_name='logout.html')),
     url(r'^user_prefs/$', views.util.user_prefs),
-    #Development
-#    static('/media/ocemr/',
-#	document_root = settings.APP_PATH + '/static_media'),
     url(r'^$', views.util.index),
     url(r'^user_prefs/change_password/$', views.util.change_password),
     url(r'^get_backup/$', views.util.get_backup),
@@ -167,4 +165,4 @@ urlpatterns = [
     url(r'^graphs/vitals/(?P<id>\d+)/hw.png$', views.graphs.vitals_height_weight),
     url(r'^graphs/vitals/(?P<id>\d+)/spo2o2.png$', views.graphs.vitals_spo2_o2),
     url(r'^graphs/vitals/(?P<id>\d+)/$', views.graphs.vitals_graphs_index),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
