@@ -228,7 +228,6 @@ def autosearch_title(request, inapp, inmodel):
 	foos = Foo.objects.filter(title__icontains=q,active=True) #[:limit]
 	return HttpResponse(iter_results(foos), content_type='text/plain')
 
-autosearch_title = cache_page(60 * 60)
 
 @login_required
 def village_merge_wizard(request):
