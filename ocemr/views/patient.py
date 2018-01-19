@@ -64,7 +64,7 @@ def patient_queue(request,dayoffset=0):
 
 	# Cleanup missed visits
 	d_missed = d_today-timedelta(7)
-	missed_q = Q(scheduledDate__lte=d_missed.date) & Q(status='SCHE')
+	missed_q = Q(scheduledDate__lte=str(d_missed.date())) & Q(status='SCHE')
 	for mv in Visit.objects.filter(missed_q):
 		mv.status = 'MISS'
 		# finished by noone
