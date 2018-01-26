@@ -1,6 +1,6 @@
 0.4.X -> 0.5.X
 
-(first run 'manage.py migrate' to add new tables.)
+(first run 'manage.py syncdb' to add new tables.)
 
 sqlite
 ------
