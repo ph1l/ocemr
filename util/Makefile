@@ -12,4 +12,3 @@ all:
 install:
 	install -m 755 -d $(DESTDIR)$(SHARE)/util
 	install -m 755 $(UTILS) $(DESTDIR)$(SHARE)/util
-	install -T -m 640 util_conf.py.DIST $(DESTDIR)$(CONF)/util_conf.py

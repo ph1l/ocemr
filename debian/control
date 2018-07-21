@@ -2,7 +2,7 @@ Source: ocemr
 Section: misc
 Priority: extra
 Maintainer: Philip J Freeman <philip.freeman@gmail.com>
-Build-Depends: debhelper (>= 7.0.50~), python-all
+Build-Depends: debhelper (>= 7.0.50~), python-all, dh-python, python2.7
 Standards-Version: 3.9.1
 Homepage: http://kremlor.net/projects/ocemr
 #Vcs-Git: git://git.debian.org/collab-maint/ocemr.git
@@ -11,8 +11,8 @@ Homepage: http://kremlor.net/projects/ocemr
 Package: ocemr
 Architecture: all
 Depends: ${python:Depends}, ${misc:Depends}, python-django, python-sqlite,
- python-matplotlib, python-mysqldb, python-enchant
- apache2, libapache2-mod-python,
+ python-matplotlib, python-mysqldb, python-enchant, python-pymysql,
+ apache2, libapache2-mod-wsgi,
  cups, enscript, gnupg, sqlite3, bzip2
 Recommends: mysql-server, mysql-client
 Description: Open Clinic Electonic Medical Records
