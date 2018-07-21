@@ -26,7 +26,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadReque
 from django.db.models import Q
 from datetime import datetime, timedelta
 
-def dump_table(field_names,headers,data_rows):
+def dump_table(request,field_names,headers,data_rows):
 	"""
 	"""
 	out_txt="<TABLE>\n"
@@ -214,7 +214,7 @@ def lab_tally(request):
 	if dump_type == "CSV":
 		return dump_csv( "lab-tally-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
 	elif dump_type == "TABLE":
-		return dump_table(field_names, headers, summary_rows )
+		return dump_table(request, field_names, headers, summary_rows )
 
 @login_required
 def med_tally(request):
@@ -299,7 +299,7 @@ def med_tally(request):
 	if dump_type == "CSV":
 		return dump_csv( "med-tally-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
 	elif dump_type == "TABLE":
-		return dump_table(field_names, headers, summary_rows )
+		return dump_table(request, field_names, headers, summary_rows )
 
 @login_required
 def clinician_tally(request):
@@ -358,7 +358,7 @@ def clinician_tally(request):
 	if dump_type == "CSV":
 		return dump_csv( "clinician-visit-tally-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
 	elif dump_type == "TABLE":
-		return dump_table(field_names, headers, summary_rows )
+		return dump_table(request, field_names, headers, summary_rows )
 
 @login_required
 def diagnosis_tally(request):
@@ -452,7 +452,7 @@ def diagnosis_tally(request):
 	if dump_type == "CSV":
 		return dump_csv( "diagnosis-tally-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
 	elif dump_type == "TABLE":
-		return dump_table(field_names, headers, summary_rows )
+		return dump_table(request, field_names, headers, summary_rows )
 	else:
 		raise "Invalid Dump Type"
 		
@@ -761,7 +761,7 @@ def diagnosis_patient(request):
 	if dump_type == "CSV":
 		return dump_csv( "diagnosis-patient-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
 	elif dump_type == "TABLE":
-		return dump_table(field_names, headers, summary_rows )
+		return dump_table(request, field_names, headers, summary_rows )
 	else:
 		raise "Invalid Dump Type"
 
@@ -1045,6 +1045,6 @@ def hmis105(request):
 	if dump_type == "CSV":
 		return dump_csv( "hmis-105-%s-%s.csv"%(dt_start.strftime("%Y%m%d"),dt_end.strftime("%Y%m%d")), field_names, headers, summary_rows )
 	elif dump_type == "TABLE":
-		return dump_table(field_names, headers, summary_rows )
+		return dump_table(request, field_names, headers, summary_rows )
 	else:
 		raise "Invalid Dump Type"
