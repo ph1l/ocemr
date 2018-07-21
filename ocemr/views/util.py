@@ -82,7 +82,7 @@ def get_backup(request):
 
 	import os, time
 	from django.http import HttpResponse
-	from django.core.servers.basehttp import FileWrapper
+	from wsgiref.util import FileWrapper
 	from django.core.management import call_command, CommandError
 	from ocemr.settings import VAR_PATH, DB_BACKUP_ENCRYPT, DATABASES
 
