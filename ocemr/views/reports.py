@@ -73,7 +73,7 @@ def dump_csv(filename,field_names,headers,data_rows):
                 out.append(row)
 
         import csv, StringIO
-	from django.core.servers.basehttp import FileWrapper
+	from wsgiref.util import FileWrapper
 
         temp=StringIO.StringIO()
         out_writer = csv.writer(temp,dialect='excel')
