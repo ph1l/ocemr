@@ -55,7 +55,8 @@ fi
 
 echo
 echo please enter mysql credentials for ${MYSQL_ADMIN_USER}:
-mysqladmin -u${MYSQL_ADMIN_USER} -p create ${MYSQL_DBNAME}
+echo 'CREATE DATABASE IF NOT EXISTS ${MYSQL_DBNAME}' \
+	| mysql -u${MYSQL_ADMIN_USER} -p
 
 echo
 echo please enter mysql credentials for ${MYSQL_ADMIN_USER}:

@@ -2,7 +2,7 @@ include makefile.defines
 
 SITE_FILES=ocemr/admin.py ocemr/forms.py ocemr/__init__.py ocemr/models.py ocemr/urls.py ocemr/widgets.py ocemr/wsgi.py manage.py
 SITE_DIRS=formats formats/en formats/en_GB templates templatetags views \
-	management management/commands
+	management management/commands migrations
 
 all: $(SITE_FILES)
 
