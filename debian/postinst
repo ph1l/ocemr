@@ -25,6 +25,27 @@ reload_apache()
         echo "Your apache2 configuration is broken, so we're not restarting it for you."
     fi
 }
+check_enable_apache_conf()
+{
+    if [ -z ${1} ]; then
+	echo "Error: must pass a module name to check_enable_apache_conf()"
+	return 2
+    fi
+    CONF=${1}
+    if [ -e /etc/apache2/conf-enabled/${CONF}.conf ]; then
+	#already enabled, silently return true
+	return 0
+    elif [ -e /etc/apache2/conf-available/${CONF}.conf ]; then
+	# present but not enabled, enable it
+	a2enconf ${CONF}
+	return 0
+    else
+	# not present, Error out loud
+	echo "Error: check_enable_apache_conf() tried to enable module that does not exist."
+	echo "        ${CONF}"
+	return 3
+    fi
+}
 check_enable_apache_mod()
 {
     if [ -z ${1} ]; then
@@ -32,17 +53,38 @@ check_enable_apache_mod()
 	return 2
     fi
     MOD=${1}
-    if [ -e /etc/apache2/mods-enabled/${MOD}.load ]; then
+    if [ -e /etc/apache2/mods-enabled/${MOD}.conf ]; then
 	#already enabled, silently return true
 	return 0
-    elif [ -e /etc/apache2/mods-available/${MOD}.load ]; then
+    elif [ -e /etc/apache2/mods-available/${MOD}.conf ]; then
 	# present but not enabled, enable it
-	a2enmod python
+	a2enmod ${MOD}
 	return 0
     else
 	# not present, Error out loud
 	echo "Error: check_enable_apache_mod() tried to enable module that does not exist."
 	echo "        ${MOD}"
+	return 3
+    fi
+}
+check_enable_apache_site()
+{
+    if [ -z ${1} ]; then
+	echo "Error: must pass a module name to check_enable_apache_site()"
+	return 2
+    fi
+    SITE=${1}
+    if [ -e /etc/apache2/sites-enabled/${SITE}.conf ]; then
+	#already enabled, silently return true
+	return 0
+    elif [ -e /etc/apache2/sites-available/${SITE}.conf ]; then
+	# present but not enabled, enable it
+	a2ensite ${SITE}
+	return 0
+    else
+	# not present, Error out loud
+	echo "Error: check_enable_apache_site() tried to enable module that does not exist."
+	echo "        ${SITE}"
 	return 3
     fi
 }
@@ -58,15 +100,15 @@ case "$1" in
 	chown -R www-data:www-data /var/lib/ocemr/*
 
         ( cd  /usr/share/ocemr/apps/ocemr;
-		echo "python ./manage.py syncdb --noinput" >> /var/log/ocemr/update.log
-                sudo -u www-data python ./manage.py syncdb --noinput 2>&1 \
+		echo "python ./manage.py migrate --noinput" >> /var/log/ocemr/update.log
+                sudo -u www-data PYTHONPATH=/usr/share/ocemr/apps/ python ./manage.py migrate --noinput 2>&1 \
 			| tee -a /var/log/ocemr/update.log || true
         )
 	check_enable_apache_mod "alias"
-	check_enable_apache_mod "python"
+	check_enable_apache_mod "wsgi"
+	check_enable_apache_conf "ocemr"
+	check_enable_apache_site "ocemr"
 	reload_apache
-
-		
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

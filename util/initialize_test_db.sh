@@ -7,9 +7,9 @@ UTIL=./util
 mkdir -p ${VAR}/{db,backups,gnupg}
 chmod 700 ${VAR}/gnupg
 
-if [ ! -e ${VAR}/gnupg/secring.gpg ]; then
-	cat source_data/gpg_server_key.options  | gpg --home ${VAR}/gnupg --gen-key --batch
-fi
+#if [ ! -e ${VAR}/gnupg/secring.gpg ]; then
+#	cat contrib/gpg_server_key.options  | gpg --home ${VAR}/gnupg --gen-key --batch
+#fi
 
 if [ -e ${VAR}/db/ocemr.db ]; then
 	echo SQLite database present, aborting initialization...
@@ -17,7 +17,7 @@ if [ -e ${VAR}/db/ocemr.db ]; then
 fi
 
 
-python ${APP}/manage.py syncdb
+python ${APP}/manage.py migrate
 
 #----------
 

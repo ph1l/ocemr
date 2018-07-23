@@ -21,10 +21,10 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 
-from django.db.models import get_model
+from django.apps import apps
 from django.views.decorators.cache import cache_page
 from django.template import RequestContext
 
@@ -35,10 +35,10 @@ import enchant
 DICT={}
 
 def close_window(request):
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 def blank(request):
-	return render_to_response('blank.html', {})
+	return render(request, 'blank.html', {})
 
 @login_required
 def index(request):
@@ -52,9 +52,7 @@ def index(request):
 def user_prefs(request):
 	"""
 	"""
-	return render_to_response(
-		'user_prefs.html', locals(),
-		context_instance=RequestContext(request))
+	return render(request, 'user_prefs.html', locals())
 
 @login_required
 def change_password(request):
@@ -69,11 +67,11 @@ def change_password(request):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = ChangePasswordForm(request.user)
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Change Password',
 		'form_action': '/user_prefs/change_password/',
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def get_backup(request):
@@ -84,7 +82,7 @@ def get_backup(request):
 
 	import os, time
 	from django.http import HttpResponse
-	from django.core.servers.basehttp import FileWrapper
+	from wsgiref.util import FileWrapper
 	from django.core.management import call_command, CommandError
 	from ocemr.settings import VAR_PATH, DB_BACKUP_ENCRYPT, DATABASES
 
@@ -97,7 +95,7 @@ def get_backup(request):
 	try:
 		call_command('backupdb', outfile)
 	except CommandError:
-		return render_to_response('popup_lines.html', {'lines': CommandError, 'link_text': """<a href="#" onclick="window.print();return false;">Print</a>"""})
+		return render(request, 'popup_lines.html', {'lines': CommandError, 'link_text': """<a href="#" onclick="window.print();return false;">Print</a>"""})
 	if DB_BACKUP_ENCRYPT:
 		outfile += ".gpg"
 	else:
@@ -131,25 +129,25 @@ def restore_backup(request):
 				call_command('restoredb', "/tmp/%s"%(f))
 					
 			except Exception, err:
-				return render_to_response('popup_lines.html', {'lines': "ERROR: %s"%err})
+				return render(request, 'popup_lines.html', {'lines': "ERROR: %s"%err})
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = UploadBackupForm()
 
-	return render_to_response( 'popup_form.html',
+	return render(request, 'popup_form.html',
 			{
 			'title': 'Restore from a backup',
 			'form_action': '/restore_backup/',
 			'form': form
-			},
-		context_instance=RequestContext(request) )
+			})
 
 @login_required
+@cache_page(60 * 60)
 def autospel_name(request, inapp, inmodel):
 	"""
 	"""
 	if not request.GET.get('q'):
-		return HttpResponse(mimetype='text/plain')
+		return HttpResponse(content_type='text/plain')
 
 	q = request.GET.get('q')
 	limit = request.GET.get('limit', 15)
@@ -157,7 +155,7 @@ def autospel_name(request, inapp, inmodel):
 		limit = int(limit)
 	except ValueError:
 		return HttpResponseBadRequest()
-	Foo = get_model( inapp, inmodel )
+	Foo = apps.get_model( inapp, inmodel )
 	# Initialize Dictionary
 	dict_key = '%s:%s:name'%(inapp, inmodel)
 	CACHE_TIMEOUT=15
@@ -180,11 +178,11 @@ def autospel_name(request, inapp, inmodel):
 		DICT[dict_key]['last_refresh'] = time.time()
 
 	foos = DICT[dict_key]['dict'].suggest(q)
-	return HttpResponse("%s|\n"%("|\n".join(foos)), mimetype='text/plain')
+	return HttpResponse("%s|\n"%("|\n".join(foos)), content_type='text/plain')
 
-autospel_name = cache_page(autospel_name, 60 * 60)
 
 @login_required
+@cache_page(60 * 60)
 def autocomplete_name(request, inapp, inmodel):
 	"""
 	"""
@@ -194,7 +192,7 @@ def autocomplete_name(request, inapp, inmodel):
 				yield '%s|%s\n' % (r.name, r.id)
 	
 	if not request.GET.get('q'):
-		return HttpResponse(mimetype='text/plain')
+		return HttpResponse(content_type='text/plain')
 	
 	q = request.GET.get('q')
 	limit = request.GET.get('limit', 15)
@@ -202,13 +200,13 @@ def autocomplete_name(request, inapp, inmodel):
 		limit = int(limit)
 	except ValueError:
 		return HttpResponseBadRequest() 
-	Foo = get_model( inapp, inmodel )
+	Foo = apps.get_model( inapp, inmodel )
 	foos = Foo.objects.filter(name__istartswith=q,active=True)[:limit]
-	return HttpResponse(iter_results(foos), mimetype='text/plain')
+	return HttpResponse(iter_results(foos), content_type='text/plain')
 
-autocomplete_name = cache_page(autocomplete_name, 60 * 60)
 
 @login_required
+@cache_page(60 * 60)
 def autosearch_title(request, inapp, inmodel):
 	"""
 	"""
@@ -218,7 +216,7 @@ def autosearch_title(request, inapp, inmodel):
 				yield '%s|%s\n' % (r.title, r.id)
 	
 	if not request.GET.get('q'):
-		return HttpResponse(mimetype='text/plain')
+		return HttpResponse(content_type='text/plain')
 	
 	q = request.GET.get('q')
 	limit = request.GET.get('limit', 15)
@@ -226,11 +224,10 @@ def autosearch_title(request, inapp, inmodel):
 		limit = int(limit)
 	except ValueError:
 		return HttpResponseBadRequest() 
-	Foo = get_model( inapp, inmodel )
+	Foo = apps.get_model( inapp, inmodel )
 	foos = Foo.objects.filter(title__icontains=q,active=True) #[:limit]
-	return HttpResponse(iter_results(foos), mimetype='text/plain')
+	return HttpResponse(iter_results(foos), content_type='text/plain')
 
-autosearch_title = cache_page(autosearch_title, 60 * 60)
 
 @login_required
 def village_merge_wizard(request):
@@ -253,11 +250,11 @@ def village_merge_wizard(request):
 	else:
 		form = MergeVillageForm() # An unbound form
 	if not valid_form:
-		return render_to_response('popup_form.html', {
+		return render(request, 'popup_form.html', {
 			'title': 'Merge Patient Records',
 			'form_action': '/village_merge_wizard/',
 			'form': form,
-		},context_instance=RequestContext(request))
+		})
 	out_txt="Merge %s: %s\n  into %s: %s\n\n"%(villageIncorrect.id, villageIncorrect, villageCorrect.id, villageCorrect)
 
 	patients=	Patient.objects.filter(village=villageIncorrect)
@@ -267,7 +264,7 @@ def village_merge_wizard(request):
 	out_txt += "\n\nThere is NO UNDO function to reverse this change.\n"
 	out_txt += "Please be sure this is what you want before continuing...\n"
 	out_link = "<A HREF=/village_merge_wizard/%d/%d/>Do the merge!</A> or "%(villageCorrect.id,villageIncorrect.id)
-	return render_to_response('popup_info.html', {
+	return render(request, 'popup_info.html', {
 		'title': 'Schedule Patient Visit',
 		'info': out_txt,
 		'link_text': out_link,

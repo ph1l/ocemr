@@ -5,12 +5,11 @@ import sys
 import util_conf
 sys.path = [ util_conf.APP_PATH ] + sys.path
 
-from django.core.management import setup_environ
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocemr.settings")
 
-import settings
-
-setup_environ(settings)
-
+import django
+django.setup()
 
 from django.contrib.auth.models import User
 user = User.objects.create_user('viewer', 'asdf@asdf.com', util_conf.VIEWER_PASSWORD)

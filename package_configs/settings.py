@@ -1,35 +1,36 @@
 #
 # OCEMR - settings.py
 #
-# 	This is the main django settings file and must be valid python.
+#     This is the main django settings file and must be valid python.
 #
 
 # DATABASES
 DATABASES = { }
 
-# sqlite3 example
-#DATABASES = {
-#	'default': {
-#		'ENGINE': 'django.db.backends.sqlite3',
-#		'NAME': '/home/phil/var/lib/ocemr.db',
-#		'USER': '',
-#		'PASSWORD': '',
-#		'HOST': '',
-#		'PORT': '',
-#		}
-#	}
+# mysql
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ocemr',
+        'USER': 'ocemr',
+        'PASSWORD': 'password',
+        'HOST': '',
+        'PORT': '',
+        }
+    }
 
-# mysql example
-#DATABASES = {
-#	'default': {
-#		'ENGINE': 'django.db.backends.mysql',
-#		'NAME': 'ocemr',
-#		'USER': 'ocemr',
-#		'PASSWORD': 'password',
-#		'HOST': '',
-#		'PORT': '',
-#		}
-#	}
+# sqlite3
+# Remove / comment out to use mysql
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': '/var/lib/ocemr/db/ocemr.db',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+        }
+    }
 
 # DB_BACKUP_*
 #
@@ -48,15 +49,14 @@ DB_BACKUP_ENCRYPT_TO=[ "ocemr@localhost" ]
 
 #
 # DEBUG -
-#	Set DEBUG = True in development
+#    Set DEBUG = True in development
 #
 
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 
 # ADMINS-
-#         Set name and email addresses of administrators. Site error reports
-#	get emailed here.
+#     Set name and email addresses of administrators. Site error reports
+#    get emailed here.
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
@@ -64,7 +64,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 # SERVER_EMAIL -
-#	  Address from which the server sends email.
+#      Address from which the server sends email.
 SERVER_EMAIL = 'ocemr@example.com'
 
 # *_PATH -
@@ -119,12 +119,25 @@ USE_I18N = True
 MEDIA_ROOT = ''
 MEDIA_URL = ''
 ADMIN_MEDIA_PREFIX = '/media/admin/'
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.request",
-    "django.contrib.auth.context_processors.auth",
-)
+STATIC_URL = '/media/ocemr/'
+STATIC_ROOT = APP_PATH+'/static_media/'
+TEMPLATES = [
+    {
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [],
+    'APP_DIRS': True,
+    'OPTIONS': {
+        'context_processors': [
+        'django.template.context_processors.debug',
+        'django.template.context_processors.i18n',
+        'django.template.context_processors.request',
+        'django.contrib.auth.context_processors.auth',
+        'django.contrib.messages.context_processors.messages',
+        ],
+    },
+    },
+]
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -133,7 +146,6 @@ MIDDLEWARE_CLASSES = (
 )
 ROOT_URLCONF = 'ocemr.urls'
 FORMAT_MODULE_PATH='ocemr.formats'
-TEMPLATE_DIRS = ()
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -143,6 +155,8 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'ocemr',
 )
+
+ALLOWED_HOSTS = ( '*' )
 
 import version
 OCEMR_VERSION=version.OCEMR_VERSION

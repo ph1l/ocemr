@@ -22,10 +22,10 @@
 
 from django import forms
 from django.utils.safestring import mark_safe
-from django.forms.widgets import flatatt
+from django.forms.utils import flatatt
 from django.utils.encoding import smart_unicode
 from django.utils.html import escape
-from django.utils.simplejson import JSONEncoder
+from simplejson import JSONEncoder
 
 class JQueryAutoComplete(forms.TextInput):
 	class Media:
@@ -66,12 +66,15 @@ class JQueryAutoComplete(forms.TextInput):
 		return u'$(\'#%s\').autocomplete(%s%s);' % (field_id, source, options)
 
 	def render(self, name, value=None, attrs=None):
-		final_attrs = self.build_attrs(attrs, name=name)
+		attrs = dict(attrs)
+		attrs.update(name=name)
 		if value:
-			final_attrs['value'] = escape(smart_unicode(value))
+			attrs.update(value=escape(smart_unicode(value)))
 
 		if not self.attrs.has_key('id'):
-			final_attrs['id'] = 'id_%s' % name	
+			attrs.update(id='id_%s'%name)
+
+		final_attrs = self.build_attrs(self.attrs, attrs)
 		
 		return u'''<input type="text" %(attrs)s/>
 		<script type="text/javascript"><!--//
@@ -120,12 +123,15 @@ class JQueryAutoContains(forms.TextInput):
 		return u'$(\'#%s\').autocomplete(%s%s);' % (field_id, source, options)
 
 	def render(self, name, value=None, attrs=None):
-		final_attrs = self.build_attrs(attrs, name=name)
+		attrs = dict(attrs)
+		attrs.update(name=name)
 		if value:
-			final_attrs['value'] = escape(smart_unicode(value))
+			attrs.update(value=escape(smart_unicode(value)))
 
 		if not self.attrs.has_key('id'):
-			final_attrs['id'] = 'id_%s' % name	
+			attrs.update(id='id_%s'%name)
+
+		final_attrs = self.build_attrs(self.attrs,attrs)
 		
 		return u'''<input type="text" %(attrs)s/>
 		<script type="text/javascript"><!--//

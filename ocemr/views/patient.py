@@ -21,12 +21,12 @@
 ##########################################################################
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.template import RequestContext
 from ocemr.forms import *
 
-from django.db.models import get_model, Q
+from django.db.models import Q
 from django.views.decorators.cache import cache_page
 
 @login_required
@@ -45,11 +45,11 @@ def select_date_for_patient_queue(request):
         else:
                 form = SelectDateForm()
 	if not form_valid:
-	        return render_to_response('popup_form.html', {
+	        return render(request, 'popup_form.html', {
 	                'title': 'Enter Date For Patient Queue',
 	                'form_action': '/select_date_for_patient_queue/',
 	                'form': form,
-	        },context_instance=RequestContext(request))
+	        })
 	days_offset=(datetime.date.today()-date_in).days *-1
 	return HttpResponseRedirect('/patient_queue/%d/'%(days_offset))
 
@@ -64,7 +64,7 @@ def patient_queue(request,dayoffset=0):
 
 	# Cleanup missed visits
 	d_missed = d_today-timedelta(7)
-	missed_q = Q(scheduledDate__lte=d_missed.date) & Q(status='SCHE')
+	missed_q = Q(scheduledDate__lte=str(d_missed.date())) & Q(status='SCHE')
 	for mv in Visit.objects.filter(missed_q):
 		mv.status = 'MISS'
 		# finished by noone
@@ -90,9 +90,7 @@ def patient_queue(request,dayoffset=0):
 	num_active = len(visits)
 	num_inactive = len(r_visits)
 
-	return render_to_response(
-		'patient_queue.html', locals(),
-		context_instance=RequestContext(request))
+	return render(request, 'patient_queue.html', locals())
 
 @login_required
 def patient_new(request):
@@ -108,9 +106,9 @@ def patient_new(request):
 	else:
 		form = NewPatientForm(request.user) # An unbound form
 
-	return render_to_response('patient_new.html', {
+	return render(request, 'patient_new.html', {
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def patient_edit_name(request, id):
@@ -127,11 +125,11 @@ def patient_edit_name(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditPatientNameForm(initial={'familyName': p.familyName, 'givenName': p.givenName, 'middleName': p.middleName }) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Patient Name',
 		'form_action': '/patient/edit/name/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def patient_edit_gender(request, id):
@@ -146,11 +144,11 @@ def patient_edit_gender(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditPatientGenderForm(initial={'gender': p.gender}) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(response, 'popup_form.html', {
 		'title': 'Edit Patient Gender',
 		'form_action': '/patient/edit/gender/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def patient_edit_phone(request, id):
@@ -165,11 +163,11 @@ def patient_edit_phone(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditPatientPhoneForm(initial={'phone': p.phone}) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Patient Phone',
 		'form_action': '/patient/edit/phone/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def patient_edit_email(request, id):
@@ -184,11 +182,11 @@ def patient_edit_email(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditPatientEmailForm(initial={'email': p.email}) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Patient E-Mail',
 		'form_action': '/patient/edit/email/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def patient_edit_age(request, id):
@@ -204,11 +202,11 @@ def patient_edit_age(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditPatientAgeForm(initial={'birthYear': p.birthYear, 'birthDate': p.birthDate}) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Patient Age',
 		'form_action': '/patient/edit/age/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def patient_edit_village(request, id):
@@ -223,11 +221,11 @@ def patient_edit_village(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditPatientVillageForm(initial={'village': p.village}) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Patient Village',
 		'form_action': '/patient/edit/village/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def patient_edit_note(request, id):
@@ -242,11 +240,11 @@ def patient_edit_note(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditPatientNoteForm(p) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Patient Note',
 		'form_action': '/patient/edit/note/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 
 @login_required
@@ -262,11 +260,11 @@ def patient_edit_alt_contact_name(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditPatientAltContactNameForm(initial={'alt_contact_name': p.altContactName}) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Patient Alternate Contact Name',
 		'form_action': '/patient/edit/alt_contact_name/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def patient_edit_alt_contact_phone(request, id):
@@ -281,11 +279,11 @@ def patient_edit_alt_contact_phone(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditPatientAltContactPhoneForm(initial={'alt_contact_phone': p.altContactPhone}) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Patient Alternate Contact Phone',
 		'form_action': '/patient/edit/alt_contact_phone/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def patient(request,id):
@@ -297,11 +295,11 @@ def patient(request,id):
 	p = Patient.objects.get(pk=id)
 	upcoming_visits = Visit.objects.filter(patient=p).filter(status='SCHE').order_by('scheduledDate')
 	visits = Visit.objects.filter(patient=p).exclude(status='SCHE').order_by('-seenDateTime')
-	return render_to_response('patient.html', {
+	return render(request, 'patient.html', {
 		'p':p,
 		'visits': visits,
 		'upcoming_visits': upcoming_visits,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def patient_search(request):
@@ -336,15 +334,15 @@ def patient_search(request):
 				patients = patients.filter(q_name)
 			if pid != None:
 				patients = patients.filter(pk=pid)
-			return render_to_response('patient_list.html', {
+			return render(request, 'patient_list.html', {
 				'patients':patients,
-			}, context_instance=RequestContext(request),)
+			})
 	else:
 		form = PatientSearchForm() # An unbound form
 
-	return render_to_response('patient_search.html', {
+	return render(request, 'patient_search.html', {
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def schedule_new_visit(request, id):
@@ -362,11 +360,11 @@ def schedule_new_visit(request, id):
 	else:
 		form = NewScheduledVisitForm(request.user, p) # An unbound form
 
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Scedule Patient Visit',
 		'form_action': '/patient/schedule_new_visit/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def schedule_walkin_visit(request, id):
@@ -384,11 +382,11 @@ def schedule_walkin_visit(request, id):
 	else:
 		form = NewWalkinVisitForm(request.user, p) # An unbound form
 
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Schedule Patient Visit',
 		'form_action': '/patient/schedule_walkin_visit/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def delete_visit(request, id):
@@ -398,7 +396,7 @@ def delete_visit(request, id):
 
 	o = Visit.objects.get(pk=id)
 	if not (o.status == 'SCHE' or o.status == 'WAIT'):
-		return render_to_response('popup_info.html', {
+		return render(request, 'popup_info.html', {
 			'title': 'Schedule Patient Visit',
 			'info': "Cannot Delete Active Visit",
 		})
@@ -414,11 +412,11 @@ def delete_visit(request, id):
                         return HttpResponseRedirect('/close_window/')
         else:
                 form = ConfirmDeleteForm()
-        return render_to_response('popup_form.html', {
+        return render(request, 'popup_form.html', {
                 'title': 'Delete Visit: %s'%(o),
                 'form_action': '/patient/delete_visit/%s/'%(id),
                 'form': form,
-        },context_instance=RequestContext(request))
+        })
 
 @login_required
 def edit_visit(request, id):
@@ -435,11 +433,11 @@ def edit_visit(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditScheduledVisitForm(v, request.user) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Visit',
 		'form_action': '/patient/edit_visit/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def edit_visit_seen(request, id):
@@ -460,11 +458,11 @@ def edit_visit_seen(request, id):
 			'seenTime':formats.date_format(
 				v.seenDateTime, 'TIME_FORMAT'),
 			})
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Visit seen time',
 		'form_action': '/patient/edit_visit_seen/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def edit_visit_reason(request, id):
@@ -479,11 +477,11 @@ def edit_visit_reason(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditVisitReasonForm(v) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Visit Reason',
 		'form_action': '/patient/edit_visit_reason/%s/'%(id),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def patient_merge(request, id):
@@ -500,11 +498,11 @@ def patient_merge(request, id):
 	else:
 		form = MergePatientForm() # An unbound form
 	if not valid_form:
-		return render_to_response('popup_form.html', {
+		return render(request, 'popup_form.html', {
 			'title': 'Merge Patient Records',
 			'form_action': '/patient/merge/%s/'%(id),
 			'form': form,
-		},context_instance=RequestContext(request))
+		})
 	pdup = Patient.objects.get(pk=int(duplicateID))
 	out_txt="Merge %s: %s\n  into %s: %s\n\n"%(pdup.id, pdup, p.id, p)
 
@@ -531,7 +529,7 @@ def patient_merge(request, id):
 	out_txt += "\n\nThere is NO UNDO function to reverse this change.\n"
 	out_txt += "Please be sure this is what you want before continuing...\n"
 	out_link = "<A HREF=/patient/merge/%d/%d/>Do the merge!</A> or "%(p.id,pdup.id)
-	return render_to_response('popup_info.html', {
+	return render(request, 'popup_info.html', {
 		'title': 'Schedule Patient Visit',
 		'info': out_txt,
 		'link_text': out_link,

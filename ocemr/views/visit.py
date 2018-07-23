@@ -21,12 +21,12 @@
 ##########################################################################
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 
 
-from django.db.models import get_model, Q
+from django.db.models import Q
 
 def get_visit_menu(current,patient):
 	
@@ -88,7 +88,7 @@ def visit_claim(request,id):
 					d.save()
 				
 		
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def visit_unclaim(request,id):
@@ -99,7 +99,7 @@ def visit_unclaim(request,id):
 	v = Visit.objects.get(pk=id)
 	v.status = 'WAIT'
 	v.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def visit_finish(request,id):
@@ -116,7 +116,7 @@ def visit_finish(request,id):
 	v.finishedBy = request.user
 	v.finishedDateTime = datetime.now()
 	v.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def visit_unfinish(request,id):
@@ -132,7 +132,7 @@ def visit_unfinish(request,id):
 	else:
 		v.status = 'INPR'
 	v.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def visit_seen(request,id):
@@ -146,7 +146,7 @@ def visit_seen(request,id):
 	from datetime import datetime
 	v.seenDateTime = datetime.now()
 	v.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def visit_unseen(request,id):
@@ -158,7 +158,7 @@ def visit_unseen(request,id):
 	if v.status == 'WAIT':
 		v.status = 'SCHE'
 	v.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def visit_past(request,id):
@@ -172,7 +172,7 @@ def visit_past(request,id):
 	menu = get_visit_menu('past', p)
 
 	
-	return render_to_response('visit_past.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'visit_past.html', locals())
 
 @login_required
 def visit_subj(request,id):
@@ -188,7 +188,7 @@ def visit_subj(request,id):
 	symptomTypes = SymptomType.objects.all()
 	symptoms = VisitSymptom.objects.filter(visit=v)
 
-	return render_to_response('visit_subj.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'visit_subj.html', locals())
 
 @login_required
 def visit_subj_new(request,id, symptomtypeid):
@@ -207,11 +207,11 @@ def visit_subj_new(request,id, symptomtypeid):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = NewVisitSymptomForm(vid, stid) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Add a Symptom: %s'%(st.title),
 		'form_action': '/visit/%d/subj/new/%d/'%(vid,stid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def visit_subj_edit(request,id, visitsymptomid):
@@ -229,11 +229,11 @@ def visit_subj_edit(request,id, visitsymptomid):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditVisitSymptomForm(initial={'notes': vs.notes})
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Symptom Notes: %s'%(vs.type.title),
 		'form_action': '/visit/%s/subj/edit/%s/'%(id,visitsymptomid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def visit_subj_delete(request,id, visitsymptomid):
@@ -252,11 +252,11 @@ def visit_subj_delete(request,id, visitsymptomid):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = ConfirmDeleteForm()
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Delete Symptom: %s'%(o.type.title),
 		'form_action': '/visit/%s/subj/delete/%s/'%(id,visitsymptomid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 	
 
@@ -283,7 +283,7 @@ def visit_obje(request,id):
 	examNoteTypes = ExamNoteType.objects.all()
 	examNotes = ExamNote.objects.filter(visit=v)
 
-	return render_to_response('visit_obje.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'visit_obje.html', locals())
 
 @login_required
 def visit_obje_vitals_new(request,id):
@@ -394,36 +394,12 @@ def visit_obje_vitals_new(request,id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = NewVitalsForm(v, request.user) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Add Vitals',
 		'form_action': '/visit/%d/obje/vitals/new/'%(vid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
-#@login_required
-#def visit_obje_vital_new(request,id, vitaltypeid):
-#	"""
-#	"""
-#	from ocemr.models import VitalType, Visit
-#	from ocemr.forms import NewVitalForm
-#	vid=int(id)
-#	vtid=int(vitaltypeid)
-#	v=Visit.objects.get(pk=vid)
-#	vt=VitalType.objects.get(pk=vtid)
-#
-#	if request.method == 'POST': # If the form has been submitted...
-#		form = NewVitalForm(v, vt, request.user, request.POST) # A form bound to the POST data
-#		if form.is_valid(): # All validation rules pass
-#			o = form.save()
-#			return HttpResponseRedirect('/close_window/')
-#	else:
-#		form = NewVitalForm(v, vt, request.user) # An unbound form
-#	return render_to_response('popup_form.html', {
-#		'title': 'Add a Vital: %s'%(vt),
-#		'form_action': '/visit/%d/obje/vital/new/%d/'%(vid,vtid),
-#		'form': form,
-#	},context_instance=RequestContext(request))
-#
 @login_required
 def visit_obje_vital_delete(request,id, oid):
 	"""
@@ -441,11 +417,11 @@ def visit_obje_vital_delete(request,id, oid):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = ConfirmDeleteForm()
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Delete Vital: %s'%(o),
 		'form_action': '/visit/%s/obje/vital/delete/%s/'%(id,oid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 	
 @login_required
@@ -466,11 +442,11 @@ def visit_obje_examNote_new(request,id, examnotetypeid):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = NewExamNoteForm(v, ent, request.user) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Add an Exam Note: %s'%(ent.title),
 		'form_action': '/visit/%d/obje/examNote/new/%d/'%(vid,entid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def visit_obje_examNote_edit(request,id, examnoteid):
@@ -488,11 +464,11 @@ def visit_obje_examNote_edit(request,id, examnoteid):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditExamNoteForm(initial={'note': en.note})
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Exam Note: %s'%(en.type.title),
 		'form_action': '/visit/%s/obje/examNote/edit/%s/'%(id,examnoteid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 
 @login_required
@@ -509,7 +485,7 @@ def visit_labs(request,id):
 	labTypes = LabType.objects.all()
 	labs = Lab.objects.filter(visit=v)
 	
-	return render_to_response('visit_labs.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'visit_labs.html', locals())
 
 @login_required
 def visit_labs_new(request,id, labtypeid):
@@ -536,7 +512,7 @@ def visit_plan(request,id):
 	p = v.patient
 	menu = get_visit_menu('plan',p)
 
-	return render_to_response('visit_plan.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'visit_plan.html', locals())
 
 @login_required
 def visit_plan_diag_new(request,id):
@@ -557,11 +533,11 @@ def visit_plan_diag_new(request,id):
         else:  
                 form = NewDiagnosisForm(v, request.user) # An unbound form
 
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
                 'title': 'Add a Diagnosis for %s'%(p),
                 'form_action': '/visit/%d/plan/diag/new/'%(v.id),
                 'form': form,
-        },context_instance=RequestContext(request))
+        })
 
 @login_required
 def visit_plan_diag_new_bytype(request, id, dtid):
@@ -594,7 +570,7 @@ def visit_meds(request,id):
 	diagnoses = Diagnosis.objects.filter(visit=v).filter(q_status)
 
 
-	return render_to_response('visit_meds.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'visit_meds.html', locals())
 
 @login_required
 def visit_vacs(request,id):
@@ -616,7 +592,7 @@ def visit_vacs(request,id):
 			vacs.append( (vt, None, vn) )
 
 
-	return render_to_response('visit_vacs.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'visit_vacs.html', locals())
 
 @login_required
 def visit_meds_new(request,id,did):
@@ -636,11 +612,11 @@ def visit_meds_new(request,id,did):
         else:  
                 form = NewMedForm(d, request.user) # An unbound form
 
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
                 'title': 'Add a Med for %s - %s'%(d.patient,d.type.title),
                 'form_action': '/visit/%d/meds/new/%d/'%(d.visit.id,did),
                 'form': form,
-        },context_instance=RequestContext(request))
+        })
 
 @login_required
 def visit_refe(request,id):
@@ -655,7 +631,7 @@ def visit_refe(request,id):
 
 	referrals = Referral.objects.filter(patient=p).order_by('-addedDateTime')
 
-	return render_to_response('visit_refe.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'visit_refe.html', locals())
 
 @login_required
 def visit_refe_new(request,id):
@@ -673,11 +649,11 @@ def visit_refe_new(request,id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = NewReferralForm(v, request.user) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Add a Referral',
 		'form_action': '/visit/%d/refe/new/'%(vid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def visit_refe_edit(request,id, refid):
@@ -696,11 +672,11 @@ def visit_refe_edit(request,id, refid):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditReferralForm(initial={'to':r.to, 'reason': r.reason})
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Referral: %s'%(r),
 		'form_action': '/visit/%s/refe/edit/%s/'%(id,refid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 
 @login_required
@@ -716,7 +692,7 @@ def visit_immu(request,id):
 
 	immunizationLogs = ImmunizationLog.objects.filter(patient=p)
 
-	return render_to_response('visit_immu.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'visit_immu.html', locals())
 
 @login_required
 def visit_immu_new(request,id):
@@ -734,11 +710,11 @@ def visit_immu_new(request,id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = NewImmunizationLogForm(v, request.user) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Add an Immunization Log',
 		'form_action': '/visit/%d/immu/new/'%(vid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 
 @login_required
@@ -751,7 +727,7 @@ def visit_note(request,id):
 	v = Visit.objects.get(pk=id)
 	p = v.patient
 	menu = get_visit_menu('note',p)
-	return render_to_response('visit_note.html', locals(),context_instance=RequestContext(request))
+	return render(request, 'visit_note.html', locals())
 
 @login_required
 def visit_allergy_new(request,id):
@@ -769,11 +745,11 @@ def visit_allergy_new(request,id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = NewAllergyForm(v, request.user) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Add an Allergy',
 		'form_action': '/visit/%d/allergy/new/'%(vid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def visit_allergy_delete(request,id, oid):
@@ -792,11 +768,11 @@ def visit_allergy_delete(request,id, oid):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = ConfirmDeleteForm()
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Delete Allergy: %s'%(o.to),
 		'form_action': '/visit/%s/allergy/delete/%s/'%(id,oid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def visit_collect(request,id):
@@ -814,11 +790,11 @@ def visit_collect(request,id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = NewCashLogForm(v, request.user) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Collect',
 		'form_action': '/visit/%d/collect/'%(vid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 	
 
 @login_required
@@ -833,10 +809,10 @@ def visit_cost_estimate_detail(request,id):
 			row[0], row[1], row[2], row[3] )
 	table+="<TR><TD COLSPAN=3>TOTAL<TD>%s</TR>"%(
 		v.get_estimated_visit_cost() )
-	return render_to_response('popup_table.html', {
+	return render(request, 'popup_table.html', {
 		'title': 'Estimated Visit Cost Detail',
 		'table': table,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def visit_bill_amount(request,id):
@@ -855,11 +831,11 @@ def visit_bill_amount(request,id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditBillAmountForm(v.cost) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Bill Amount',
 		'form_action': '/visit/%d/bill_amount/'%(vid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 	
 
 @login_required
@@ -875,7 +851,7 @@ def visit_resolve(request,id):
 		v.resolvedBy = request.user
 		v.resolvedDateTime = datetime.now()
 		v.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def visit_unresolve(request,id):
@@ -887,7 +863,7 @@ def visit_unresolve(request,id):
 	if v.status == 'RESO':
 		v.status = 'CHOT'
 		v.save()
-	return render_to_response('close_window.html', {})
+	return render(request, 'close_window.html', {})
 
 @login_required
 def visit_record(request, id, type):
@@ -944,7 +920,7 @@ def visit_record(request, id, type):
 		(child_stdin, child_stdout) = (p.stdin, p.stdout)
 		child_stdin.write(text_out.encode( "utf-8" ))
 		out,err=p.communicate()
-		return render_to_response('close_window.html', {})
+		return render(request, 'close_window.html', {})
 	else:
 		lines = text_out.replace('\t','&nbsp;&nbsp;&nbsp;').replace('\n','<BR>')
-		return render_to_response('popup_lines.html', {'lines': lines, 'link_text': """<a href="#" onclick="window.print();return false;">Print</a>"""})
+		return render(request, 'popup_lines.html', {'lines': lines, 'link_text': """<a href="#" onclick="window.print();return false;">Print</a>"""})

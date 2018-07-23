@@ -26,11 +26,13 @@ import sys, csv, re
 import util_conf
 sys.path = [ util_conf.APP_PATH ] + sys.path
 
-from django.core.management import setup_environ
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocemr.settings")
 
-import settings
+import django
+django.setup()
 
-setup_environ(settings)
+from django.conf import settings
 
 #from ocemr.models import ###
 from ocemr.models import DiagnosisType

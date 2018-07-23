@@ -20,12 +20,11 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from ocemr.forms import *
 from ocemr.models import Patient, VacType, VacNote, Vac
-from django.db.models import get_model, Q
 
 @login_required
 def vac_del(request,pid, vtid):
@@ -39,7 +38,7 @@ def vac_del(request,pid, vtid):
 		v.delete()
 	#vn = VacNote( vac=v, addedBy=request.user, note="Canceled" )
 	#vn.save()
-        return render_to_response('close_window.html', {})
+        return render(request, 'close_window.html', {})
 
 @login_required
 def vac_notate(request, pid, vtid):
@@ -56,11 +55,11 @@ def vac_notate(request, pid, vtid):
                         return HttpResponseRedirect('/close_window/')
         else:
                 form = NewVacNoteForm(p, vt, request.user) # An unbound form
-        return render_to_response('popup_form.html', {
+        return render(request, 'popup_form.html', {
                 'title': 'Add a Vac Note: %s'%(vt.title),
                 'form_action': '/vac/notate/%d/%d/'%(p.id,vt.id),
                 'form': form,
-        },context_instance=RequestContext(request))
+        })
 
 @login_required
 def vac_new(request,pid,vtid):
@@ -82,11 +81,11 @@ def vac_new(request,pid,vtid):
         else:
                 form = NewVacForm(p, vact, request.user) # An unbound form
 
-        return render_to_response('popup_form.html', {
+        return render(request, 'popup_form.html', {
                 'title': 'Add a Vac ',
                 'form_action': '/vac/new/%d/%d/'%(pid,vtid),
                 'form': form,
-        },context_instance=RequestContext(request))
+        })
 
 @login_required
 def vac_edit_received(request,vid):
@@ -101,11 +100,11 @@ def vac_edit_received(request,vid):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditVacReceivedForm(v, request.user) # An unbound form
-	return render_to_response('popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Vaccination Received Date',
 		'form_action': '/vac/edit_received/%s/'%(vid),
 		'form': form,
-	},context_instance=RequestContext(request))
+	})
 
 @login_required
 def edit_visit_seen(request, id):

@@ -20,10 +20,10 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
-from django.db.models import get_model, Q
+#from django.db.models import get_model, Q
 from datetime import datetime, timedelta
 
 def test_matplotlib(request):
@@ -280,4 +280,4 @@ def vitals_spo2_o2(request, id):
 	return response
 
 def vitals_graphs_index(request, id):
-	return render_to_response('popup_graphs_index.html', {'id': id, })
+	return render(request, 'popup_graphs_index.html', {'id': id, })
