@@ -4,4 +4,3 @@ WWW=$(SHARE)/www
 APPS=$(SHARE)/apps
 SITE=$(APPS)/ocemr
 CONF=/etc/ocemr
-
