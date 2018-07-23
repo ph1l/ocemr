@@ -37,7 +37,7 @@ check_enable_apache_conf()
 	return 0
     elif [ -e /etc/apache2/conf-available/${CONF}.conf ]; then
 	# present but not enabled, enable it
-	a2enmod ${CONF}
+	a2enconf ${CONF}
 	return 0
     else
 	# not present, Error out loud
