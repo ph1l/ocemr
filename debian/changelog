@@ -1,3 +1,10 @@
+ocemr (0.6.0) experimental; urgency=low
+
+  * port code to django-1.11
+  * ...
+
+ -- Philip J Freeman <elektron@halo.nu>  Sat, 21 Jul 2018 16:27:42 -0700
+
 ocemr (0.5.6) stable; urgency=low
 
   * finish hmis105 report
