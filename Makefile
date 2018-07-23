@@ -12,7 +12,7 @@ install:
 	install -m 644 $(SITE_FILES) $(DESTDIR)$(SITE)
 	# Don't build the version in build, use the one checked in
 	#./util/make_version.sh > version.py
-	install -m 644 version.py $(DESTDIR)$(SITE)
+	install -m 644 ocemr/version.py $(DESTDIR)$(SITE)
 	for subdir in $(SITE_DIRS); do \
 		install -d $(DESTDIR)$(SITE)/$$subdir; \
 		install -m 644 `find $$subdir -mindepth 1 -maxdepth 1 -type f` $(DESTDIR)$(SITE)/$$subdir ; \
