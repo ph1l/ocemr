@@ -43,7 +43,7 @@ class JQueryAutoComplete(forms.TextInput):
 		For available options see the autocomplete sample page::
 		http://jquery.bassistance.de/autocomplete/"""
 
-		self.options = { 'minChars': '2' }
+		self.options = { 'minChars': '2', 'max': '64' }
 		self.attrs = {'autocomplete': 'off'}
 		self.source = source
 		if len(options) > 0:
@@ -97,7 +97,7 @@ class JQueryAutoContains(forms.TextInput):
 		For available options see the autocomplete sample page::
 		http://jquery.bassistance.de/autocomplete/"""
 
-		self.options = {'matchContains': 'true', 'minChars': '2'}
+		self.options = {'matchContains': 'true', 'minChars': '2', 'max': '64'}
 		self.attrs = {'autocomplete': 'off'}
 		self.source = source
 		if len(options) > 0:
