@@ -1,3 +1,5 @@
+v0.5.6.1 -
+  * fix autocomplete bug (preggers bug) [d9fc952]
 v0.5.2 -
   * fix unhandled form error DiagnosisType Doesn't exist
   * added quantity (dispenseAmount) to medqueue medview

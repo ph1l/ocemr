@@ -1,3 +1,9 @@
+ocemr (0.5.6.1) UNRELEASED; urgency=medium
+
+  * fix autocomplete bug (preggers bug) [d9fc952]
+
+ -- Philip J Freeman <elektron@halo.nu>  Mon, 23 Jul 2018 21:57:58 -0700
+
 ocemr (0.5.6) stable; urgency=low
 
   * finish hmis105 report
