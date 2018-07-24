@@ -9,6 +9,9 @@ from django.core.management.base import BaseCommand, CommandError
 class Command(BaseCommand):
     help = "Restore database. Only Mysql and sqlite3 engines are implemented"
 
+    def add_arguments(self, parser):
+        parser.add_argument('filename')
+
     def handle(self, *args, **options):
         from django.db import connection
         from django.conf import settings
@@ -24,39 +27,32 @@ class Command(BaseCommand):
         self.encrypt = settings.DB_BACKUP_ENCRYPT
         self.encrypt_to = settings.DB_BACKUP_ENCRYPT_TO
 
-        if len(args) < 1:
-		raise Exception("restoredb called with insufficient args")
-	elif len(args) > 2:
-		raise Exception("restoredb called with too many args")
-	infile = args[0]
+	infile = options['filename']
+
         if not os.path.exists(infile):
 		raise Exception("restoredb can't find file(%s)"%infile)
 
 	if infile[-4:] == ".bz2":
 		outfile = infile[:-4]
-		print "Decompressing \"%s\" to \"%s\"..."%(infile, outfile)
+		self.stdout.write("Decompressing \"%s\" to \"%s\"..."%(infile, outfile))
 		self.do_decompress_backup(infile, outfile)
-		print "\tdone."
 		infile = outfile
 	elif infile[-4:] == ".gpg":
 		outfile = infile[:-4]
-		print "Decrypting \"%s\" to \"%s\" ..."%(infile, outfile)
+		self.stdout.write("Decrypting \"%s\" to \"%s\" ..."%(infile, outfile))
 		self.do_decrypt_backup(infile, outfile)
 		infile = outfile
-		print "\tdone."
 
 	if infile[-6:] == ".mysql":
 		if self.engine != 'mysql':
 			raise Exception("Backup from MySQL, but current engine is not!")
-		print 'Doing MySQL restore to database %s from %s...' % (self.db, infile)
+		self.stdout.write('Doing MySQL restore to database %s from %s...' % (self.db, infile))
 		self.do_mysql_restore(infile)
-		print "\tdone."
 	elif infile[-8:] == ".sqlite3":
 		if self.engine != 'sqlite3':
 			raise Exception("Backup from SqLite3, but current engine is not!")
-		print 'Doing sqlite3 restore to database %s from %s' % (self.db, infile)
+		self.stdout.write('Doing sqlite3 restore to database %s from %s' % (self.db, infile))
 		self.do_sqlite3_restore
-		print "\tdone."
         else:
 		raise Exception("restoredb doesn't understand file(%s)"%infile)
 
