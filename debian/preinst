@@ -20,10 +20,8 @@ case "$1" in
     upgrade)
 	echo "========= PREINST: `date`" >> /var/log/ocemr/update.log
 	echo "python ./manage.py backupdb" >> /var/log/ocemr/update.log
-	( cd  /usr/share/ocemr/apps/ocemr;
-		sudo -u www-data PYTHONPATH=/usr/share/ocemr/apps/ python ./manage.py backupdb 2>&1 \
-			| tee -a /var/log/ocemr/update.log || true
-	)
+        PYTHONPATH=/usr/share/ocemr/apps/ python /usr/share/ocemr/apps/ocemr/manage.py backupdb 2>&1 \
+		| tee -a /var/log/ocemr/update.log || true
     ;;
 
     abort-upgrade)

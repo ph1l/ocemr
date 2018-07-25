@@ -1,4 +1,4 @@
-include ../makefile.defines
+include ../../makefile.defines
 all:
 	-echo nothing to do
 install:

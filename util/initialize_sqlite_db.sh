@@ -22,11 +22,14 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 VAR=/var/lib/ocemr
-APP=/usr/share/ocemr/apps/ocemr
+APP_DIR=/usr/share/ocemr/apps
+APP=$APP_DIR/ocemr
 UTIL=/usr/share/ocemr/util
 
+export PYTHONPATH=$APP_DIR
+
 if [ -e ${VAR}/db/ocemr.db ]; then
-	echo SQLite database present, aborting execution...
+	echo SQLite database present, aborting initialization...
 	exit 10
 fi
 

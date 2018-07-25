@@ -1,3 +1,11 @@
+v0.6.0 -
+  * port to newer platform. target debian/ buster w/ django 1.11
+  * fix autocomplete bug (preggers bug) [d9fc952]
+v0.5.6 -
+  * finish hmis105 report
+v0.5.5 -
+v0.5.3 -
+  * added restore_backup function to web interface
 v0.5.2 -
   * fix unhandled form error DiagnosisType Doesn't exist
   * added quantity (dispenseAmount) to medqueue medview

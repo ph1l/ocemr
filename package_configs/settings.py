@@ -116,11 +116,7 @@ USE_L10N = True
 # LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
-MEDIA_ROOT = ''
-MEDIA_URL = ''
-ADMIN_MEDIA_PREFIX = '/media/admin/'
 STATIC_URL = '/media/ocemr/'
-STATIC_ROOT = APP_PATH+'/static_media/'
 TEMPLATES = [
     {
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -143,6 +139,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 ROOT_URLCONF = 'ocemr.urls'
 FORMAT_MODULE_PATH='ocemr.formats'
@@ -153,6 +150,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'django.contrib.staticfiles',
     'ocemr',
 )
 

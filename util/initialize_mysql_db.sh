@@ -22,8 +22,11 @@
 #       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
 ##########################################################################
 MYSQL_DATA=/var/lib/mysql
-APP=/usr/share/ocemr/apps/ocemr
+APP_DIR=/usr/share/ocemr/apps
+APP=$APP_DIR/ocemr
 UTIL=/usr/share/ocemr/util
+
+export PYTHONPATH=$APP_DIR
 
 MYSQL_ADMIN_USER=root
 MYSQL_USER=ocemr

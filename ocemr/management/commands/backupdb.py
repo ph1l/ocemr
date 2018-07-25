@@ -7,7 +7,10 @@ from subprocess import Popen
 from django.core.management.base import BaseCommand, CommandError
 
 class Command(BaseCommand):
-    help = "Backup database. Only Mysql and Postgresql engines are implemented"
+    help = "Backup database. Only Mysql and sqlite engines are implemented"
+
+    def add_arguments(self, parser):
+        parser.add_argument('filename', nargs='?')
 
     def handle(self, *args, **options):
         from django.db import connection
@@ -24,32 +27,36 @@ class Command(BaseCommand):
         self.encrypt = settings.DB_BACKUP_ENCRYPT
         self.encrypt_to = settings.DB_BACKUP_ENCRYPT_TO
 
-        if len(args) == 0:
+	if 'filename' in options and options['filename'] != None:
+		outfile = options['filename']
+	else:
                 backup_dir = '%s/backups'%(self.var_path)
                 if not os.path.exists(backup_dir):
                         os.makedirs(backup_dir)
                 outfile = os.path.join(backup_dir, 'backup_%s.%s' % (time.strftime('%y%m%d-%H%M%S'),self.engine))
-        elif len(args) == 1:
-                outfile = args[0]
-        else:
-                raise Exception("backupdb: Too many args.")
+
         if self.engine == 'mysql':
-            print 'Doing Mysql backup to database %s into %s' % (self.db, outfile)
+            self.stdout.write('Doing Mysql backup to database %s into %s' % (self.db, outfile))
             self.do_mysql_backup(outfile)
         #elif self.engine in ('postgresql_psycopg2', 'postgresql'):
-        #    print 'Doing Postgresql backup to database %s into %s' % (self.db, outfile)
+        #    self.stdout.write('Doing Postgresql backup to database %s into %s' % (self.db, outfile))
         #    self.do_postgresql_backup(outfile)
         elif self.engine =='sqlite3':
-	    print 'Doing sqlite3 backup to database %s into %s' % (self.db, outfile)
+	    self.stdout.write('Doing sqlite3 backup to database %s into %s' % (self.db, outfile))
 	    self.do_sqlite3_backup(outfile)
         else:
-            print 'Backup in %s engine not implemented' % self.engine
+            self.stdout.write('Backup in %s engine not implemented' % self.engine)
+            raise Exception("backupdb: engine (%s) not implemented"%(self.engine))
+
         if self.encrypt:
-            print 'Encrypting %s to %s %s.gpg'%(outfile, self.encrypt_to, outfile)
+            self.stdout.write('Encrypting %s to %s %s.gpg'%(outfile, self.encrypt_to, outfile))
             self.do_encrypt_backup(outfile)
+            outfile = '%s.gpg'%(outfile)
 	else:
-	    print 'Compressing %s to %s.bz2'%(outfile, outfile)
+	    self.stdout.write('Compressing %s to %s.bz2'%(outfile, outfile))
             self.do_compress_backup(outfile)
+            outfile = '%s.bz2'%(outfile)
+	self.stdout.write('Backup file is: %s'%(outfile))
 
     def do_sqlite3_backup(self, outfile):
         args = [self.db, ".dump"]
@@ -96,7 +103,7 @@ class Command(BaseCommand):
 		stdin=PIPE, stdout=PIPE, close_fds=True)
         if self.passwd:
             p.stdin.write('%s\n' % self.passwd)
-        print p.stdout.read()
+        self.stdout.write(p.stdout.read())
 
     def do_compress_backup(self, outfile):
 	cmd = 'bzip2 -9 %s'%( outfile )

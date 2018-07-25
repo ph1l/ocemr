@@ -165,4 +165,4 @@ urlpatterns = [
     url(r'^graphs/vitals/(?P<id>\d+)/hw.png$', views.graphs.vitals_height_weight),
     url(r'^graphs/vitals/(?P<id>\d+)/spo2o2.png$', views.graphs.vitals_spo2_o2),
     url(r'^graphs/vitals/(?P<id>\d+)/$', views.graphs.vitals_graphs_index),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]

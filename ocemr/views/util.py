@@ -195,7 +195,7 @@ def autocomplete_name(request, inapp, inmodel):
 		return HttpResponse(content_type='text/plain')
 	
 	q = request.GET.get('q')
-	limit = request.GET.get('limit', 15)
+	limit = request.GET.get('limit', 64)
 	try:
 		limit = int(limit)
 	except ValueError:
@@ -219,7 +219,7 @@ def autosearch_title(request, inapp, inmodel):
 		return HttpResponse(content_type='text/plain')
 	
 	q = request.GET.get('q')
-	limit = request.GET.get('limit', 15)
+	limit = request.GET.get('limit', 64)
 	try:
 		limit = int(limit)
 	except ValueError:
