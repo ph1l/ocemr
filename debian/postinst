@@ -97,13 +97,16 @@ case "$1" in
 	if [ ! -e /var/lib/ocemr/gnupg/secring.gpg ]; then
 		echo "Warning: GPG Server Key doesn't exist. see settings.py for more info."
 	fi
+
+	#initialize a default db if one does not exist
+	/usr/share/ocemr/util/initialize_sqlite_db.sh 2>&1 | tee -a  /var/log/ocemr/update.log || true
+
+	echo "python ./manage.py migrate --noinput" >> /var/log/ocemr/update.log
+        PYTHONPATH=/usr/share/ocemr/apps/ python /usr/share/ocemr/apps/ocemr/manage.py migrate --noinput 2>&1 \
+		| tee -a /var/log/ocemr/update.log || true
+
 	chown -R www-data:www-data /var/lib/ocemr/*
 
-        ( cd  /usr/share/ocemr/apps/ocemr;
-		echo "python ./manage.py migrate --noinput" >> /var/log/ocemr/update.log
-                sudo -u www-data PYTHONPATH=/usr/share/ocemr/apps/ python ./manage.py migrate --noinput 2>&1 \
-			| tee -a /var/log/ocemr/update.log || true
-        )
 	check_enable_apache_mod "alias"
 	check_enable_apache_mod "wsgi"
 	check_enable_apache_conf "ocemr"

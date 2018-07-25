@@ -29,7 +29,7 @@ UTIL=/usr/share/ocemr/util
 export PYTHONPATH=$APP_DIR
 
 if [ -e ${VAR}/db/ocemr.db ]; then
-	echo SQLite database present, aborting execution...
+	echo SQLite database present, aborting initialization...
 	exit 10
 fi
 

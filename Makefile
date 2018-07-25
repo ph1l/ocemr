@@ -26,6 +26,7 @@ install:
 	install -T -m 640 package_configs/util_conf.py $(DESTDIR)$(CONF)/util_conf.py
 	make -C ocemr/static install
 	make -C contrib install
+	install -o root -g root -m 755 ocemr-manage $(DESTDIR)/usr/sbin
 
 pkg:
 	dpkg-buildpackage -rfakeroot -us -uc

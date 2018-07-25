@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+export PYTHONPATH=/usr/share/ocemr/apps
+
+exec python /usr/share/ocemr/apps/ocemr/manage.py $@

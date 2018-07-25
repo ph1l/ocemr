@@ -3,17 +3,14 @@ ocemr for Debian
 
 New Install -
 
-    1). Setup a Database: (select one)
+    1). Add a super user
 
-	- SQLite -
+	# ocemr-manage createsuperuser
 
-	-- /etc/ocemr/settings.py --
-	DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
-	DATABASES['default']['NAME'] = '/var/lib/ocemr/db/ocemr.db'
-	----------------------------
 
-	$ sudo -u www-data /usr/share/ocemr/util/initialize_sqlite_db.sh
+Switch to MariaDB Backend -
 
+    1). Setup the Database in settings.py
 
 	- MySQL -
 
@@ -24,54 +21,9 @@ New Install -
 	DATABASES['default']['PASSWORD'] = 'password'
 	----------------------------
 
-	$ sudo apt-get install mysql-server
-	$ sudo -u www-data /usr/share/ocemr/util/initialize_mysql_db.sh
+	# apt-get install mariadb-server
+	# /usr/share/ocemr/util/initialize_mysql_db.sh
+	# systemctl restart apache2
 
 
-	- PostgreSQL -
-
-	(should work, not scripted, or supported by backup/restore yet...)
-
-    2). Enable the website:
-
-	$ sudo vi /etc/ocemr/apache2.conf
-	$ sudo a2dissite default
-	$ sudo a2ensite ocemr
-	$ sudo /etc/init.d/apache2 reload
-
-Upgrade Notes - 
-
-    from >= v0.5.0:
-
-	  Upgrading from versions 0.5.0 and beyond should all be managed
-	by the Debian package. The database will be backed up via the
-	pre-install script, and then migated in the post-install. The only
-	thing the administrator should have to worry about is merging in
-	changes to the configuration files.
-
-    from v0.4.X:
-
-	  Upgrading from an install previous to v0.5.0 will be more
-	complicated.  Since Debian packaging was not introduced until
-	v0.5.0, you will need to do the following:
-
-		1). Backup your database and configuration!
-			( mysqldump or sqlite3> .dump)
-
-		2). Disable the old site.
-
-		3). Install the package.
-
-		4). Configure your /etc/ocemr/* config files.
-
-		5). Enable the debianized site.
-			(see step #2 in the new install instructions above)
-
-		6). upgrade the DB schema.
-		    - # python /usr/share/ocemr/apps/ocemr/manage.py migrate
-		    - login to the Django Admin with a superuser account
-		    - Modify the record for version 0.5 to reference 0.4
-		    - # python /usr/share/ocemr/apps/ocemr/manage.py migrate
-
-
- -- Philip J Freeman <philip.freeman@gmail.com>  Sat, 17 Mar 2012 00:43:18 -0500
+ -- Philip J Freeman <elektron@halo.nu>  Tue, 24 Jul 2018 12:44:54 -0700
