@@ -24,7 +24,7 @@ install:
 	install -m 644 package_configs/conf/ocemr.conf $(DESTDIR)$(CONF)/apache2/conf
 	install -m 644 package_configs/sites/ocemr.conf $(DESTDIR)$(CONF)/apache2/sites
 	install -T -m 640 package_configs/util_conf.py $(DESTDIR)$(CONF)/util_conf.py
-	make -C static_media install
+	make -C ocemr/static install
 	make -C contrib install
 
 pkg:
