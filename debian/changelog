@@ -1,6 +1,7 @@
-ocemr (0.6.0) experimental; urgency=low
+ocemr (0.6.0) UNRELEASED; urgency=low
 
-  * port code to django-1.11
+  * port to newer platform. target debian/ buster w/ django 1.11
+  * fix autocomplete bug (preggers bug) [d9fc952]
   * ...
 
  -- Philip J Freeman <elektron@halo.nu>  Sat, 21 Jul 2018 16:27:42 -0700
