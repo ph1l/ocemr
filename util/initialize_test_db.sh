@@ -1,8 +1,11 @@
 #!/bin/bash
 #
 VAR=~/var
-APP=./
+APP_DIR=.
+APP=$APP_DIR/ocemr
 UTIL=./util
+
+export PYTHONPATH=$APP_DIR
 
 mkdir -p ${VAR}/{db,backups,gnupg}
 chmod 700 ${VAR}/gnupg
