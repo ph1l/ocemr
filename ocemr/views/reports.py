@@ -1023,7 +1023,7 @@ def hmis105(request):
 				'visit_list': "",
 				})
 	for d in diagnoses:
-		if len(d["types"]) == 0:
+		if d.has_key("types") and len(d["types"]) == 0:
 			summary_rows.append({
 				'cat': d['NAME'],
 				'lt4m': "-",
