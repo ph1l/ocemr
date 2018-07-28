@@ -539,20 +539,6 @@ class NewAllergyForm(forms.ModelForm):
 		model = apps.get_model('ocemr','Allergy')
                 exclude = [ 'addedDateTime']
 
-class NewImmunizationLogForm(forms.ModelForm):
-	from models import Visit, Patient
-	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
-	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-	def __init__(self, v, user, *args, **kwargs):
-		
-		super(NewImmunizationLogForm, self).__init__(*args, **kwargs)
-		self.fields['patient'].initial=v.patient.id
-		self.fields['addedBy'].initial=user.id
-
-	class Meta:
-		model = apps.get_model('ocemr','ImmunizationLog')
-                exclude = [ 'addedDateTime']
-
 class NewLabNoteForm(forms.ModelForm):
 	from models import Visit, Lab
 	lab = forms.ModelChoiceField(queryset=Lab.objects.all(),widget=forms.HiddenInput)
@@ -649,41 +635,6 @@ class NewMedForm(forms.ModelForm):
 			raise forms.ValidationError("The MedType must exist!")
 		return d
 
-class NewVacForm(forms.ModelForm):
-	from models import Visit, Patient, VacType
-	receivedDate = forms.DateField(required=False,widget=widgets.CalendarWidget)
-        type = forms.ModelChoiceField(queryset=VacType.objects.all(),widget=forms.HiddenInput)
-	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
-	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-
-	def __init__(self, patient, vactype, user, *args, **kwargs):
-
-		super(NewVacForm, self).__init__(*args, **kwargs)
-		#raise(" | ".join(dir(self.fields['createdBy'])))
-		self.fields['type'].initial=vactype.id
-		self.fields['addedBy'].initial=user.id
-		self.fields['patient'].initial=patient.id
-
-        class Meta:
-                model = apps.get_model('ocemr','Vac')
-                exclude = [ 'addedDateTime' ]
-
-	def clean_receivedDate(self):
-		data = self.cleaned_data['receivedDate']
-		if data == "" or data == None:
-			from datetime import datetime
-			return datetime.now().date()
-		return data
-
-class EditVacReceivedForm(forms.Form):
-        receivedDate = forms.DateField(widget=widgets.CalendarWidget)
-
-	def __init__(self, v, user, *args, **kwargs):
-		
-		super(EditVacReceivedForm, self).__init__(*args, **kwargs)
-		#raise(" | ".join(dir(self.fields['createdBy'])))
-		self.fields['receivedDate'].initial = v.receivedDate
-
 class NewMedNoteForm(forms.ModelForm):
 	from models import Med
 	med = forms.ModelChoiceField(queryset=Med.objects.all(),widget=forms.HiddenInput)
@@ -696,22 +647,6 @@ class NewMedNoteForm(forms.ModelForm):
 
 	class Meta:
 		model = apps.get_model('ocemr','MedNote')
-                exclude = [ 'addedDateTime']
-
-class NewVacNoteForm(forms.ModelForm):
-	from models import Patient, VacType
-	patient = forms.ModelChoiceField(queryset=Patient.objects.all(),widget=forms.HiddenInput)
-	type = forms.ModelChoiceField(queryset=VacType.objects.all(),widget=forms.HiddenInput)
-	addedBy = forms.ModelChoiceField(queryset=User.objects.all(),widget=forms.HiddenInput)
-	def __init__(self, p, vt, user, *args, **kwargs):
-		
-		super(NewVacNoteForm, self).__init__(*args, **kwargs)
-		self.fields['patient'].initial=p.id
-		self.fields['type'].initial=vt.id
-		self.fields['addedBy'].initial=user.id
-
-	class Meta:
-		model = apps.get_model('ocemr','VacNote')
                 exclude = [ 'addedDateTime']
 
 class NewCashLogForm(forms.ModelForm):

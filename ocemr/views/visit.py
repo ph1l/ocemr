@@ -37,9 +37,7 @@ def get_visit_menu(current,patient):
 		{ 'link': 'labs', 'ord':4, 'title': 'Labs', 'active': False },
 		{ 'link': 'plan', 'ord':5, 'title': 'Assessment/Plan', 'active': False },
 		{ 'link': 'meds', 'ord':6, 'title': 'Meds', 'active': False },
-		{ 'link': 'vacs', 'ord':7, 'title': 'Vaccinations', 'active': False },
 		{ 'link': 'refe', 'ord':8, 'title': 'Referrals', 'active': False },
-		{ 'link': 'immu', 'ord':9, 'title': 'Immunizations', 'active': False },
 		{ 'link': 'note', 'ord':10, 'title': 'Notes', 'active': False, 'hilite': False },
 		]
 	for i in range(0,len(menu)):
@@ -573,28 +571,6 @@ def visit_meds(request,id):
 	return render(request, 'visit_meds.html', locals())
 
 @login_required
-def visit_vacs(request,id):
-	"""
-	Visit 
-	"""
-	from ocemr.models import Visit, VacType, VacNote, Vac
-
-	v = Visit.objects.get(pk=id)
-	p = v.patient
-	menu = get_visit_menu('vacs',p)
-	vacs = []
-	for vt in VacType.objects.filter(active=True):
-		vac = Vac.objects.filter(type=vt, patient=p)
-		vn = VacNote.objects.filter(type=vt,patient=p)
-		if len(vac) > 0:
-			vacs.append( (vt, vac[0], vn) )
-		else:
-			vacs.append( (vt, None, vn) )
-
-
-	return render(request, 'visit_vacs.html', locals())
-
-@login_required
 def visit_meds_new(request,id,did):
         """
         """
@@ -675,44 +651,6 @@ def visit_refe_edit(request,id, refid):
 	return render(request, 'popup_form.html', {
 		'title': 'Edit Referral: %s'%(r),
 		'form_action': '/visit/%s/refe/edit/%s/'%(id,refid),
-		'form': form,
-	})
-
-
-@login_required
-def visit_immu(request,id):
-	"""
-	Visit 
-	"""
-	from ocemr.models import Visit, ImmunizationLog
-
-	v = Visit.objects.get(pk=id)
-	p = v.patient
-	menu = get_visit_menu('immu',p)
-
-	immunizationLogs = ImmunizationLog.objects.filter(patient=p)
-
-	return render(request, 'visit_immu.html', locals())
-
-@login_required
-def visit_immu_new(request,id):
-	"""
-	"""
-	from ocemr.models import Visit, ImmunizationLog
-	from ocemr.forms import NewImmunizationLogForm
-	vid=int(id)
-	v=Visit.objects.get(pk=vid)
-
-	if request.method == 'POST': # If the form has been submitted...
-		form = NewImmunizationLogForm(v, request.user, request.POST) # A form bound to the POST data
-		if form.is_valid(): # All validation rules pass
-			o = form.save()
-			return HttpResponseRedirect('/close_window/')
-	else:
-		form = NewImmunizationLogForm(v, request.user) # An unbound form
-	return render(request, 'popup_form.html', {
-		'title': 'Add an Immunization Log',
-		'form_action': '/visit/%d/immu/new/'%(vid),
 		'form': form,
 	})
 
