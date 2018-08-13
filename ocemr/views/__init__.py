@@ -5,5 +5,4 @@ import med
 import patient
 import reports
 import util
-import vac
 import visit

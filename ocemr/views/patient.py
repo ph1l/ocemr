@@ -485,7 +485,7 @@ def edit_visit_reason(request, id):
 
 @login_required
 def patient_merge(request, id):
-	from ocemr.models import Patient, Visit, Vital, Lab, Diagnosis, Med, Referral, ImmunizationLog, Allergy, CashLog
+	from ocemr.models import Patient, Visit, Vital, Lab, Diagnosis, Med, Referral, Allergy, CashLog
 
 	p = Patient.objects.get(pk=int(id))
 	valid_form=False
@@ -512,7 +512,6 @@ def patient_merge(request, id):
 	diagnoses=	Diagnosis.objects.filter(patient=pdup)
 	meds=		Med.objects.filter(patient=pdup)
 	referrals=	Referral.objects.filter(patient=pdup)
-	immunizations=	ImmunizationLog.objects.filter(patient=pdup)
 	allergies=	Allergy.objects.filter(patient=pdup)
 	cashlogs=	CashLog.objects.filter(patient=pdup)
 
@@ -522,7 +521,6 @@ def patient_merge(request, id):
 	for o in diagnoses: out_txt += "  -> Diagnosis: %s\n"%(o)
 	for o in meds: out_txt += "  -> Med: %s\n"%(o)
 	for o in referrals: out_txt += "  -> Referral: %s\n"%(o)
-	for o in immunizations: out_txt += "  -> Immunization: %s\n"%(o)
 	for o in allergies: out_txt += "  -> Allergy: %s\n"%(o)
 	for o in cashlogs: out_txt += "  -> CashLog: %s\n"%(o)
 
@@ -537,7 +535,7 @@ def patient_merge(request, id):
 
 @login_required
 def patient_do_merge(request, id, dupid):
-	from ocemr.models import Patient, Visit, Vital, Lab, Diagnosis, Med, Referral, ImmunizationLog, Allergy, CashLog
+	from ocemr.models import Patient, Visit, Vital, Lab, Diagnosis, Med, Referral, Allergy, CashLog
 
 	p = Patient.objects.get(pk=int(id))
 	pdup = Patient.objects.get(pk=int(dupid))
@@ -549,7 +547,6 @@ def patient_do_merge(request, id, dupid):
 	diagnoses=	Diagnosis.objects.filter(patient=pdup)
 	meds=		Med.objects.filter(patient=pdup)
 	referrals=	Referral.objects.filter(patient=pdup)
-	immunizations=	ImmunizationLog.objects.filter(patient=pdup)
 	allergies=	Allergy.objects.filter(patient=pdup)
 	cashlogs=	CashLog.objects.filter(patient=pdup)
 
@@ -569,9 +566,6 @@ def patient_do_merge(request, id, dupid):
 		o.patient=p
 		o.save()
 	for o in referrals:
-		o.patient=p
-		o.save()
-	for o in immunizations:
 		o.patient=p
 		o.save()
 	for o in allergies:

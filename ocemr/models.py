@@ -503,41 +503,11 @@ class Med(models.Model):
 	def __unicode__(self):
 		return "%s: %s"%(self.id, self.type.title)
 
-
 class MedNote(models.Model):
 	med = models.ForeignKey(Med)
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	addedBy = models.ForeignKey(User)
 	note = models.TextField(default="")
-
-
-class VacType(models.Model):
-	title = models.CharField(max_length=128)
-	active = models.BooleanField(default=True)
-	def __unicode__(self):
-		return "%s"%(self.title)
-
-class Vac(models.Model):
-	type = models.ForeignKey(VacType)
-	patient = models.ForeignKey(Patient)
-	receivedDate = models.DateField()
-	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
-	addedBy = models.ForeignKey(User,related_name="vac_added_by")
-	def get_notes(self):
-		"""
-		"""
-		from models import VacNote
-		return VacNote.objects.filter(type=self.type,patient=self.patient).order_by('-addedDateTime')
-	def __unicode__(self):
-		return "%s: %s"%(self.id, self.type.title)
-
-class VacNote(models.Model):
-	type = models.ForeignKey(VacType)
-	patient = models.ForeignKey(Patient)
-	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
-	addedBy = models.ForeignKey(User)
-	note = models.TextField(default="")
-
 
 class ExamNoteType(models.Model):
 	title = models.CharField(max_length=128)
@@ -562,14 +532,6 @@ class Referral(models.Model):
 	addedBy = models.ForeignKey(User)
 	def __unicode__(self):
 		return "%s: %s"%(self.id, self.to)
-
-class ImmunizationLog(models.Model):
-	patient = models.ForeignKey(Patient)
-	description = models.TextField(blank=True)
-	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
-	addedBy = models.ForeignKey(User)
-	def __unicode__(self):
-		return "%s: ImmunizationLog"%(self.id)
 
 class Allergy(models.Model):
 	patient = models.ForeignKey(Patient)

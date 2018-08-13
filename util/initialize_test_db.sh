@@ -30,7 +30,6 @@ python ${UTIL}/import_examnotes_csv.py
 python ${UTIL}/import_labs_csv.py
 python ${UTIL}/import_dx_csv.py
 python ${UTIL}/import_rx_csv.py
-python ${UTIL}/import_vacs_csv.py
 
 #----------
 #
