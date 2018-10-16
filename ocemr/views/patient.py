@@ -144,7 +144,7 @@ def patient_edit_gender(request, id):
 			return HttpResponseRedirect('/close_window/')
 	else:
 		form = EditPatientGenderForm(initial={'gender': p.gender}) # An unbound form
-	return render(response, 'popup_form.html', {
+	return render(request, 'popup_form.html', {
 		'title': 'Edit Patient Gender',
 		'form_action': '/patient/edit/gender/%s/'%(id),
 		'form': form,
