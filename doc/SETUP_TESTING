@@ -3,14 +3,7 @@ Installing OCEMR for Development or Testing
 
 NOTE: This is getting there...
 
-Start with Debian 9 (Stretch).
-
-Add backports repo:
-
-    echo "deb http://ftp.debian.org/debian stretch-backports main" | \
-        sudo tee /etc/apt/sources.list.d/backports.list
-
-    sudo apt-get update
+Start with Debian 10 (Buster).
 
 Preparing the Environment
 -------------------------
@@ -24,9 +17,9 @@ Preparing the Environment
 
     $ git clone git://github.com/ph1l/ocemr.git
     $ cd ~/ocemr
-    $ git co django-1.11-port
 
  -  Setup the main config File:
+    Replace all instances of USER with your username
 
     $ cp ocemr/settings.py.DIST ocemr/settings.py
 
@@ -58,6 +51,8 @@ Preparing the Environment
     $ cp ./util/util_conf.py.DIST ./util/util_conf.py
 
     - Change APP_PATH
+
+        APP_PATH="/home/USER/ocemr"
 
 
 Setting up the Database
