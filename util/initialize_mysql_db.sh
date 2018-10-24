@@ -42,29 +42,31 @@ if [ -e ${MYSQL_DATA}/${MYSQL_DBNAME} ]; then
 	echo "MySQL database present (${MYSQL_DATA}/${MYSQN_DBNAME}), aborting initialization..."
 	exit 1
 fi
-echo
-echo -n please enter mysql password for ${MYSQL_USER}@${MYSQL_HOST}:\ 
-read -s PASSWD
-echo
-echo
-echo -n again:\ 
-read -s PASSWD2
-echo
+if [ -z "${PASSWD}" ]; then
+	echo
+	echo -n please enter mysql password for ${MYSQL_USER}@${MYSQL_HOST}:\
+	read -s PASSWD
+	echo
+	echo
+	echo -n again:\
+	read -s PASSWD2
+	echo
 
-if [ ${PASSWD} != ${PASSWD2} ]; then
-	echo Error: Passwords didn\'t match.
-	exit 1
+	if [ ${PASSWD} != ${PASSWD2} ]; then
+		echo Error: Passwords didn\'t match.
+		exit 1
+	fi
 fi
 
 echo
 echo please enter mysql credentials for ${MYSQL_ADMIN_USER}:
 echo 'CREATE DATABASE IF NOT EXISTS '${MYSQL_DBNAME} \
-	| mysql -u${MYSQL_ADMIN_USER} -p
+	| mysql -u${MYSQL_ADMIN_USER} -p${MYSQL_ADMIN_PASSWD}
 
 echo
 echo please enter mysql credentials for ${MYSQL_ADMIN_USER}:
 echo 'GRANT ALL ON ocemr.* TO '${MYSQL_USER}'@'${MYSQL_HOST}' IDENTIFIED BY "'${PASSWD}'";' \
-	| mysql -u${MYSQL_ADMIN_USER} -p
+	| mysql -u${MYSQL_ADMIN_USER} -p${MYSQL_ADMIN_PASSWD}
 
 python ${APP}/manage.py migrate
 
