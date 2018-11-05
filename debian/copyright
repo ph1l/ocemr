@@ -1,18 +1,18 @@
 This work was packaged for Debian by:
 
-    Philip J Freeman <philip.freeman@gmail.com> on Sat, 17 Mar 2012 00:43:18 -0500
+    Philip J Freeman <elektron@halo.nu> on Sat, 17 Mar 2012 00:43:18 -0500
 
 It was downloaded from:
 
-    <http://github.com/ph1l/ocemr>
+    <http://github.com/ocemr/ocemr>
 
 Upstream Author(s):
 
-    Philip J Freeman <philip.freeman@gmail.com>
+    Philip J Freeman <elektron@halo.nu>
 
 Copyright:
 
-    <Copyright (C) 2012 Philip J Freeman>
+    <Copyright (C) 2012-8 Philip J Freeman>
 
 License:
 
@@ -34,7 +34,7 @@ Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
 
 The Debian packaging is:
 
-    Copyright (C) 2012 Philip J Freeman <philip.freeman@gmail.com>
+    Copyright (C) 2012-8 Philip J Freeman <elektron@halo.nu>
 
 and is licensed under the GPL version 3, see above.
 

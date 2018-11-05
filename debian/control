@@ -1,12 +1,10 @@
 Source: ocemr
 Section: misc
 Priority: extra
-Maintainer: Philip J Freeman <philip.freeman@gmail.com>
+Maintainer: Philip J Freeman <elektron@halo.nu>
 Build-Depends: debhelper (>= 7.0.50~), python-all, dh-python, python2.7
 Standards-Version: 3.9.1
 Homepage: http://kremlor.net/projects/ocemr
-#Vcs-Git: git://git.debian.org/collab-maint/ocemr.git
-#Vcs-Browser: http://git.debian.org/?p=collab-maint/ocemr.git;a=summary
 
 Package: ocemr
 Architecture: all
