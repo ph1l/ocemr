@@ -19,7 +19,7 @@
 #
 #
 #########################################################################
-#       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
+#       Copyright 2011-8 Philip Freeman <elektron@halo.nu>
 ##########################################################################
 
 b=`git branch | grep ^\* | cut -b3-`

@@ -16,7 +16,7 @@
 #
 #
 #########################################################################
-#       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
+#       Copyright 2011-8 Philip Freeman <elektron@halo.nu>
 ##########################################################################
 
 from django.conf.urls import include, url

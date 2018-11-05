@@ -17,7 +17,7 @@
 #
 #
 #########################################################################
-#       Copyright 2012 Philip Freeman <philip.freeman@gmail.com>
+#       Copyright 2012 Philip Freeman <elektron@halo.nu>
 ##########################################################################
 
 """Database Check
