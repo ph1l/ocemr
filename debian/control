@@ -1,6 +1,6 @@
 Source: ocemr
 Section: misc
-Priority: extra
+Priority: optional
 Maintainer: Philip J Freeman <philip.freeman@gmail.com>
 Build-Depends: debhelper (>= 9), python-all, dh-python, python2.7
 Standards-Version: 3.9.1
@@ -14,7 +14,7 @@ Depends: ${python:Depends}, ${misc:Depends}, python-django, python-sqlite,
  python-matplotlib, python-mysqldb, python-enchant, python-pymysql,
  apache2, libapache2-mod-wsgi, python-simplejson,
  cups, enscript, gnupg, sqlite3, bzip2
-Recommends: mysql-server, mysql-client
+Recommends: default-mysql-server, default-mysql-client
 Description: Open Clinic Electonic Medical Records
  OCEMR is a web based electronic medical records system designed for the
  clinic environment. Designed for small clinics in rural parts of the world,
