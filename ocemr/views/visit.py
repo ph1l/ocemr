@@ -40,6 +40,8 @@ def get_visit_menu(current,patient):
 		{ 'link': 'refe', 'ord':8, 'title': 'Referrals', 'active': False },
 		{ 'link': 'note', 'ord':10, 'title': 'Notes', 'active': False, 'hilite': False },
 		]
+	if patient.gender == 'F':
+		menu.append({ 'link': 'preg', 'ord':9, 'title': 'Pregnancy History', 'active': False })
 	for i in range(0,len(menu)):
 		if menu[i]['link']==current:
 			menu[i]['active']=True

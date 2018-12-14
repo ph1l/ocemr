@@ -1,0 +1,35 @@
+{% extends "base_visit.html" %}
+{% block visitExtrahead %}
+<link href="/media/ocemr/css/visit_preg.css" rel="stylesheet" />
+{% endblock %}
+{% block visitContent %}
+<DIV ID=pregnancies>
+<TABLE>
+    <TR><TH><TH>Date of<BR>Delivery<TH>Gest<BR>Age<TH>Mode of<BR>Delivery<TH>Gender<TH>Presentation<TH>Length<BR>of Labor<TH>Complications<TH>Referral<TH>Referral<BR>Outcome<TH>PP<BR>F/U<TH>PP<BR>Comp<TH>Breastfeeding<BR>Problems<TH>PMTCT<TH>Tetanus<BR>Booster</TR>
+{% for pr in pregnancy %}
+<TR>
+        <TD><A HREF="#" " onClick='window.open("/visit/{{v.id}}/preg/edit/{{pr.id}}","Update Pregnancy","menubar=no,width=540,height=540,toolbar=no,scrollbars=yes");'>{{ forloop.counter }}
+   <TD>{{ pr.deliveryDate }}
+   <TD>{{ pr.gestationalAge }}w, {{ pr.gestationalAgePlusDays }}d
+   <TD>{{ pr.deliveryMode }}
+   <TD>{% ifequal pr.gender "M" %}
+           Male
+       {% else %}
+           Female
+       {% endifequal %}
+   <TD>{{ pr.presentation }}
+   <TD>{{ pr.laborLength }}
+   <TD><PRE>{{ pr.complications }}</PRE>
+   <TD>{{ pr.referral }}
+   <TD><PRE>{{ pr.referralOutcome }}</PRE>
+   <TD>{{ pr.postpartumFollowUp | yesno:"Yes,No,Unknown" }}
+   <TD><PRE>{{ pr.postpartumComplications }}</PRE>
+   <TD>{{ pr.breastfeedingProblems | yesno:"Yes,No,Unknown" }}
+   <TD>{{ pr.pmtct | yesno:"Yes,No,Unknown" }}
+   <TD>{{ pr.tetanusBoosterDate | date:"m/d/Y" }}</A>
+</TR>
+{% endfor %}
+</TABLE>
+<BR><A HREF="#" onClick='window.open("/visit/{{v.id}}/preg/new/","New Pregnancy","menubar=no,width=540,height=480,toolbar=no,scrollbars=yes");'>Add Pregnancy</A>
+</DIV> <!-- pregTable -->
+{% endblock %}

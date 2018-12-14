@@ -115,6 +115,10 @@ urlpatterns = [
     url(r'^visit/(?P<id>\d+)/unresolve/$', views.visit.visit_unresolve),
     url(r'^visit/(?P<id>\d+)/record/(?P<type>\w+)/$', views.visit.visit_record),
 
+    url(r'^visit/(?P<id>\d+)/preg/$', views.pregnancy.pregnancy),
+    url(r'^visit/(?P<id>\d+)/preg/new/$', views.pregnancy.pregnancy_new),
+    url(r'^visit/(?P<id>\d+)/preg/edit/(?P<pregid>\d+)/$', views.pregnancy.pregnancy_edit),
+
     url(r'^lab_queue/$', views.lab.lab_queue),
     url(r'^lab/(?P<id>\d+)/start/$', views.lab.lab_start),
     url(r'^lab/(?P<id>\d+)/cancel/$', views.lab.lab_cancel),
