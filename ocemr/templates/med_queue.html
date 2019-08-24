@@ -48,7 +48,6 @@
 <TD>{{v.get_estimated_visit_cost}} (<A HREF=# onClick='window.open("/visit/{{v.id}}/cost_estimate_detail/","Cost Estimate Detail","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>detail</A>)</TD>
 <TD>{{v.cost}}(<A HREF=# onClick='window.open("/visit/{{v.id}}/bill_amount/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>)</TD>
 <TD>
-{% ifequal v.get_med_status 2 %}
 	{% if v.has_collected %}
 		{% if v.has_collected_multiple %}
 			{% for cl in v.get_cashlog %}
@@ -63,10 +62,6 @@
 		-
 		(<A HREF=# onClick='window.open("/visit/{{v.id}}/collect/","Collect","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>add</A>)
 	{% endif %}
-		
-{% else %}
-		-
-{% endifequal %}
 </TD>
 <TD>
 		<A HREF="/meds/{{v.id}}/">View</A>
