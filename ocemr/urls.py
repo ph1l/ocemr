@@ -146,6 +146,7 @@ urlpatterns = [
     url(r'^reports/clinician/tally/$', views.reports.clinician_tally),
     url(r'^reports/lab/tally/$', views.reports.lab_tally),
     url(r'^reports/med/tally/$', views.reports.med_tally),
+    url(r'^reports/village/tally/$', views.reports.village_tally),
     url(r'^reports/cashflow/$', views.reports.cashflow),
     url(r'^reports/accounts_outstanding/$', views.reports.accounts_outstanding),
     url(r'^reports/hmis105/$', views.reports.hmis105),
