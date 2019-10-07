@@ -339,7 +339,8 @@ class Visit(models.Model):
 		referrals = Referral.objects.filter(visit=self)
 		for referral in referrals:
 			out_txt +="Referral: %s - %s"%(referral.to, referral.reason)
-		out_txt += "\n\nSeen By: %s %s\n\n" %( self.claimedBy.first_name, self.claimedBy.last_name)
+		if self.claimedBy:
+			out_txt += "\n\nSeen By: %s %s\n\n" %( self.claimedBy.first_name, self.claimedBy.last_name)
 		return out_txt
 
 class SymptomType(models.Model):
