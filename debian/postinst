@@ -105,6 +105,7 @@ case "$1" in
         PYTHONPATH=/usr/share/ocemr/apps/ python /usr/share/ocemr/apps/ocemr/manage.py migrate --noinput 2>&1 \
 		| tee -a /var/log/ocemr/update.log || true
 
+	#TODO: W: ocemr: maintainer-script-should-not-use-recursive-chown-or-chmod postinst:108
 	chown -R www-data:www-data /var/lib/ocemr/*
 
 	check_enable_apache_mod "alias"
