@@ -44,11 +44,11 @@ if [ -e ${MYSQL_DATA}/${MYSQL_DBNAME} ]; then
 fi
 if [ -z "${PASSWD}" ]; then
 	echo
-	echo -n please enter mysql password for ${MYSQL_USER}@${MYSQL_HOST}:\
+	echo -n "please enter mysql password for ${MYSQL_USER}@${MYSQL_HOST}: "
 	read -s PASSWD
 	echo
 	echo
-	echo -n again:\
+	echo -n "again: "
 	read -s PASSWD2
 	echo
 
