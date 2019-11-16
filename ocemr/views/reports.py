@@ -125,6 +125,16 @@ def dump_graph_pie(title,labels,data):
         matplotlib.pyplot.close(fig)
         return response
 
+def yearsago(years, from_date=None):
+    if from_date is None:
+        from_date = datetime.now()
+    try:
+        return from_date.replace(year=from_date.year - years)
+    except ValueError:
+        # Must be 2/29!
+        return from_date.replace(month=2, day=28,
+                                 year=from_date.year-years)
+
 @login_required
 def index(request):
         """
@@ -855,135 +865,233 @@ def hmis105(request):
 	#(Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end))
 	field_names=[
 		'cat',
+		'lt28dm',
+		'lt28df',
 		'lt4m',
 		'lt4f',
 		'gt4m',
 		'gt4f',
+		'gt59m',
+		'gt59f',
 		'visit_list',
 		]
 	headers={
 		'cat': 'Category',
+		'lt28dm': '0-28 days, Male',
+		'lt28df': '0-28 days, Female',
 		'lt4m': '0-4 years, Male',
 		'lt4f': '0-4 years, Female',
-		'gt4m': '5 and over, Male',
-		'gt4f': '5 and over, Female',
+		'gt4m': '5-59 years, Male',
+		'gt4f': '5-59 years, Female',
+		'gt59m': '60+ years, Male',
+		'gt59f': '60+ years, Female',
 		'visit_list': 'Visit List',
 		}
 	from ocemr.models import Visit, Referral, Diagnosis, DiagnosisType
 
 	summary_rows=[]
-	new_patient_visits=[0,0,0,0]
-	old_patient_visits=[0,0,0,0]
-	total_visits=[0,0,0,0]
-	referrals_from=[0,0,0,0]
+	new_patient_visits=[0,0,0,0,0,0,0,0]
+	old_patient_visits=[0,0,0,0,0,0,0,0]
+	total_visits=[0,0,0,0,0,0,0,0]
+	referrals_from=[0,0,0,0,0,0,0,0]
 
 	diagnoses = [
-		{ 'NAME': "1.3.1 Epidemic-Prone Diseases"},
+		{ 'NAME': "1.3.1 Epidemic-Prone Diseases" },
 		{ 'NAME': "01 Acute flaccid paralysis", 'ICPC2': [ "N70", ], },
-		{ 'NAME': "02 Cholera", 'ICPC2': [ ], },
-		{ 'NAME': "03 Dysentery", 'ICPC2': [ "D11", ], },
-		{ 'NAME': "04 Guinea worm", 'ICPC2': [ ], },
-		{ 'NAME': "05 Bacterial meningitis", 'ICPC2': [ "N71", ], },
-		{ 'NAME': "06 Measles", 'ICPC2': [ "A71", ], },
-		{ 'NAME': "07 Tetanus (Neonatal)", 'ICPC2': [ "N72", ], },
-		{ 'NAME': "08 Plauge", 'ICPC2': [ ], },
-		{ 'NAME': "09 Rabies", 'ICPC2': [ ], },
-		{ 'NAME': "10 Yellow Fever", 'ICPC2': [ ], },
-		{ 'NAME': "11 Other Viral Haemorrhagic Fevers", 'ICPC2': [ ], },
-		{ 'NAME': "12 Severe Acute Respiratory Infection (SARI)", 'ICPC2': [ ], },
-		{ 'NAME': "13 Adverse Events Following Immunization (AEFI)", 'ICPC2': [ ], },
-		{ 'NAME': "14 Other Emerging Infectious Diseases, specify e.g. small pox, ILI, SARS", 'ICPC2': [ ], },
-		{ 'NAME': "1.3.2 Other Infectious/Communicable Diseases"},
-		{ 'NAME': "15 Diarrhea- Acute", 'ICPC2': [ "D11", ], },
-		{ 'NAME': "16 Diarrhea- Persistent", 'ICPC2': [ ], },
-		{ 'NAME': "17 Ear Nose and Throat (ENT) conditions", 'ICPC2': [ "H", "R06", "R07", "R08", "R09", "R1", "R20", "R21", "R72", "R73", "R87", "R90", "R97" ], },
-		{ 'NAME': "18 Ophthalmia neonatorum", 'ICPC2': [ "F03", "F70", "F73", "F80" ], 'MAX_AGE_DAYS': 21},
-		{ 'NAME': "19 Other Eye conditions (subtract line 18)", 'ICPC2': [ "F", ], },
-		{ 'NAME': "20 Urethral discharges", 'ICPC2': [ "Y03", ], },
-		{ 'NAME': "21 Genital ulcers", 'ICPC2': [ ], },
-		{ 'NAME': "22 Sexually Transmitted Infection due to SGBV", 'ICPC2': [ ], },
-		{ 'NAME': "23 Other Sexually Transmitted Infections", 'ICPC2': [ "X70", "X71", "X72", "X73", "X74", "X90", "X91", "X92", "Y70", "Y71", "Y72", "Y73", "Y74", "Y75", "Y76" ], },
-		{ 'NAME': "24 Urinary Tract Infections (UTI)", 'ICPC2': [ "U70", "U71", "U72" ], },
-		{ 'NAME': "25 Intestinal Worms", 'ICPC2': [ "D96", ], },
-		{ 'NAME': "26 Leprosy (Manually Review S76, S99)", 'ICPC2': [ "S76", "S99" ], },
-		{ 'NAME': "27 Malaria", 'ICPC2': [ "A73", ], },
-		{ 'NAME': "28 Other types of meningitis", 'ICPC2': [ ], },
-		{ 'NAME': "29 No pneumonia Cough or Cold", 'ICPC2': [ "R05", "R71", "R74" ], },
-		{ 'NAME': "30 Pneumonia", 'ICPC2': [ "R81", ], },
-		{ 'NAME': "31 Skin Diseases", 'ICPC2': [ "S", ], },
-		{ 'NAME': "32 Tuberculosis (New smear positive cases)", 'ICPC2': [ ], },
-		{ 'NAME': "33 Other Tuberculosis", 'ICPC2': [ "A70", ], },
-		{ 'NAME': "34 Typhoid Fever", 'ICPC2': [ "A78", ], },
-		{ 'NAME': "35 Tetanus (over 28 days age)", 'ICPC2': [ "N72", ], 'MIN_AGE_DAYS': 28 },
-		{ 'NAME': "36 Sleeping sickness", 'ICPC2': [ ], },
-		{ 'NAME': "37 Pelvic Inflammatory Disease (PID)", 'ICPC2': [ "X74", ], },
-		{ 'NAME': "1.3.3 Maternal and Perinatal Conditions"},
-		{ 'NAME': "38 Abortions due to Gender-Based Violence (GBV)", 'ICPC2': [ ], },
-		{ 'NAME': "39 Abortions due to other causes", 'ICPC2': [ "W82", "W83" ], },
-		{ 'NAME': "40 Malaria in pregnancy", 'DIAGNOSIS_TYPE': [ 18, 20 ], },
-		{ 'NAME': "41 High blood pressure in pregnancy", 'DIAGNOSIS_TYPE': [ 216, ], },
-		{ 'NAME': "42 Obstructed labor", 'ICPC2': [ ], },
-		{ 'NAME': "43 Puerperial Sepsis", 'ICPC2': [ "W70", ], },
-		{ 'NAME': "44 Haemorrhage in pregnancy (APH and/or PPH)", 'ICPC2': [ "W03", "W17" ], },
-		{ 'NAME': "1.3.4 Maternal and Perinatal Diseases"},
-		{ 'NAME': "45 Neonatal septicemia (Manually Review A94)", 'ICPC2': [ "A94", ], },
-		{ 'NAME': "46 Perinatal conditions in newborns (0-7 days) (Manually Review A94)", 'ICPC2': [ "A94", ], },
-		{ 'NAME': "47 Neonatal conditions in newborns (8-28 days) (Manually Review A94)", 'ICPC2': [ "A94", ], },
-		{ 'NAME': "1.3.5 Non Communicable Diseases"},
-		{ 'NAME': "48 Anaemia", 'ICPC2': [ "B82", ], },
-		{ 'NAME': "49 Asthma", 'ICPC2': [ "R96", ], },
-		{ 'NAME': "50 Periodontal diseases", 'ICPC2': [ "D19", ], },
-		{ 'NAME': "51 Diabetes mellitus", 'ICPC2': [ "T90", "W85" ], },
-		{ 'NAME': "52 Bipolar disorders", 'ICPC2': [ "P73" ], },
-		{ 'NAME': "53 Hypertension", 'ICPC2': [ "K86", "K87" ], },
-		{ 'NAME': "54 Depression", 'ICPC2': [ "P76", ], },
-		{ 'NAME': "55 Schizophrenia", 'ICPC2': [ "P72", ], },
-		{ 'NAME': "56 HIV related psychosis (Manually Review B90)", 'ICPC2': [ "B90", ], },
-		{ 'NAME': "57 Anxiety disorders", 'ICPC2': [ "P74", ], },
-		{ 'NAME': "58 Alcohol abuse", 'ICPC2': [ "P15", "P16" ], },
-		{ 'NAME': "59 Drug abuse", 'ICPC2': [ "P19", ], },
-		{ 'NAME': "60 Childhood Mental Disorders", 'ICPC2': [ ], },
-		{ 'NAME': "61 Epilepsy", 'ICPC2': [ "N88", ], },
-		{ 'NAME': "62 Dementia", 'ICPC2': [ "P70", ], },
-		{ 'NAME': "63 Other forms of mental illness", 'ICPC2': [
+		{ 'NAME': "02 Animal Bites (suspected rabies)", 'ICPC2': [ ], },
+		{ 'NAME': "03 Cholera", 'ICPC2': [ ], },
+		{ 'NAME': "04 Dysentery", 'ICPC2': [ "D11", ], },
+		{ 'NAME': "05 Guinea worm", 'ICPC2': [ ], },
+		{ 'NAME': "06 Malaria", 'ICPC2': [ "A73", ], },
+		{ 'NAME': "07 Measles", 'ICPC2': [ "A71", ], },
+		{ 'NAME': "08 Bacterial meningitis", 'ICPC2': [ "N71", ], },
+		{ 'NAME': "09 Neonatal Tetanus", 'ICPC2': [ "N72", ], },
+		{ 'NAME': "10 Plauge", 'ICPC2': [ ], },
+		{ 'NAME': "11 Yellow Fever", 'ICPC2': [ ], },
+		{ 'NAME': "12 Other Viral Haemorrhagic Fevers", 'ICPC2': [ ], },
+		{ 'NAME': "13 Severe Acute Respiratory Infection (SARI)", 'ICPC2': [ ], },
+		{ 'NAME': "14 Adverse Events Following Immunization (AEFI)", 'ICPC2': [ ], },
+		{ 'NAME': "15 Typhoid Fever", 'ICPC2': [ "A78", ], },
+		{ 'NAME': "16 Presumptive MDR TB cases", 'ICPC2': [ ], },
+		{ 'NAME': "Other Emerging Infectious Diseases , specify e.g. small pox, ILI, SARS", 'ICPC2': [ ], },
+
+		{ 'NAME': "1.3.2 Other Infectious/Communicable Diseases" },
+		{ 'NAME': "17 Diarrhea- Acute", 'ICPC2': [ "D11", ], },
+		{ 'NAME': "18 Diarrhea- Persistent", 'ICPC2': [ ], },
+		{ 'NAME': "19 Urethral discharges", 'ICPC2': [ "Y03", ], },
+		{ 'NAME': "20 Genital ulcers", 'ICPC2': [ ], },
+		{ 'NAME': "21 Sexually Transmitted Infection due to SGBV", 'ICPC2': [ ], },
+		{ 'NAME': "22 Other Sexually Transmitted Infections", 'ICPC2': [ "X70", "X71", "X72", "X73", "X74", "X90", "X91", "X92", "Y70", "Y71", "Y72", "Y73", "Y74", "Y75", "Y76" ], },
+		{ 'NAME': "23 Urinary Tract Infections (UTI)", 'ICPC2': [ "U70", "U71", "U72" ], },
+		{ 'NAME': "24 Intestinal Worms", 'ICPC2': [ "D96", ], },
+		{ 'NAME': "25 Hematological Meningitis", 'ICPC2': [ ], },
+		{ 'NAME': "26 Other types of meningitis", 'ICPC2': [ ], },
+		{ 'NAME': "27 No pneumonia Cough or Cold", 'ICPC2': [ "R05", "R71", "R74" ], },
+		{ 'NAME': "28 Pneumonia", 'ICPC2': [ "R81", ], },
+		{ 'NAME': "29 Skin Diseases", 'ICPC2': [ "S", ], },
+		{ 'NAME': "30 New TB cases diagnosed (Bacteriologically confirmed)", 'ICPC2': [ ], },
+		{ 'NAME': "30 New TB cases diagnosed (Clinically Diagnosed)", 'ICPC2': [ ], },
+		{ 'NAME': "30 New TB cases diagnosed (EPTB)", 'ICPC2': [ ], },
+		{ 'NAME': "31 Leprosy (Manually review S76, S99)", 'ICPC2': [ "S76", "S99" ], },
+		{ 'NAME': "32 Tuberculosis MDR/XDR cases started on trastment", 'ICPC2': [ ], },
+		{ 'NAME': "33 Tetanus (over 28 days age)", 'ICPC2': [ "N72", ], 'MIN_AGE_DAYS': 28 },
+		{ 'NAME': "34 Sleeping sickness", 'ICPC2': [ ], },
+		{ 'NAME': "35 Pelvic Inflammatory Disease (PID)", 'ICPC2': [ "X74", ], },
+		{ 'NAME': "36 Brucellosis", 'ICPC2': [ ], },
+
+		{ 'NAME': "1.3.3 Neonatal Diseases" },
+		{ 'NAME': "37 Neonatal Sepsis (0-7days)", 'ICPC2': [ ], 'MAX_AGE_DAYS': 7},
+		{ 'NAME': "38 Neonatal Sepsis (8-28days)", 'ICPC2': [ ], 'MIN_AGE_DAYS': 8, 'MAX_AGE_DAYS': 28},
+		{ 'NAME': "39 Neonatal Pneumonia", 'ICPC2': [ ], },
+		{ 'NAME': "40 Neonatal Meningitis", 'ICPC2': [ ], },
+		{ 'NAME': "41 Neonatal Jaundice", 'ICPC2': [ ], },
+		{ 'NAME': "42 Premature baby (as a condition for management)", 'ICPC2': [ ], },
+		{ 'NAME': "43 Other Neonatal Conditions", 'ICPC2': [ ], },
+
+		{ 'NAME': "1.3.4 Non Communicable Diseases/Conditions" },
+		{ 'NAME': "44 Sickle Cell Anaemia", 'ICPC2': [ ], },
+		{ 'NAME': "45 Other types of Anaemia", 'ICPC2': [ "B82", ], },
+		{ 'NAME': "46 Gastro-Intestinal Disorders (non-Infective) ",
+			'ICPC2': [ "D0", "D1", "D2", "D74", "D75", "D76", "D77",
+				"D78", "D79", "D8", "D9" ], },
+		{ 'NAME': "47 Pain Requiring Pallative Care", 'ICPC2': [ ], },
+
+		{ 'NAME': "Oral diseases" },
+		{ 'NAME': "48 Dental Caries", 'ICPC2': [ ], },
+		{ 'NAME': "49 Gingivitis", 'ICPC2': [ ], },
+		{ 'NAME': "50 HIV-Oral lesions", 'ICPC2': [ ], },
+		{ 'NAME': "51 Oral Cancers", 'ICPC2': [ ], },
+		{ 'NAME': "52 Other Oral Conditions", 'ICPC2': [ ], },
+
+		{ 'NAME': "ENT conditions" },
+		{ 'NAME': "53 Otitis media", 'ICPC2': [ "H70", "H71", "H72", "H74" ], },
+		{ 'NAME': "54 Hearing loss", 'ICPC2': [ "H02", "H28", "H76", "H81", "H86" ], },
+		{ 'NAME': "55 Other ENT conditions", 'ICPC2': [ "H", "R06", "R07", "R08", "R09", "R1", "R20", "R21", "R72", "R73", "R87", "R90", "R97" ], 'subtract': [ "53 Otitis media", "54 Hearing loss" ] },
+
+		{ 'NAME': "Eye conditions" },
+		{ 'NAME': "56 Ophthalmia neonatorum", 'ICPC2': [ "F03", "F70", "F73", "F80" ], 'MAX_AGE_DAYS': 21 },
+		{ 'NAME': "57 Cataracts", 'ICPC2': [ ], },
+		{ 'NAME': "58 Refractive errors", 'ICPC2': [ ], },
+		{ 'NAME': "59 Glaucoma", 'ICPC2': [ ], },
+		{ 'NAME': "60 Trachoma", 'ICPC2': [ ], },
+		{ 'NAME': "61 Tumors", 'ICPC2': [ ], },
+		{ 'NAME': "62 Blindness", 'ICPC2': [ ], },
+		{ 'NAME': "63 Diabetic Retinopathy", 'ICPC2': [ ], },
+		{ 'NAME': "64 Other Eye conditions", 'ICPC2': [ "F", ], 'subtract': [ "56 Ophthalmia neonatorum", "57 Cataracts", "58 Refractive errors", "59 Glaucoma", "60 Trachoma", "61 Tumors", "62 Blindness", "63 Diabetic Retinopathy" ] },
+
+		{ 'NAME': "Mental Health" },
+		{ 'NAME': "65 Bipolar disorders", 'ICPC2': [ "P73" ], },
+		{ 'NAME': "66 Depression", 'ICPC2': [ "P76", ], },
+		{ 'NAME': "67 Epilepsy", 'ICPC2': [ "N88", ], },
+		{ 'NAME': "68 Dementia", 'ICPC2': [ "P70", ], },
+		{ 'NAME': "69 Childhood Mental Disorders", 'ICPC2': [ ], },
+		{ 'NAME': "70 Schizophrenia", 'ICPC2': [ "P72", ], },
+		{ 'NAME': "71 HIV related psychosis (Manually review B90)", 'ICPC2': [ "B90", ], },
+		{ 'NAME': "72 Anxiety disorders", 'ICPC2': [ "P74", ], },
+		{ 'NAME': "73 Alcohol abuse", 'ICPC2': [ "P15", "P16" ], },
+		{ 'NAME': "74 Drug abuse", 'ICPC2': [ "P19", ], },
+		{ 'NAME': "75 Other Mental Health Conditions", 'ICPC2': [
 			"P71", "P72", "P73", "P74", "P75", "P76", "P77", "P78",
 			"P79", "P8", "P9"
 			 ], },
-		{ 'NAME': "64 Cardiovascular diseases", 'ICPC2': [ "K", ], },
-		{ 'NAME': "65 Gastro-Intestinal Disorders (non-Infective) ",
-			'ICPC2': [ "D0", "D1", "D2", "D74", "D75", "D76", "D77",
-				"D78", "D79", "D8", "D9" ], },
-		{ 'NAME': "66 Severe Acute Malnutrition (Marasmus, Kwashiorkor, Marasmic-kwash)", 'ICPC2': [ "T91", ], },
-		{ 'NAME': "67 Jaw injuries", 'ICPC2': [ "L07", ], },
-		{ 'NAME': "68 Injuries- Road traffic Accidents (Manually Review A80, A81)", 'ICPC2': [ "A80", "A81" ], },
-		{ 'NAME': "69 Injuries due to Gender based violence (Manually Review A80, A81)", 'ICPC2': [ "A80", "A81" ], },
-		{ 'NAME': "70 Injuries (Trauma due to other causes) (Manually Review A80, A81)", 'ICPC2': [ "A80", "A81" ], },
-		{ 'NAME': "71 Animal bites (Manually Review S13)", 'ICPC2': [ "S13", ], },
-		{ 'NAME': "72 Snake bites (Manually Review S13)", 'ICPC2': [ "S13", ], },
-		{ 'NAME': "1.3.6 Minor operations in OPD"},
-		{ 'NAME': "73 Tooth extractions", 'ICPC2': [ ], },
-		{ 'NAME': "74 Dental Fillings", 'ICPC2': [ ], },
-		{ 'NAME': "1.3.7 Neglegted Tropical Diseases"},
-		{ 'NAME': "75 Leishmaniasis (Manually Review A78)", 'ICPC2': [ "A78", ], },
-		{ 'NAME': "76 Lymphatic Filariasis (hydrocele) (Manually Review A78)", 'ICPC2': [ "A78", ], },
-		{ 'NAME': "77 Lymphatic Filariasis (Lymphoedema) (Manually Review A78)", 'ICPC2': [ "A78", ], },
-		{ 'NAME': "78 Urinary Schistosomiasis (Manually Review A78)", 'ICPC2': [ "A78", ], },
-		{ 'NAME': "79 Intestinal Schistosomiasis (Manually Review A78)", 'ICPC2': [ "A78", ], },
-		{ 'NAME': "80 Onchocerciasis (Manually Review A78)", 'ICPC2': [ "A78", ], },
-		{ 'NAME': "81 Other diagnoses (specify priority for District)", 'ICPC2': [ ], },
-		{ 'NAME': "82 Deaths in OPD", 'ICPC2': [ ], },
-		{ 'NAME': "83 All others", 'ICPC2': [ ], },
+
+		{ 'NAME': "Chronic respiratory diseases" },
+		{ 'NAME': "76 Asthma", 'ICPC2': [ "R96", ], },
+		{ 'NAME': "77 Chronic Obstructive Pulmonary Disease (COPD)", 'ICPC2': [ ], },
+
+		{ 'NAME': "Cancers" },
+		{ 'NAME': "78 Cancer Cervix", 'ICPC2': [ ], },
+		{ 'NAME': "79 Cancer Prostate", 'ICPC2': [ ], },
+		{ 'NAME': "80 Cancer Breast", 'ICPC2': [ ], },
+		{ 'NAME': "81 Cancer Lung", 'ICPC2': [ ], },
+		{ 'NAME': "82 Cancer Liver", 'ICPC2': [ ], },
+		{ 'NAME': "83 Cancer Colon", 'ICPC2': [ ], },
+		{ 'NAME': "84 Cancer Sarcoma", 'ICPC2': [ ], },
+		{ 'NAME': "85 Cancer Others", 'ICPC2': [ ], },
+
+		{ 'NAME': "Cardiovascular diseases" },
+		{ 'NAME': "86 Stroke/Cardiovascular Accident(CVA)", 'ICPC2': [ ], },
+		{ 'NAME': "87 Hypertension", 'ICPC2': [ "K86", "K87" ], },
+		{ 'NAME': "88 Heart failure", 'ICPC2': [ ], },
+		{ 'NAME': "89 Ischemic Heart Diseases", 'ICPC2': [ ], },
+		{ 'NAME': "90 Rheumatic Heart Diseases", 'ICPC2': [ ], },
+		{ 'NAME': "91 Other Cardiovascular Diseases", 'ICPC2': [ "K", ], 'subtract': [ "86 Stroke/Cardiovascular Accident(CVA)", "87 Hypertension", "88 Heart failure", "89 Ischemic Heart Diseases", "90 Rheumatic Heart Diseases", ] },
+
+		{ 'NAME': "Endocrine and Metabolic Disorders" },
+		{ 'NAME': "92 Diabetes mellitus", 'ICPC2': [ "T90", "W85" ], },
+		{ 'NAME': "93 Thyroid Disease", 'ICPC2': [ ], },
+		{ 'NAME': "94 Other Endocrine and Metabolic Diseases", 'ICPC2': [ ], },
+
+		{ 'NAME': "Malnutrition" },
+		{ 'NAME': "95 Severe Acute Malnutrition (SAM) With oedema", 'ICPC2': [ "T91", ], },
+		{ 'NAME': "95 Severe Acute Malnutrition (SAM) Without oedema", 'ICPC2': [ "T91", ], },
+		{ 'NAME': "96 Mild Acute Malnutrition (MAM)", 'ICPC2': [ "T91", ], },
+
+		{ 'NAME': "Injuries" },
+		{ 'NAME': "97 Jaw injuries", 'ICPC2': [ "L07", ], },
+		{ 'NAME': "98 Injuries- Road traffic Accidents (Manually review A80, A81)", 'ICPC2': [ "A80", "A81" ], },
+		{ 'NAME': "99 Injuries due to motorcycle(boda-boda)(Manually review A80, A81)", 'ICPC2': [ "A80", "A81" ], },
+		{ 'NAME': "100 Injuries due to Gender based violence (Manually review A80, A81)", 'ICPC2': [ "A80", "A81" ], },
+		{ 'NAME': "101 Injuries (Trauma due to other causes) (Manually review A80, A81)", 'ICPC2': [ "A80", "A81" ], },
+		{ 'NAME': "102 Animal bites (Domestic)  (Manually review S13)", 'ICPC2': [ "S13", ], },
+		{ 'NAME': "102 Animal bites (Wild) (Manually review S13)", 'ICPC2': [ "S13", ], },
+		{ 'NAME': "102 Animal bites (Insects) (Manually review S13)", 'ICPC2': [ "S13", ], },
+		{ 'NAME': "103 Snake bites (Manually review S13)", 'ICPC2': [ "S13", ], },
+
+		{ 'NAME': "1.3.5 Minor Operations in OPD" },
+		{ 'NAME': "104 Tooth extractions", 'ICPC2': [ ], },
+		{ 'NAME': "105 Dental Fillings", 'ICPC2': [ ], },
+		{ 'NAME': "106 Other Minor Operations", 'ICPC2': [ ], },
+
+		{ 'NAME': "1.3.7 Neglegted Tropical Diseases (NTDs)"},
+		{ 'NAME': "107 Leishmaniasis (Manually review A78)", 'ICPC2': [ "A78", ], },
+		{ 'NAME': "108 Lymphatic Filariasis (hydrocele) (Manually review A78)", 'ICPC2': [ "A78", ], },
+		{ 'NAME': "109 Lymphatic Filariasis (Lymphoedema) (Manually review A78)", 'ICPC2': [ "A78", ], },
+		{ 'NAME': "110 Urinary Schistosomiasis (Manually review A78)", 'ICPC2': [ "A78", ], },
+		{ 'NAME': "111 Intestinal Schistosomiasis (Manually review A78)", 'ICPC2': [ "A78", ], },
+		{ 'NAME': "112 Onchocerciasis (Manually review A78)", 'ICPC2': [ "A78", ], },
+
+		{ 'NAME': "Maternal conditions" },
+		{ 'NAME': "113 Abortions due to Gender-Based Violence (GBV)", 'ICPC2': [ ], },
+		{ 'NAME': "114 Abortions due to other causes", 'ICPC2': [ "W82", "W83" ], },
+		{ 'NAME': "115 Malaria in pregnancy", 'DIAGNOSIS_TYPE': [ 18, 20 ], },
+		{ 'NAME': "116 High blood pressure in pregnancy", 'DIAGNOSIS_TYPE': [ 216, ], },
+		{ 'NAME': "117 Obstructed labour", 'ICPC2': [ ], },
+		{ 'NAME': "118 Puerperial Sepsis", 'ICPC2': [ "W70", ], },
+		{ 'NAME': "119 Haemorrhage in pregnancy (APH or PPH)", 'ICPC2': [ "W03", "W17" ], },
+
+		{ 'NAME': "Other OPD conditions" },
+		{ 'NAME': "120 Other diagnoses (specify priority diseases for District)", 'ICPC2': [ ], },
+		{ 'NAME': "121 Deaths in OPD", 'ICPC2': [ ], },
+		{ 'NAME': "122 All others", 'ICPC2': [ ], },
+
+		{ 'NAME': "1.3.9 RISKY BEHAVIORS" },
+		{ 'NAME': "1.3.10 BODY MASS INDEX (BMI)" },
 		]
 	diag_map = {}
 	for d in diagnoses:
-		diag_map[d['NAME']] = [0,0,0,0,[]]
+		diag_map[d['NAME']] = [0,0,0,0,0,0,0,0,[]]
 	visits = Visit.objects.filter(Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) & (Q(status="CHOT") | Q(status="RESO")) )
 	for v in visits:
 		if not v.finishedDateTime:
 			print "Warning: skipping unfinished visit: %s"%v
 		index = 0
-		if v.patient.birthYear > v.finishedDateTime.year - 4:
-			index += 2
+		if v.patient.birthDate:
+			if v.patient.birthDate > (v.finishedDateTime - timedelta(days=28)).date():
+				index = 0
+			elif v.patient.birthDate > yearsago(5, v.finishedDateTime).date():
+				index += 2
+			elif v.patient.birthDate > yearsago(60, v.finishedDateTime).date():
+				index += 4
+			else:
+				index += 6
+		else:
+			if v.patient.birthYear >= v.finishedDateTime.year - 4:
+				index += 2
+			elif v.patient.birthYear >= v.finishedDateTime.year - 59:
+				index += 4
+			else:
+				index += 6
 		if v.patient.gender == "F":
 			index += 1
 		total_visits[index] += 1
@@ -1025,74 +1133,110 @@ def hmis105(request):
 			my_count = my_d.count()
 			if my_count > 0:
 				diag_map[d['NAME']][index] += my_count
-				diag_map[d['NAME']][4].append("<A HREF=\"#%(diag_name)s_%(visit_id)s\" onclick=\"window.opener.location.href='/visit/%(visit_id)s/plan/';\">%(visit_id)s</A>"%{'visit_id': v.id, 'diag_name': d['NAME']})
+				diag_map[d['NAME']][8].append("<A HREF=\"#%(diag_name)s_%(visit_id)s\" onclick=\"window.opener.location.href='/visit/%(visit_id)s/plan/';\">%(visit_id)s</A>"%{'visit_id': v.id, 'diag_name': d['NAME']})
 
 
 	summary_rows.append({	'cat': "1.1 Outpatient Attendance",
-				'lt4m': "", 'lt4f': "", 'gt4m': "", 'gt4f': "",
+				'lt28dm': "", 'lt28df': "",
+				'lt4m': "", 'lt4f': "",
+				'gt4m': "", 'gt4f': "",
+				'gt59m': "", 'gt59f': "",
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "New Attendance",
-				'lt4m': new_patient_visits[0],
-				'lt4f': new_patient_visits[1],
-				'gt4m': new_patient_visits[2],
-				'gt4f': new_patient_visits[3],
+				'lt28dm': new_patient_visits[0],
+				'lt28df': new_patient_visits[1],
+				'lt4m': new_patient_visits[2],
+				'lt4f': new_patient_visits[3],
+				'gt4m': new_patient_visits[4],
+				'gt4f': new_patient_visits[5],
+				'gt59m': new_patient_visits[6],
+				'gt59f': new_patient_visits[7],
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "Re-Attendance",
-				'lt4m': old_patient_visits[0],
-				'lt4f': old_patient_visits[1],
-				'gt4m': old_patient_visits[2],
-				'gt4f': old_patient_visits[3],
+				'lt28dm': old_patient_visits[0],
+				'lt28df': old_patient_visits[1],
+				'lt4m': old_patient_visits[2],
+				'lt4f': old_patient_visits[3],
+				'gt4m': old_patient_visits[4],
+				'gt4f': old_patient_visits[5],
+				'gt59m': old_patient_visits[6],
+				'gt59f': old_patient_visits[7],
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "Total Attendance",
-				'lt4m': total_visits[0],
-				'lt4f': total_visits[1],
-				'gt4m': total_visits[2],
-				'gt4f': total_visits[3],
+				'lt28dm': total_visits[0],
+				'lt28df': total_visits[1],
+				'lt4m': total_visits[2],
+				'lt4f': total_visits[3],
+				'gt4m': total_visits[4],
+				'gt4f': total_visits[5],
+				'gt59m': total_visits[6],
+				'gt59f': total_visits[7],
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "1.2 Outpatient Referrals",
-				'lt4m': "", 'lt4f': "", 'gt4m': "", 'gt4f': "",
+				'lt28dm': "", 'lt28df': "",
+				'lt4m': "", 'lt4f': "",
+				'gt4m': "", 'gt4f': "",
+				'gt59m': "", 'gt59f': "",
 				'visit_list': "",
 				})
 	summary_rows.append({   'cat': "Referrals to unit",
-				'lt4m': "-",
-				'lt4f': "-",
-				'gt4m': "-",
-				'gt4f': "-",
+		                'lt28dm': "", 'lt28df': "",
+				'lt4m': "-", 'lt4f': "-",
+				'gt4m': "-", 'gt4f': "-",
+				'gt59m': "-", 'gt59f': "-",
 				'visit_list': "",
 				})
 	summary_rows.append({   'cat': "Referrals from unit",
-				'lt4m': referrals_from[0],
-				'lt4f': referrals_from[1],
-				'gt4m': referrals_from[2],
-				'gt4f': referrals_from[3],
+				'lt28dm': referrals_from[0],
+				'lt28df': referrals_from[1],
+				'lt4m': referrals_from[2],
+				'lt4f': referrals_from[3],
+				'gt4m': referrals_from[4],
+				'gt4f': referrals_from[5],
+				'gt59m': referrals_from[6],
+				'gt59f': referrals_from[7],
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "1.3 Outpatient Diagnoses",
-				'lt4m': "", 'lt4f': "", 'gt4m': "", 'gt4f': "",
+				'lt28dm': "", 'lt28df': "",
+				'lt4m': "", 'lt4f': "",
+				'gt4m': "", 'gt4f': "",
+				'gt59m': "", 'gt59f': "",
 				'visit_list': "",
 				})
 	for d in diagnoses:
 		if d.has_key("types") and len(d["types"]) == 0:
 			summary_rows.append({
 				'cat': d['NAME'],
-				'lt4m': "-",
-				'lt4f': "-",
-				'gt4m': "-",
-				'gt4f': "-",
+				'lt28dm': "", 'lt28df': "",
+				'lt4m': "-", 'lt4f': "-",
+				'gt4m': "-", 'gt4f': "-",
+				'gt59m': "-", 'gt59f': "-",
 				'visit_list': "-",
 				})
 		else:
+			if d.has_key("subtract"):
+				for subtraction in d['subtract']:
+					for i in range(0,7):
+						diag_map[d['NAME']][i]-=diag_map[subtraction][i]
+					for v in diag_map[subtraction][8]:
+						if v in diag_map[d['NAME']][8]:
+							diag_map[d['NAME']][8].remove(v)
 			summary_rows.append({
 				'cat': d['NAME'],
-				'lt4m':  diag_map[d['NAME']][0],
-				'lt4f':  diag_map[d['NAME']][1],
-				'gt4m':  diag_map[d['NAME']][2],
-				'gt4f':  diag_map[d['NAME']][3],
-				'visit_list': ", ".join(diag_map[d['NAME']][4])
+				'lt28dm':  diag_map[d['NAME']][0],
+				'lt28df':  diag_map[d['NAME']][1],
+				'lt4m':  diag_map[d['NAME']][2],
+				'lt4f':  diag_map[d['NAME']][3],
+				'gt4m':  diag_map[d['NAME']][4],
+				'gt4f':  diag_map[d['NAME']][5],
+				'gt59m':  diag_map[d['NAME']][6],
+				'gt59f':  diag_map[d['NAME']][7],
+				'visit_list': ", ".join(diag_map[d['NAME']][8])
 				})
 
 	if dump_type == "CSV":
