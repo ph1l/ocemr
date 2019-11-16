@@ -701,6 +701,14 @@ class DiagnosisTallyReportForm(forms.Form):
 			)
 		)
 
+class VillageTallyReportForm(forms.Form):
+	dump_type = forms.ChoiceField(choices=(
+				('TABLE', 'display'),
+				('CSV', 'csv'),
+				('G_PIE', 'Pie Graph'),
+			)
+		)
+
 class DiagnosisPatientReportForm(forms.Form):
 	from models import DiagnosisType
 	diagnosis = forms.ModelMultipleChoiceField(

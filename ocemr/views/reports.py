@@ -302,6 +302,57 @@ def med_tally(request):
 		return dump_table(request, field_names, headers, summary_rows )
 
 @login_required
+def village_tally(request):
+	"""
+	"""
+	from ocemr.forms import VillageTallyReportForm
+
+	form_valid=0
+	if request.method == 'POST':
+		form = VillageTallyReportForm(request.POST)
+		if form.is_valid():
+			dump_type = form.cleaned_data['dump_type']
+
+			form_valid=1
+	else:
+		form = VillageTallyReportForm()
+	if not form_valid:
+		return render(request, 'popup_form.html', {
+	                'title': 'Enter type For Report',
+	                'form_action': '/reports/village/tally/',
+	                'form': form,
+	        })
+	from ocemr.models import Patient
+	patients = Patient.objects.all()
+	totals={}
+	for p in patients:
+		if p.village.name not in totals.keys():
+			totals[p.village.name] = 0
+		totals[p.village.name] += 1
+
+	sorted_keys=sorted(totals,key=totals.__getitem__,reverse=True)
+
+	if dump_type == "G_PIE":
+		title="Village Tally"
+		labels=[]
+		data = []
+		for key in sorted_keys:
+			labels.append(key)
+			data.append(totals[key])
+		return dump_graph_pie(title, labels, data)
+
+	summary_rows=[]
+        field_names=[ 'village', 'num_patients', ]
+	headers={ 'village': 'Village', 'num_patients': 'Number of Patients', }
+	for village in sorted_keys:
+		summary_rows.append({'village':village, 'num_patients':totals[village]})
+	if dump_type == "CSV":
+		return dump_csv( "village-tally-%s.csv"%(datetime.now().strftime("%Y%m%d")), field_names, headers, summary_rows )
+	elif dump_type == "TABLE":
+		return dump_table(request, field_names, headers, summary_rows )
+
+
+@login_required
 def clinician_tally(request):
 	"""
 	"""
