@@ -19,7 +19,7 @@
 #
 #
 #########################################################################
-#       Copyright 2011 Philip Freeman <philip.freeman@gmail.com>
+#       Copyright 2011-8 Philip Freeman <elektron@halo.nu>
 ##########################################################################
 MYSQL_DATA=/var/lib/mysql
 APP_DIR=/usr/share/ocemr/apps

@@ -16,15 +16,15 @@ web-based EMR intends to be portable and straightforward to use.
 
 ## Project Links
 
- * [Home Page](http://github.com/ph1l/ocemr)
- * [Bug/Feature Tracking](https://github.com/ph1l/ocemr/issues)
- * [Wiki](https://github.com/ph1l/ocemr/wiki)
+ * [Home Page](http://github.com/ocemr/ocemr)
+ * [Bug/Feature Tracking](https://github.com/ocemr/ocemr/issues)
+ * [Wiki](https://github.com/ocemr/ocemr/wiki)
  * [IRC channel](http://webchat.freenode.net/?channels=%23ocemr)
 
 ## Documentation
 
 * For Users:
-  * [User's Manual](https://github.com/ph1l/ocemr/wiki/DocIndex#users-manual)
+  * [User's Manual](https://github.com/ocemr/ocemr/wiki/DocIndex#users-manual)
   * [CHANGELOG](doc/CHANGELOG)
 
 * For Administrators/Developers/Testers:

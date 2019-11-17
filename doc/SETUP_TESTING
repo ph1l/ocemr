@@ -15,7 +15,7 @@ Preparing the Environment
 
  -  Git a copy of the software:
 
-    $ git clone git://github.com/ph1l/ocemr.git
+    $ git clone git://github.com/ocemr/ocemr.git
     $ cd ~/ocemr
 
  -  Setup the main config File:
