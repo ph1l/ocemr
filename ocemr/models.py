@@ -426,6 +426,37 @@ class LabNote(models.Model):
 	addedBy = models.ForeignKey(User)
 	note = models.TextField(default="")
 
+class Pregnancy(models.Model):
+	GENDER_CHOICES = (
+		('M', 'Male'),
+		('F', 'Female'),
+	)
+	PREGNANCY_DELIVERY_MODES = (
+		('NVD', 'Normal Vaginal Delivery'),
+		('C/S', 'C-Section'),
+		('VAVD', 'Vacuum Assisted Vaginal Delivery'),
+		('FAVD', 'Forceps Assisted Vaginal Delivery'),
+	)
+	patient = models.ForeignKey(Patient)
+	deliveryDate = models.DateTimeField(default=datetime.datetime.now)
+	gestationalAge = models.IntegerField(default=40)
+	gestationalAgePlusDays = models.IntegerField(default=0)
+	deliveryMode = models.CharField(max_length=4, choices=PREGNANCY_DELIVERY_MODES, default='NVD')
+	gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+	presentation = models.CharField(max_length=32,default="")
+	laborLength = models.CharField(max_length=6,default="00:00")
+	complications = models.TextField(default="")
+	referral =  models.CharField(max_length=128, default="")
+	referralOutcome = models.TextField(default="")
+	postpartumFollowUp = models.NullBooleanField(default=None, null=True)
+	postpartumComplications = models.TextField(default="")
+	breastfeedingProblems = models.NullBooleanField(default=None, null=True)
+	pmtct = models.NullBooleanField(default=None, null=True)
+	tetanusBoosterDate = models.DateTimeField(blank=True, null=True)
+	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
+	addedBy = models.ForeignKey(User)
+	def __unicode__(self):
+		return "%s"%(self.type.title)
 
 class DiagnosisType(models.Model):
 	title = models.CharField(max_length=128)

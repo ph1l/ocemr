@@ -116,4 +116,9 @@ textarea
 	border: 1px solid #000000;
 }
 
+ul.errorlist
+{
+	color: #E64320;
+}
+
 form.inlineform	 {display: inline;}
