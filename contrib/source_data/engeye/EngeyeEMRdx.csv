@@ -715,6 +715,11 @@ W73,Benign/unspecif neopl relat to pregn
 W75,Injury complicating pregnancy,Injury complicating pregnancy
 W76,Congen anom complicating pregnancy,Congen anom complicating pregnancy
 W78,Pregnancy,Pregnancy
+W78,Pregnancy,ANC 1
+W78,Pregnancy,ANC 2
+W78,Pregnancy,ANC 3
+W78,Pregnancy,ANC 4
+W78,Pregnancy,ANC 5+
 W79,Unwanted pregnancy,Unwanted pregnancy
 W80,Ectopic pregnancy,Ectopic pregnancy
 W81,Toxaemia of pregnancy,Toxaemia (toxemia)/preeclampsia of pregnancy
