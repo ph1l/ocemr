@@ -23,9 +23,27 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
-#from django.db.models import get_model, Q
 from datetime import datetime, timedelta
 
+import functools
+
+def lock_decorator():
+	def decorator(func):
+		@functools.wraps(func)
+		def inner(*args, **kwargs):
+			from django.core.files import locks
+			with open('/var/tmp/ocemr_matplotlab_lock', 'wb') as f:
+				locks.lock(f, locks.LOCK_EX)
+				ret = None
+				ret = func(*args, **kwargs)
+				return ret
+
+		return inner
+
+	return decorator
+
+
+@lock_decorator()
 def test_matplotlib(request):
 	"""
 	"""
@@ -40,12 +58,15 @@ def test_matplotlib(request):
 	pie(fracs, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True)
 	title('Raining Hogs and Dogs', bbox={'facecolor':'0.8', 'pad':5})
 
-	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(f)    
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(f)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	matplotlib.pyplot.close(f)
 	return response
 
+@lock_decorator()
 def vitals_bp(request, id):
 	"""
 	"""
@@ -85,6 +106,12 @@ def vitals_bp(request, id):
 	plt.plot(bpD_date_list, bpD_data_list, 'o-', color='m', label="diastolic")
 	plt.ylabel('mmHg')
 	plt.legend(loc=0)
+	try:
+		plt.xlim(matplotlib.dates.date2num(min(bpS_date_list + bpD_date_list)) - 1,
+			matplotlib.dates.date2num(max(bpS_date_list + bpD_date_list)) + 1
+			)
+	except ValueError:
+		pass
 	fig.autofmt_xdate()
 
 	fig.text(0.15, 0.33, 'OCEMR',
@@ -92,13 +119,16 @@ def vitals_bp(request, id):
 		alpha=0.07)
 
 	plt.draw()
-	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	plt.close(fig)
 	return response
 
 
+@lock_decorator()
 def vitals_temp(request, id):
 	"""
 	"""
@@ -125,6 +155,12 @@ def vitals_temp(request, id):
 	plt.plot(temp_date_list,temp_data_list, 'o-', color='r', label="Temp")
 	plt.ylabel('degrees C')
 	plt.legend(loc=0)
+	try:
+		plt.xlim(matplotlib.dates.date2num(min(temp_date_list)) - 1,
+			matplotlib.dates.date2num(max(temp_date_list)) + 1,
+			)
+	except ValueError:
+		pass
 	fig.autofmt_xdate()
 
 	fig.text(0.15, 0.33, 'OCEMR',
@@ -132,13 +168,16 @@ def vitals_temp(request, id):
 		alpha=0.07)
 
 	plt.draw()
-	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	matplotlib.pyplot.close(fig)
 	return response
 
 
+@lock_decorator()
 def vitals_hrrr(request, id):
 	"""
 	"""
@@ -173,7 +212,13 @@ def vitals_hrrr(request, id):
 	plt.plot(hr_date_list,hr_data_list, 'o-', color='r',label="Heart")
 	plt.plot(rr_date_list,rr_data_list, 'o-', color='m',label="Resp")
 	plt.ylabel('rate (bpm)')
-	l = plt.legend(loc=0)
+	plt.legend(loc=0)
+	try:
+		plt.xlim(matplotlib.dates.date2num(min(hr_date_list + rr_date_list)) - 1,
+			matplotlib.dates.date2num(max(hr_date_list + rr_date_list)) + 1,
+			)
+	except ValueError:
+		pass
 	fig.autofmt_xdate()
 
 	fig.text(0.15, 0.33, 'OCEMR',
@@ -181,12 +226,15 @@ def vitals_hrrr(request, id):
 		alpha=0.07)
 
 	plt.draw()
-	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	matplotlib.pyplot.close(fig)
 	return response
 
+@lock_decorator()
 def vitals_height_weight(request, id):
 	"""
 	"""
@@ -220,6 +268,12 @@ def vitals_height_weight(request, id):
 	plt.plot(weight_date_list,weight_data_list, 'o-', color='m',label="Weight")
 	plt.ylabel('cm, kg')
 	plt.legend(loc=0)
+	try:
+		plt.xlim(matplotlib.dates.date2num(min(height_date_list + weight_date_list)) - 1,
+			matplotlib.dates.date2num(max(height_date_list + weight_date_list)) + 1
+			)
+	except ValueError:
+		pass
 	fig.autofmt_xdate()
 
 	fig.text(0.15, 0.33, 'OCEMR',
@@ -227,12 +281,15 @@ def vitals_height_weight(request, id):
 		alpha=0.07)
 
 	plt.draw()
-	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	matplotlib.pyplot.close(fig)
 	return response
 
+@lock_decorator()
 def vitals_spo2_o2(request, id):
 	"""
 	"""
@@ -266,6 +323,12 @@ def vitals_spo2_o2(request, id):
 	plt.plot(date_list2,data_list2, 'o-', color='m',label="Oxygen")
 	plt.ylabel('percent')
 	plt.legend(loc=0)
+	try:
+		plt.xlim(matplotlib.dates.date2num(min(date_list + date_list2)) - 1,
+			matplotlib.dates.date2num(max(date_list + date_list2)) + 1
+			)
+	except ValueError:
+		pass
 	fig.autofmt_xdate()
 
 	fig.text(0.15, 0.33, 'OCEMR',
@@ -274,8 +337,10 @@ def vitals_spo2_o2(request, id):
 
 	plt.draw()
 	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	matplotlib.pyplot.close(fig)
 	return response
 
