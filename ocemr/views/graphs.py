@@ -106,6 +106,12 @@ def vitals_bp(request, id):
 	plt.plot(bpD_date_list, bpD_data_list, 'o-', color='m', label="diastolic")
 	plt.ylabel('mmHg')
 	plt.legend(loc=0)
+	try:
+		plt.xlim(matplotlib.dates.date2num(min(bpS_date_list + bpD_date_list)) - 1,
+			matplotlib.dates.date2num(max(bpS_date_list + bpD_date_list)) + 1
+			)
+	except ValueError:
+		pass
 	fig.autofmt_xdate()
 
 	fig.text(0.15, 0.33, 'OCEMR',
@@ -149,6 +155,12 @@ def vitals_temp(request, id):
 	plt.plot(temp_date_list,temp_data_list, 'o-', color='r', label="Temp")
 	plt.ylabel('degrees C')
 	plt.legend(loc=0)
+	try:
+		plt.xlim(matplotlib.dates.date2num(min(temp_date_list)) - 1,
+			matplotlib.dates.date2num(max(temp_date_list)) + 1,
+			)
+	except ValueError:
+		pass
 	fig.autofmt_xdate()
 
 	fig.text(0.15, 0.33, 'OCEMR',
@@ -201,6 +213,12 @@ def vitals_hrrr(request, id):
 	plt.plot(rr_date_list,rr_data_list, 'o-', color='m',label="Resp")
 	plt.ylabel('rate (bpm)')
 	l = plt.legend(loc=0)
+	try:
+		plt.xlim(matplotlib.dates.date2num(min(hr_date_list + rr_date_list)) - 1,
+			matplotlib.dates.date2num(max(hr_date_list + rr_date_list)) + 1,
+			)
+	except ValueError:
+		pass
 	fig.autofmt_xdate()
 
 	fig.text(0.15, 0.33, 'OCEMR',
@@ -250,6 +268,12 @@ def vitals_height_weight(request, id):
 	plt.plot(weight_date_list,weight_data_list, 'o-', color='m',label="Weight")
 	plt.ylabel('cm, kg')
 	plt.legend(loc=0)
+	try:
+		plt.xlim(matplotlib.dates.date2num(min(height_date_list + weight_date_list)) - 1,
+			matplotlib.dates.date2num(max(height_date_list + weight_date_list)) + 1
+			)
+	except ValueError:
+		pass
 	fig.autofmt_xdate()
 
 	fig.text(0.15, 0.33, 'OCEMR',
@@ -299,6 +323,12 @@ def vitals_spo2_o2(request, id):
 	plt.plot(date_list2,data_list2, 'o-', color='m',label="Oxygen")
 	plt.ylabel('percent')
 	plt.legend(loc=0)
+	try:
+		plt.xlim(matplotlib.dates.date2num(min(date_list + date_list2)) - 1,
+			matplotlib.dates.date2num(max(date_list + date_list2)) + 1
+			)
+	except ValueError:
+		pass
 	fig.autofmt_xdate()
 
 	fig.text(0.15, 0.33, 'OCEMR',
