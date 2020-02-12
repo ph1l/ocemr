@@ -212,7 +212,7 @@ def vitals_hrrr(request, id):
 	plt.plot(hr_date_list,hr_data_list, 'o-', color='r',label="Heart")
 	plt.plot(rr_date_list,rr_data_list, 'o-', color='m',label="Resp")
 	plt.ylabel('rate (bpm)')
-	l = plt.legend(loc=0)
+	plt.legend(loc=0)
 	try:
 		plt.xlim(matplotlib.dates.date2num(min(hr_date_list + rr_date_list)) - 1,
 			matplotlib.dates.date2num(max(hr_date_list + rr_date_list)) + 1,
