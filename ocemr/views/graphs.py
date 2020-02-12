@@ -39,9 +39,11 @@ def test_matplotlib(request):
 	pie(fracs, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True)
 	title('Raining Hogs and Dogs', bbox={'facecolor':'0.8', 'pad':5})
 
-	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(f)    
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(f)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	matplotlib.pyplot.close(f)
 	return response
 
@@ -91,9 +93,11 @@ def vitals_bp(request, id):
 		alpha=0.07)
 
 	plt.draw()
-	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	plt.close(fig)
 	return response
 
@@ -131,9 +135,11 @@ def vitals_temp(request, id):
 		alpha=0.07)
 
 	plt.draw()
-	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	matplotlib.pyplot.close(fig)
 	return response
 
@@ -180,9 +186,11 @@ def vitals_hrrr(request, id):
 		alpha=0.07)
 
 	plt.draw()
-	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	matplotlib.pyplot.close(fig)
 	return response
 
@@ -226,9 +234,11 @@ def vitals_height_weight(request, id):
 		alpha=0.07)
 
 	plt.draw()
-	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)    
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	matplotlib.pyplot.close(fig)
 	return response
 
@@ -273,8 +283,10 @@ def vitals_spo2_o2(request, id):
 
 	plt.draw()
 	canvas = matplotlib.backends.backend_agg.FigureCanvasAgg(fig)
-	response = HttpResponse(content_type='image/png')
-	canvas.print_png(response)
+	import StringIO
+	output = StringIO.StringIO()
+	canvas.print_png(output, format='png')
+	response = HttpResponse(output.getvalue(), content_type='image/png')
 	matplotlib.pyplot.close(fig)
 	return response
 
