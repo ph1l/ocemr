@@ -25,6 +25,25 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from datetime import datetime, timedelta
 
+import functools
+
+def lock_decorator():
+	def decorator(func):
+		@functools.wraps(func)
+		def inner(*args, **kwargs):
+			from django.core.files import locks
+			with open('/var/tmp/ocemr_matplotlab_lock', 'wb') as f:
+				locks.lock(f, locks.LOCK_EX)
+				ret = None
+				ret = func(*args, **kwargs)
+				return ret
+
+		return inner
+
+	return decorator
+
+
+@lock_decorator()
 def test_matplotlib(request):
 	"""
 	"""
@@ -47,6 +66,7 @@ def test_matplotlib(request):
 	matplotlib.pyplot.close(f)
 	return response
 
+@lock_decorator()
 def vitals_bp(request, id):
 	"""
 	"""
@@ -102,6 +122,7 @@ def vitals_bp(request, id):
 	return response
 
 
+@lock_decorator()
 def vitals_temp(request, id):
 	"""
 	"""
@@ -144,6 +165,7 @@ def vitals_temp(request, id):
 	return response
 
 
+@lock_decorator()
 def vitals_hrrr(request, id):
 	"""
 	"""
@@ -194,6 +216,7 @@ def vitals_hrrr(request, id):
 	matplotlib.pyplot.close(fig)
 	return response
 
+@lock_decorator()
 def vitals_height_weight(request, id):
 	"""
 	"""
@@ -242,6 +265,7 @@ def vitals_height_weight(request, id):
 	matplotlib.pyplot.close(fig)
 	return response
 
+@lock_decorator()
 def vitals_spo2_o2(request, id):
 	"""
 	"""
