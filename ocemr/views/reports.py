@@ -834,6 +834,7 @@ def hmis105(request):
 	"""
 
 	from ocemr.forms import Hmis105Form
+	import re
 
 	form_valid=0
 	if request.method == 'POST':
@@ -1224,8 +1225,11 @@ def hmis105(request):
 					for i in range(0,7):
 						diag_map[d['NAME']][i]-=diag_map[subtraction][i]
 					for v in diag_map[subtraction][8]:
-						if v in diag_map[d['NAME']][8]:
-							diag_map[d['NAME']][8].remove(v)
+                                                id_match = re.match(".*>(\d+)<", v)
+                                                if id_match:
+						    for i in diag_map[d['NAME']][8]:
+                                                        if i.find(">" + id_match.group(1) + "<") > 0:
+							    diag_map[d['NAME']][8].remove(i)
 			summary_rows.append({
 				'cat': d['NAME'],
 				'lt28dm':  diag_map[d['NAME']][0],
