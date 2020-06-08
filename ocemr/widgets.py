@@ -30,8 +30,8 @@ from simplejson import JSONEncoder
 class JQueryAutoComplete(forms.TextInput):
 	class Media:
 		js = (
-			'/media/ocemr/js/jquery-1.4.2.js',
-			'/media/ocemr/js/jquery.autocomplete.js',
+			'/media/ocemr/js/jquery-3.3.1.js',
+			'/media/ocemr/js/jquery-ui-1.12.1.js',
 		)
 		css = {
 			'all': ('/media/ocemr/css/jquery.autocomplete.css',),
@@ -43,7 +43,7 @@ class JQueryAutoComplete(forms.TextInput):
 		For available options see the autocomplete sample page::
 		http://jquery.bassistance.de/autocomplete/"""
 
-		self.options = { 'minChars': '2', 'max': '64' }
+		self.options = { 'minLength': '2', 'max': '64' }
 		self.attrs = {'autocomplete': 'off'}
 		self.source = source
 		if len(options) > 0:
@@ -87,8 +87,8 @@ class JQueryAutoComplete(forms.TextInput):
 class JQueryAutoContains(forms.TextInput):
 	class Media:
 		js = (
-			'/media/ocemr/js/jquery-1.4.2.js',
-			'/media/ocemr/js/jquery.autocomplete.js',
+			'/media/ocemr/js/jquery-3.3.1.js',
+			'/media/ocemr/js/jquery-ui-1.12.1.js',
 		)
 		css = {
 			'all': ('/media/ocemr/css/jquery.autocomplete.css',),
@@ -100,7 +100,7 @@ class JQueryAutoContains(forms.TextInput):
 		For available options see the autocomplete sample page::
 		http://jquery.bassistance.de/autocomplete/"""
 
-		self.options = {'matchContains': 'true', 'minChars': '2', 'max': '64'}
+		self.options = {'source': source, 'matchContains': 'true', 'minLength': '2', 'max': '64'}
 		self.attrs = {'autocomplete': 'off'}
 		self.source = source
 		if len(options) > 0:
@@ -112,15 +112,15 @@ class JQueryAutoContains(forms.TextInput):
 		if isinstance(self.source, list):
 			source = JSONEncoder().encode(self.source)
 		elif isinstance(self.source, str):
-			source = "'%s'" % escape(self.source)
+			source = "source: '%s'" % escape(self.source)
 		else:
 			raise ValueError('source type is not valid')
 		
 		options = ''
 		if self.options:
-			options += ',%s' % self.options
+			options += '%s' % self.options
 
-		return u'$(\'#%s\').autocomplete(%s%s);' % (field_id, source, options)
+		return u'$(\'#%s\').autocomplete(%s);' % (field_id, options)
 
 	def render(self, name, value=None, attrs=None):
 		attrs = dict(attrs)
@@ -134,8 +134,8 @@ class JQueryAutoContains(forms.TextInput):
 		final_attrs = self.build_attrs(self.attrs,attrs)
 		
 		return u'''<input type="text" %(attrs)s/>
-		<script type="text/javascript"><!--//
-		%(js)s//--></script>
+		<script type="text/javascript">
+		%(js)s</script>
 		''' % {
 			'attrs' : flatatt(final_attrs),
 			'js' : self.render_js(final_attrs['id']),
