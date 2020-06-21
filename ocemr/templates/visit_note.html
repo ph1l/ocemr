@@ -1,6 +1,7 @@
 {% extends "base_visit.html" %}
 {% block visitContent %}
 <TABLE>
+<P ID=notice>NOTE: This tab is for internal communication only. It will not print with the patient's visit record.<BR>
 <A HREF="#" onClick='window.open("/patient/edit/note/{{p.id}}/","Edit Note","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>edit</A>
 <TEXTAREA style="width: 100%;" rows=8 DISABLED>{{p.scratchNote}}</TEXTAREA><BR>
 </TABLE>
