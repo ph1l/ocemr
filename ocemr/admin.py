@@ -86,6 +86,11 @@ class DBVerisionAdmin(admin.ModelAdmin):
 
 admin.site.register(DBVersion,DBVerisionAdmin)
 
+class CustomizedTextFieldAdmin(admin.ModelAdmin):
+	list_display = [ 'fieldName', 'content' ]
+
+admin.site.register(CustomizedTextField,CustomizedTextFieldAdmin)
+
 #admin.site.register(Referral)
 #admin.site.register(VisitSymptom)
 #admin.site.register(Vital)

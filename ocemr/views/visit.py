@@ -812,21 +812,20 @@ def visit_record(request, id, type):
 	"""
 
 	from ocemr.models import Visit
+	from ocemr.models import CustomizedTextField
 
 	v = Visit.objects.get(pk=id)
 
-	# TODO: Make this header Configurable!
-	head_text = """\t\t\t\tEngeye Health Clinic - Ddegeya-Masaka
-\t\t\t\tP.O. Box 26592, Kampala\t\t0772-556105\t\twww.engeye.org
-
-\t\tBino bye bikwata ku kujjanjabibwa kwo funnye leero
-
-"""
+	try:
+		h = CustomizedTextField.objects.get(fieldName="printedHeader")
+		head_text = h.content
+	except:
+		head_text = """\t\t\t\tOCEMR Medical Record"""
 	if v.finishedDateTime:
 		d = v.finishedDateTime
 	else:
 		d = v.seenDateTime
-	head_text += "\tPatient: %s\tVisit# %05d\tDate: %02d-%02d-%02d\n"%(
+	head_text += "\n\n\tPatient: %s\tVisit# %05d\tDate: %02d-%02d-%02d\n"%(
 		v.patient,v.id,
 		d.day, d.month, d.year)
 	allergy_list = []
@@ -849,7 +848,12 @@ def visit_record(request, id, type):
 			)
 		
 
-	text_out = head_text + summ_text + upco_text
+	try:
+		f = CustomizedTextField.objects.get(fieldName="printedFooter")
+		foot_text = f.content
+	except:
+		foot_text = ""
+	text_out = head_text + summ_text + upco_text + foot_text
 
 	if type == "print":
 		from subprocess import Popen, PIPE
@@ -862,5 +866,5 @@ def visit_record(request, id, type):
 		out,err=p.communicate()
 		return render(request, 'close_window.html', {})
 	else:
-		lines = text_out.replace('\t','&nbsp;&nbsp;&nbsp;').replace('\n','<BR>')
+		lines = text_out.replace('\t','&nbsp;&nbsp;&nbsp;').replace('\\t','&nbsp;&nbsp;&nbsp;').replace('\n','<BR>').replace('\\n','<BR>')
 		return render(request, 'popup_lines.html', {'lines': lines, 'link_text': """<a href="#" onclick="window.print();return false;">Print</a>"""})
