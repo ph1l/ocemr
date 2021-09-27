@@ -261,17 +261,20 @@ def med_tally(request):
 	daily_index=0
 	ordered={}
 	dispensed={}
+	units_dispensed={}
 	substituted={}
 	canceled={}
 	for m in days_meds:
 		if m.type.title not in ordered.keys():
 			ordered[m.type.title] = 0
 			dispensed[m.type.title] = 0
+			units_dispensed[m.type.title] = 0
 			substituted[m.type.title] = 0
 			canceled[m.type.title] = 0
 		ordered[m.type.title] += 1
 		if m.status == "DIS":
 			dispensed[m.type.title] += 1
+			units_dispensed[m.type.title] += m.dispenseAmount
 		elif m.status == "SUB":
 			substituted[m.type.title] += 1
 		elif m.status == "CAN":
@@ -289,11 +292,12 @@ def med_tally(request):
 		return dump_graph_pie(title, labels, data)
 
 	summary_rows=[]
-	field_names=[ 'med', 'ord', 'dis', 'sub', 'can' ]
+	field_names=[ 'med', 'ord', 'dis', 'udis', 'sub', 'can' ]
 	headers={
 		'med': 'Med Type',
 		'ord': 'Number Ordered',
 		'dis': 'Number Dispensed',
+		'udis': 'Units Dispensed',
 		'sub': 'Number Substituted',
 		'can': 'Number Canceled',
 		 }
@@ -303,6 +307,7 @@ def med_tally(request):
 				'med': m,
 				'ord': ordered[m],
 				'dis': dispensed[m],
+				'udis': units_dispensed[m],
 				'sub': substituted[m],
 				'can': canceled[m],
 			})
