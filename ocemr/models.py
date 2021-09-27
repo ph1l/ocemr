@@ -588,3 +588,9 @@ class DBVersion(models.Model):
 	addedDateTime = models.DateTimeField(default=datetime.datetime.now)
 	def __unicode__(self):
 		return "Version %d.%d.x"%(self.major,self.minor)
+
+class CustomizedTextField(models.Model):
+	fieldName = models.CharField(max_length=64, primary_key=True)
+	content = models.TextField(default="")
+	def __unicode__(self):
+		return "%s: %s"%(self.fieldName,self.content)
