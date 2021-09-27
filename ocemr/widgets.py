@@ -38,32 +38,21 @@ class JQueryAutoComplete(forms.TextInput):
 		}
 	def __init__(self, source, options={}, attrs={}):
 		"""source can be a list containing the autocomplete values or a
-		string containing the url used for the XHR request.
+		string containing the url used for the XHR request. """
 
-		For available options see the autocomplete sample page::
-		http://jquery.bassistance.de/autocomplete/"""
-
-		self.options = { 'minLength': '2', 'max': '64' }
+		self.options = {'source': source, 'minLength': '2', 'max': '64' }
 		self.attrs = {'autocomplete': 'off'}
-		self.source = source
 		if len(options) > 0:
 			self.options = JSONEncoder().encode(options)
 
 		self.attrs.update(attrs)
 	
 	def render_js(self, field_id):
-		if isinstance(self.source, list):
-			source = JSONEncoder().encode(self.source)
-		elif isinstance(self.source, str):
-			source = "'%s'" % escape(self.source)
-		else:
-			raise ValueError('source type is not valid')
-		
 		options = ''
 		if self.options:
-			options += ',%s' % self.options
+			options += '%s' % self.options
 
-		return u'$(\'#%s\').autocomplete(%s%s);' % (field_id, source, options)
+		return u'$(\'#%s\').autocomplete(%s);' % (field_id, options)
 
 	def render(self, name, value=None, attrs=None):
 		attrs = dict(attrs)
@@ -77,8 +66,8 @@ class JQueryAutoComplete(forms.TextInput):
 		final_attrs = self.build_attrs(self.attrs, attrs)
 		
 		return u'''<input type="text" %(attrs)s/>
-		<script type="text/javascript"><!--//
-		%(js)s//--></script>
+		<script type="text/javascript">
+		%(js)s</script>
 		''' % {
 			'attrs' : flatatt(final_attrs),
 			'js' : self.render_js(final_attrs['id']),
@@ -95,27 +84,16 @@ class JQueryAutoContains(forms.TextInput):
 		}
 	def __init__(self, source, options={}, attrs={}):
 		"""source can be a list containing the autocomplete values or a
-		string containing the url used for the XHR request.
+		string containing the url used for the XHR request."""
 
-		For available options see the autocomplete sample page::
-		http://jquery.bassistance.de/autocomplete/"""
-
-		self.options = {'source': source, 'matchContains': 'true', 'minLength': '2', 'max': '64'}
+		self.options = {'source': source, 'matchContains': 'true', 'minLength': '2', 'max': '64' }
 		self.attrs = {'autocomplete': 'off'}
-		self.source = source
 		if len(options) > 0:
 			self.options = JSONEncoder().encode(options)
 
 		self.attrs.update(attrs)
 	
 	def render_js(self, field_id):
-		if isinstance(self.source, list):
-			source = JSONEncoder().encode(self.source)
-		elif isinstance(self.source, str):
-			source = "source: '%s'" % escape(self.source)
-		else:
-			raise ValueError('source type is not valid')
-		
 		options = ''
 		if self.options:
 			options += '%s' % self.options

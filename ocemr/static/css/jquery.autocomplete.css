@@ -22,7 +22,7 @@
 //#########################################################################
 */
 
-.ac_results {
+.ui-autocomplete {
 	padding: 0px;
 	border: 1px solid black;
 	background-color: white;
@@ -30,7 +30,7 @@
 	z-index: 99999;
 }
 
-.ac_results ul {
+.ui-autocomplete ul {
 	width: 100%;
 	list-style-position: outside;
 	list-style: none;
@@ -38,7 +38,7 @@
 	margin: 0;
 }
 
-.ac_results li {
+.ui-autocomplete li {
 	margin: 0px;
 	padding: 2px 5px;
 	cursor: default;
@@ -56,17 +56,4 @@
 	*/
 	line-height: 16px;
 	overflow: hidden;
-}
-
-.ac_loading {
-	background: white url('indicator.gif') right center no-repeat;
-}
-
-.ac_odd {
-	background-color: #eee;
-}
-
-.ac_over {
-	background-color: #0A246A;
-	color: white;
 }
