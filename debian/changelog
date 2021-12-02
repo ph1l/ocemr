@@ -1,3 +1,10 @@
+ocemr (0.7.0) UNRELEASED; urgency=medium
+
+  * tally units of dispensed meds in addition to the dispensed order counts (patfreeman)
+  * add a table of customized text fields for use on printouts
+
+ -- Philip J Freeman <elektron@halo.nu>  Thu, 02 Dec 2021 12:54:43 -0800
+
 ocemr (0.6.1) stable; urgency=medium
 
   * afdcc05 Finish the upgrade to jquery-ui autocomplete
