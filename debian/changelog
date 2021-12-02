@@ -1,8 +1,13 @@
-ocemr (0.6.0) UNRELEASED; urgency=low
+ocemr (0.6.1) stable; urgency=medium
+
+  * afdcc05 Finish the upgrade to jquery-ui autocomplete
+
+ -- Philip J Freeman <elektron@halo.nu>  Thu, 02 Dec 2021 11:09:57 -0800
+
+ocemr (0.6.0) stable; urgency=low
 
   * port to newer platform. target debian/ buster w/ django 1.11
   * fix autocomplete bug (preggers bug) [d9fc952]
-  * ...
 
  -- Philip J Freeman <elektron@halo.nu>  Sat, 21 Jul 2018 16:27:42 -0700
 

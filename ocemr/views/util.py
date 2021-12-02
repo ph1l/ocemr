@@ -1,4 +1,3 @@
-
 ##########################################################################
 #
 #    This file is part of OCEMR.
@@ -20,6 +19,7 @@
 #########################################################################
 #       Copyright 2011-8 Philip Freeman <elektron@halo.nu>
 ##########################################################################
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
@@ -28,6 +28,8 @@ from django.apps import apps
 from django.views.decorators.cache import cache_page
 from django.template import RequestContext
 
+import json
+import tempfile
 
 # Setup Spell-Checker for autocomplete
 import time
@@ -146,10 +148,10 @@ def restore_backup(request):
 def autospel_name(request, inapp, inmodel):
 	"""
 	"""
-	if not request.GET.get('q'):
+	if not request.GET.get('term'):
 		return HttpResponse(content_type='text/plain')
 
-	q = request.GET.get('q')
+	q = request.GET.get('term')
 	limit = request.GET.get('limit', 15)
 	try:
 		limit = int(limit)
@@ -171,14 +173,16 @@ def autospel_name(request, inapp, inmodel):
 		DICT[dict_key] = { 'last_refresh': None, 'dict': None }
 		dict_broker = enchant.Broker()
 		# Start with a blank dict
-		DICT[dict_key]['dict'] = dict_broker.request_pwl_dict(None)
+		dict_dir = tempfile.mkdtemp()
+		DICT[dict_key]['dict'] = dict_broker.request_pwl_dict(dict_dir + "/enchanting_villages")
 		# Add all the names from the database
 		for o in Foo.objects.all():
 			DICT[dict_key]['dict'].add(o.name)
 		DICT[dict_key]['last_refresh'] = time.time()
 
 	foos = DICT[dict_key]['dict'].suggest(q)
-	return HttpResponse("%s|\n"%("|\n".join(foos)), content_type='text/plain')
+	data = json.dumps(foos)
+	return HttpResponse(data, content_type='application/json')
 
 
 @login_required
@@ -191,10 +195,10 @@ def autocomplete_name(request, inapp, inmodel):
 			for r in results:
 				yield '%s|%s\n' % (r.name, r.id)
 	
-	if not request.GET.get('q'):
+	if not request.GET.get('term'):
 		return HttpResponse(content_type='text/plain')
 	
-	q = request.GET.get('q')
+	q = request.GET.get('term')
 	limit = request.GET.get('limit', 64)
 	try:
 		limit = int(limit)
@@ -202,7 +206,11 @@ def autocomplete_name(request, inapp, inmodel):
 		return HttpResponseBadRequest() 
 	Foo = apps.get_model( inapp, inmodel )
 	foos = Foo.objects.filter(name__istartswith=q,active=True)[:limit]
-	return HttpResponse(iter_results(foos), content_type='text/plain')
+	results = []
+	for r in foos:
+		results.append(r.title)
+	data = json.dumps(results)
+	return HttpResponse(data, content_type='application/json')
 
 
 @login_required
@@ -215,10 +223,10 @@ def autosearch_title(request, inapp, inmodel):
 			for r in results:
 				yield '%s|%s\n' % (r.title, r.id)
 	
-	if not request.GET.get('q'):
+	if not request.GET.get('term'):
 		return HttpResponse(content_type='text/plain')
 	
-	q = request.GET.get('q')
+	q = request.GET.get('term')
 	limit = request.GET.get('limit', 64)
 	try:
 		limit = int(limit)
@@ -226,7 +234,11 @@ def autosearch_title(request, inapp, inmodel):
 		return HttpResponseBadRequest() 
 	Foo = apps.get_model( inapp, inmodel )
 	foos = Foo.objects.filter(title__icontains=q,active=True) #[:limit]
-	return HttpResponse(iter_results(foos), content_type='text/plain')
+	results = []
+	for r in foos:
+		results.append(r.title)
+	data = json.dumps(results)
+	return HttpResponse(data, content_type='application/json')
 
 
 @login_required
