@@ -154,6 +154,7 @@ urlpatterns = [
     url(r'^reports/cashflow/$', views.reports.cashflow),
     url(r'^reports/accounts_outstanding/$', views.reports.accounts_outstanding),
     url(r'^reports/hmis105/$', views.reports.hmis105),
+    url(r'^reports/med_pricelist/$', views.reports.med_pricelist),
 
     url(r'^graphs/test_matplotlib/$', views.graphs.test_matplotlib),
     url(r'^graphs/vitals/(?P<id>\d+)/bp.png$', views.graphs.vitals_bp),

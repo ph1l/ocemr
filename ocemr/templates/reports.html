@@ -2,9 +2,10 @@
 {% block title %}System Reports{% endblock %}
 
 {% block content %}
+<H3>Reports</H3>
 <UL>
 <LI><A HREF="#" onClick='window.open("/reports/legacy/patient/daily","Get Legacy Daily Report","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Legacy Daily Patient Report</A>
-<LI><A HREF="#" onClick='window.open("/reports/diagnosis_patient","Get Diagnosis Patient Report","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Diagnosis Patient Report</A> <b>*NEW*</b>
+<LI><A HREF="#" onClick='window.open("/reports/diagnosis_patient","Get Diagnosis Patient Report","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Diagnosis Patient Report</A>
 <LI><A HREF="#" onClick='window.open("/reports/diagnosis/tally/","Get Daily Tally","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Diagnosis Tally Report</A> 
 <LI><A HREF="#" onClick='window.open("/reports/lab/tally/","Lab Tally Report","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Lab Tally Report</A>
 <LI><A HREF="#" onClick='window.open("/reports/med/tally/","Med Tally Report","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Med Tally Report</A>
@@ -12,6 +13,10 @@
 <LI><A HREF="#" onClick='window.open("/reports/village/tally/","Village Tally Report","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Village Tally Report</A>
 <LI><A HREF="#" onClick='window.open("/reports/accounts_outstanding/","Show Outstanding Accounts","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Outstanding Accounts</A>
 <LI><A HREF="#" onClick='window.open("/reports/hmis105/","HMIS Form 105","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>HMIS Form 105</A>
+</UL>
+<H3>Downloads</H3>
+<UL>
+<LI><A HREF="/reports/med_pricelist/">Medication Price List</A>
 </UL>
 {% endblock %}
 
