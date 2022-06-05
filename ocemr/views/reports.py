@@ -274,7 +274,8 @@ def med_tally(request):
 		ordered[m.type.title] += 1
 		if m.status == "DIS":
 			dispensed[m.type.title] += 1
-			units_dispensed[m.type.title] += m.dispenseAmount
+			if not m.dispenseAmount is None:
+				units_dispensed[m.type.title] += m.dispenseAmount
 		elif m.status == "SUB":
 			substituted[m.type.title] += 1
 		elif m.status == "CAN":
