@@ -10,7 +10,7 @@ Package: ocemr
 Architecture: all
 Depends: ${python:Depends}, ${misc:Depends}, python-django, python-sqlite,
  python-matplotlib, python-mysqldb, python-enchant, python-pymysql,
- apache2, libapache2-mod-wsgi, python-simplejson,
+ apache2, libapache2-mod-wsgi, python-simplejson, python-reportlab,
  cups, enscript, gnupg, sqlite3, bzip2
 Recommends: mysql-server, mysql-client
 Description: Open Clinic Electonic Medical Records

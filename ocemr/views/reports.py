@@ -125,6 +125,12 @@ def dump_graph_pie(title,labels,data):
         matplotlib.pyplot.close(fig)
         return response
 
+def download(filehandle, filename):
+	response = HttpResponse(filehandle.read(), content_type='application/force-download')
+	filehandle.close()
+	response['Content-Disposition'] = 'inline; filename=%s' % filename
+	return response
+
 def yearsago(years, from_date=None):
     if from_date is None:
         from_date = datetime.now()
@@ -1255,3 +1261,48 @@ def hmis105(request):
 		return dump_table(request, field_names, headers, summary_rows )
 	else:
 		raise "Invalid Dump Type"
+
+@login_required
+def med_pricelist(request):
+	"""
+	Download a PDF of the current price list
+	"""
+	# Gather the data
+	data = list()
+	import textwrap
+	from ocemr.models import MedType
+	for m in MedType.objects.all():
+		data.append([textwrap.fill(m.title, width=36, expand_tabs=False), m.cost])
+
+	# Build the PDF
+	from reportlab.platypus import BaseDocTemplate, Frame, PageBreak, PageTemplate, Paragraph, Table
+	from reportlab.lib.styles import getSampleStyleSheet
+	import io
+
+	# Per-page header
+	def header(canvas, doc):
+		canvas.saveState()
+		canvas.setTitle("Medication Price List")
+		P = Paragraph("Engeye Medication Price List as of %s" % today, styles['Heading1'])
+		w, h = P.wrap(doc.width, doc.bottomMargin)
+		P.drawOn(canvas, doc.leftMargin, doc.height + doc.bottomMargin)
+		canvas.restoreState()
+
+	# Initialize some basic elements and an in-memory file
+	elements = []
+	fh = io.BytesIO()
+	styles = getSampleStyleSheet()
+	doc = BaseDocTemplate(fh,showBoundary=1)
+	today = datetime.today().strftime("%Y-%m-%d")
+
+	# Make 2 columns
+	frame1 = Frame(doc.leftMargin, doc.bottomMargin, doc.width/2-6, doc.height, id='col1')
+	frame2 = Frame(doc.leftMargin+doc.width/2+6, doc.bottomMargin, doc.width/2-6, doc.height, id='col2')
+
+	# Add the data
+	elements.append(Table(data))
+	doc.addPageTemplates([PageTemplate(id='TwoCol',frames=[frame1,frame2], onPage=header), ])
+	doc.build(elements)
+
+	# Force the download
+	return download(fh, "med_price_list_%s.pdf" % today)
