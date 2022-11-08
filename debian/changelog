@@ -1,3 +1,9 @@
+ocemr (0.8.1) stable; urgency=low
+
+  * Fix medication price list file handling
+
+ -- Pat Freeman <github@e2r4.com>  Mon, 07 Nov 2022 19:43:08 -0600
+
 ocemr (0.8.0) stable; urgency=low
 
   * Add a medication price list PDF to the reports

@@ -1305,4 +1305,5 @@ def med_pricelist(request):
 	doc.build(elements)
 
 	# Force the download
+	fh.seek(0)
 	return download(fh, "med_price_list_%s.pdf" % today)
