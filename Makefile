@@ -28,6 +28,15 @@ install:
 	make -C contrib install
 	install -o root -g root -m 755 ocemr-manage $(DESTDIR)/usr/sbin
 
+/var/lib/machines/ocemr-server:
+	debootstrap --include=systemd buster /var/lib/machines/ocemr-server
+
+container-build: /var/lib/machines/ocemr-server
+	systemd-nspawn -U -D /var/lib/machines/ocemr-server --machine ocemr-server --bind $$PWD/:/build /build/contrib/nspawn/build
+
+container-clean:
+	rm -rf /var/lib/machines/ocemr-server
+
 pkg:
 	dpkg-buildpackage -rfakeroot -us -uc
 pkgtest:

@@ -1,0 +1,4 @@
+# Example ocemer-server.nspawn config file
+[Network]
+VirtualEthernet=yes
+Bridge=br0

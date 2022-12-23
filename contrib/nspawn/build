@@ -1,0 +1,32 @@
+#!/bin/bash -xe
+
+#enable logins to container
+echo 'root:ocemr' | chpasswd
+echo 'pts/1' >> /etc/securetty
+
+#setup network
+if ip link show dev host0 > /dev/null; then
+	cat << EOF > /etc/network/interfaces
+source /etc/network/interfaces.d/*
+auto lo
+iface lo inet loopback
+auto host0
+iface host0 inet dhcp
+EOF
+	if ! ifquery --state host0; then ifup host0; fi
+fi
+
+#update the container
+apt-get update
+apt-get upgrade
+apt-get -y install netcat
+
+#build the code
+if [ ! -d /work ]; then mkdir /work; fi
+cp -r /build /work/build
+pushd /work/build
+apt-get -y build-dep .
+dpkg-buildpackage -us -uc
+
+#install the package
+apt-get -y install --reinstall $(ls /work/ocemr_*.deb | tail -1)
