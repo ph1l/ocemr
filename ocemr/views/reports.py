@@ -884,8 +884,10 @@ def hmis105(request):
 		'lt4f',
 		'gt4m',
 		'gt4f',
-		'gt59m',
-		'gt59f',
+		'gt9m',
+		'gt9f',
+		'gt19m',
+		'gt19f',
 		'visit_list',
 		]
 	headers={
@@ -894,19 +896,21 @@ def hmis105(request):
 		'lt28df': '0-28 days, Female',
 		'lt4m': '0-4 years, Male',
 		'lt4f': '0-4 years, Female',
-		'gt4m': '5-59 years, Male',
-		'gt4f': '5-59 years, Female',
-		'gt59m': '60+ years, Male',
-		'gt59f': '60+ years, Female',
+		'gt4m': '5-9 years, Male',
+		'gt4f': '5-9 years, Female',
+		'gt9m': '10-19 years, Male',
+		'gt9f': '10-19 years, Female',
+		'gt19m': '19+ years, Male',
+		'gt19f': '19+ years, Female',
 		'visit_list': 'Visit List',
 		}
 	from ocemr.models import Visit, Referral, Diagnosis, DiagnosisType
 
 	summary_rows=[]
-	new_patient_visits=[0,0,0,0,0,0,0,0]
-	old_patient_visits=[0,0,0,0,0,0,0,0]
-	total_visits=[0,0,0,0,0,0,0,0]
-	referrals_from=[0,0,0,0,0,0,0,0]
+	new_patient_visits=[0,0,0,0,0,0,0,0,0,0]
+	old_patient_visits=[0,0,0,0,0,0,0,0,0,0]
+	total_visits=[0,0,0,0,0,0,0,0,0,0]
+	referrals_from=[0,0,0,0,0,0,0,0,0,0]
 
 	diagnoses = [
 		{ 'NAME': "1.3.1 Epidemic-Prone Diseases" },
@@ -1083,7 +1087,7 @@ def hmis105(request):
 		]
 	diag_map = {}
 	for d in diagnoses:
-		diag_map[d['NAME']] = [0,0,0,0,0,0,0,0,[]]
+		diag_map[d['NAME']] = [0,0,0,0,0,0,0,0,0,0,[]]
 	visits = Visit.objects.filter(Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) & (Q(status="CHOT") | Q(status="RESO")) )
 	for v in visits:
 		if not v.finishedDateTime:
@@ -1094,17 +1098,21 @@ def hmis105(request):
 				index = 0
 			elif v.patient.birthDate > yearsago(5, v.finishedDateTime).date():
 				index += 2
-			elif v.patient.birthDate > yearsago(60, v.finishedDateTime).date():
+			elif v.patient.birthDate > yearsago(10, v.finishedDateTime).date():
 				index += 4
-			else:
+			elif v.patient.birthDate > yearsago(20, v.finishedDateTime).date():
 				index += 6
+                        else:
+				index += 8
 		else:
 			if v.patient.birthYear >= v.finishedDateTime.year - 4:
 				index += 2
-			elif v.patient.birthYear >= v.finishedDateTime.year - 59:
+			elif v.patient.birthYear >= v.finishedDateTime.year - 9:
 				index += 4
-			else:
+			elif v.patient.birthYear >= v.finishedDateTime.year - 19:
 				index += 6
+			else:
+				index += 8
 		if v.patient.gender == "F":
 			index += 1
 		total_visits[index] += 1
@@ -1146,14 +1154,15 @@ def hmis105(request):
 			my_count = my_d.count()
 			if my_count > 0:
 				diag_map[d['NAME']][index] += my_count
-				diag_map[d['NAME']][8].append("<A HREF=\"#%(diag_name)s_%(visit_id)s\" onclick=\"window.opener.location.href='/visit/%(visit_id)s/plan/';\">%(visit_id)s</A>"%{'visit_id': v.id, 'diag_name': d['NAME']})
+				diag_map[d['NAME']][10].append("<A HREF=\"#%(diag_name)s_%(visit_id)s\" onclick=\"window.opener.location.href='/visit/%(visit_id)s/plan/';\">%(visit_id)s</A>"%{'visit_id': v.id, 'diag_name': d['NAME']})
 
 
 	summary_rows.append({	'cat': "1.1 Outpatient Attendance",
 				'lt28dm': "", 'lt28df': "",
 				'lt4m': "", 'lt4f': "",
 				'gt4m': "", 'gt4f': "",
-				'gt59m': "", 'gt59f': "",
+				'gt9m': "", 'gt9f': "",
+				'gt19m': "", 'gt19f': "",
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "New Attendance",
@@ -1163,8 +1172,10 @@ def hmis105(request):
 				'lt4f': new_patient_visits[3],
 				'gt4m': new_patient_visits[4],
 				'gt4f': new_patient_visits[5],
-				'gt59m': new_patient_visits[6],
-				'gt59f': new_patient_visits[7],
+				'gt9m': new_patient_visits[6],
+				'gt9f': new_patient_visits[7],
+				'gt19m': new_patient_visits[8],
+				'gt19f': new_patient_visits[9],
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "Re-Attendance",
@@ -1174,8 +1185,10 @@ def hmis105(request):
 				'lt4f': old_patient_visits[3],
 				'gt4m': old_patient_visits[4],
 				'gt4f': old_patient_visits[5],
-				'gt59m': old_patient_visits[6],
-				'gt59f': old_patient_visits[7],
+				'gt9m': old_patient_visits[6],
+				'gt9f': old_patient_visits[7],
+				'gt19m': old_patient_visits[8],
+				'gt19f': old_patient_visits[9],
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "Total Attendance",
@@ -1185,22 +1198,26 @@ def hmis105(request):
 				'lt4f': total_visits[3],
 				'gt4m': total_visits[4],
 				'gt4f': total_visits[5],
-				'gt59m': total_visits[6],
-				'gt59f': total_visits[7],
+				'gt9m': total_visits[6],
+				'gt9f': total_visits[7],
+				'gt19m': total_visits[8],
+				'gt19f': total_visits[9],
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "1.2 Outpatient Referrals",
 				'lt28dm': "", 'lt28df': "",
 				'lt4m': "", 'lt4f': "",
 				'gt4m': "", 'gt4f': "",
-				'gt59m': "", 'gt59f': "",
+				'gt9m': "", 'gt9f': "",
+				'gt19m': "", 'gt19f': "",
 				'visit_list': "",
 				})
 	summary_rows.append({   'cat': "Referrals to unit",
 		                'lt28dm': "", 'lt28df': "",
 				'lt4m': "-", 'lt4f': "-",
 				'gt4m': "-", 'gt4f': "-",
-				'gt59m': "-", 'gt59f': "-",
+				'gt9m': "", 'gt9f': "",
+				'gt19m': "", 'gt19f': "",
 				'visit_list': "",
 				})
 	summary_rows.append({   'cat': "Referrals from unit",
@@ -1210,15 +1227,18 @@ def hmis105(request):
 				'lt4f': referrals_from[3],
 				'gt4m': referrals_from[4],
 				'gt4f': referrals_from[5],
-				'gt59m': referrals_from[6],
-				'gt59f': referrals_from[7],
+				'gt9m': referrals_from[6],
+				'gt9f': referrals_from[7],
+				'gt19m': referrals_from[8],
+				'gt19f': referrals_from[9],
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "1.3 Outpatient Diagnoses",
 				'lt28dm': "", 'lt28df': "",
 				'lt4m': "", 'lt4f': "",
 				'gt4m': "", 'gt4f': "",
-				'gt59m': "", 'gt59f': "",
+				'gt9m': "", 'gt9f': "",
+				'gt19m': "", 'gt19f': "",
 				'visit_list': "",
 				})
 	for d in diagnoses:
@@ -1228,7 +1248,8 @@ def hmis105(request):
 				'lt28dm': "", 'lt28df': "",
 				'lt4m': "-", 'lt4f': "-",
 				'gt4m': "-", 'gt4f': "-",
-				'gt59m': "-", 'gt59f': "-",
+				'gt9m': "", 'gt9f': "",
+				'gt19m': "", 'gt19f': "",
 				'visit_list': "-",
 				})
 		else:
@@ -1236,12 +1257,12 @@ def hmis105(request):
 				for subtraction in d['subtract']:
 					for i in range(0,7):
 						diag_map[d['NAME']][i]-=diag_map[subtraction][i]
-					for v in diag_map[subtraction][8]:
+					for v in diag_map[subtraction][10]:
                                                 id_match = re.match(".*>(\d+)<", v)
                                                 if id_match:
-						    for i in diag_map[d['NAME']][8]:
+						    for i in diag_map[d['NAME']][10]:
                                                         if i.find(">" + id_match.group(1) + "<") > 0:
-							    diag_map[d['NAME']][8].remove(i)
+							    diag_map[d['NAME']][10].remove(i)
 			summary_rows.append({
 				'cat': d['NAME'],
 				'lt28dm':  diag_map[d['NAME']][0],
@@ -1250,9 +1271,11 @@ def hmis105(request):
 				'lt4f':  diag_map[d['NAME']][3],
 				'gt4m':  diag_map[d['NAME']][4],
 				'gt4f':  diag_map[d['NAME']][5],
-				'gt59m':  diag_map[d['NAME']][6],
-				'gt59f':  diag_map[d['NAME']][7],
-				'visit_list': ", ".join(diag_map[d['NAME']][8])
+				'gt9m':  diag_map[d['NAME']][6],
+				'gt9f':  diag_map[d['NAME']][7],
+				'gt19m':  diag_map[d['NAME']][8],
+				'gt19f':  diag_map[d['NAME']][9],
+				'visit_list': ", ".join(diag_map[d['NAME']][10])
 				})
 
 	if dump_type == "CSV":
