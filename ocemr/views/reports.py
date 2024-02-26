@@ -1271,8 +1271,8 @@ def med_pricelist(request):
 	data = list()
 	import textwrap
 	from ocemr.models import MedType
-	for m in MedType.objects.all():
-		data.append([textwrap.fill(m.title, width=36, expand_tabs=False), m.cost])
+	for m in MedType.objects.all().order_by('title'):
+		data.append([textwrap.fill(m.title, width=32, expand_tabs=False), m.cost])
 
 	# Build the PDF
 	from reportlab.platypus import BaseDocTemplate, Frame, PageBreak, PageTemplate, Paragraph, Table
