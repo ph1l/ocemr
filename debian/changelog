@@ -1,3 +1,12 @@
+ocemr (0.8.2) stable; urgency=medium
+
+  * remove old jquery lib [6b029ec]
+  * formatting fix for med list [e7d33f3]
+  * adjust HMIS report age groups [866c4a4]
+  * adjust hmis attendance definition [5d59773]
+
+ -- Pat <github@e2r4.com>  Tue, 05 Mar 2024 20:01:18 -0600
+
 ocemr (0.8.1) stable; urgency=low
 
   * Fix medication price list file handling
