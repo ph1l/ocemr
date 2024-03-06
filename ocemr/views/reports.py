@@ -908,7 +908,7 @@ def hmis105(request):
 
 	summary_rows=[]
 	new_patient_visits=[0,0,0,0,0,0,0,0,0,0]
-	old_patient_visits=[0,0,0,0,0,0,0,0,0,0]
+	old_patient_visits=[[],[],[],[],[],[],[],[],[],[]]
 	total_visits=[0,0,0,0,0,0,0,0,0,0]
 	referrals_from=[0,0,0,0,0,0,0,0,0,0]
 
@@ -1116,9 +1116,9 @@ def hmis105(request):
 		if v.patient.gender == "F":
 			index += 1
 		total_visits[index] += 1
-		if Visit.objects.filter(Q(patient=v.patient) & Q(finishedDateTime__lte=dt_end)).count() > 1:
-			old_patient_visits[index] += 1
-		else:
+		if Visit.objects.filter(Q(patient=v.patient) & Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end)).count() > 1:
+			old_patient_visits[index].append(v.patient.id)
+		if Visit.objects.filter(Q(patient=v.patient) & Q(finishedDateTime__lte=dt_start)).count() < 1:
 			new_patient_visits[index] += 1
 		referrals = Referral.objects.filter(visit=v)
 		referrals_from[index] += len(referrals)
@@ -1179,16 +1179,16 @@ def hmis105(request):
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "Re-Attendance",
-				'lt28dm': old_patient_visits[0],
-				'lt28df': old_patient_visits[1],
-				'lt4m': old_patient_visits[2],
-				'lt4f': old_patient_visits[3],
-				'gt4m': old_patient_visits[4],
-				'gt4f': old_patient_visits[5],
-				'gt9m': old_patient_visits[6],
-				'gt9f': old_patient_visits[7],
-				'gt19m': old_patient_visits[8],
-				'gt19f': old_patient_visits[9],
+				'lt28dm': len(old_patient_visits[0])-len(set(old_patient_visits[0])),
+				'lt28df': len(old_patient_visits[1])-len(set(old_patient_visits[1])),
+				'lt4m': len(old_patient_visits[2])-len(set(old_patient_visits[2])),
+				'lt4f': len(old_patient_visits[3])-len(set(old_patient_visits[3])),
+				'gt4m': len(old_patient_visits[4])-len(set(old_patient_visits[4])),
+				'gt4f': len(old_patient_visits[5])-len(set(old_patient_visits[5])),
+				'gt9m': len(old_patient_visits[6])-len(set(old_patient_visits[6])),
+				'gt9f': len(old_patient_visits[7])-len(set(old_patient_visits[7])),
+				'gt19m': len(old_patient_visits[8])-len(set(old_patient_visits[8])),
+				'gt19f': len(old_patient_visits[9])-len(set(old_patient_visits[9])),
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "Total Attendance",
