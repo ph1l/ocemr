@@ -1,0 +1,36 @@
+name: test
+
+on: [push]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    container:
+      image: debian:buster-slim
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: cp DIST files
+      run: |
+        cp ocemr/settings.py.DIST ocemr/settings.py
+        cp util/util_conf.py.DIST util/util_conf.py
+
+    - name: install ocemr python dependencies
+      run: |
+        apt-get update
+        apt-get install -y python-django python-sqlite python-matplotlib python-mysqldb python-enchant python-pymysql python-simplejson python-reportlab
+      env:
+        DEBIAN_FRONTEND: noninteractive
+
+    - name: install pylint
+      run: |
+        apt-get update
+        apt-get install -y pylint
+      env:
+        DEBIAN_FRONTEND: noninteractive
+
+    - name: run pylint -E
+      run: |
+        pylint -E ocemr/ util/*.py manage.py
