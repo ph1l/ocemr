@@ -1,0 +1,19 @@
+name: test
+
+on: [push]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v5
+
+    - uses: Silleellie/pylint-github-action@v2.1
+      with:
+        lint-path: |
+          ocemr/
+          util/*.py
+          manage.py
+        python-version: 3.13
