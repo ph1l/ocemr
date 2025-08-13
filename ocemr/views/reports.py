@@ -67,7 +67,10 @@ def dump_csv(filename,field_names,headers,data_rows):
                 row=[]
                 for field in field_names:
                         if data_row.has_key(field):
-                                row.append(data_row[field])
+                                if isinstance(data_row[field], unicode):
+                                        row.append(data_row[field].encode('ascii', 'replace'))
+                                else:
+                                        row.append(str(data_row[field]).encode('ascii','replace'))
                         else:
                                 row.append(None)
                 out.append(row)
