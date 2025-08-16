@@ -1064,7 +1064,7 @@ def hmis105(request):
 		{ 'NAME': "MH14. Other Adult Mental Health Conditions", 'ICPC2': [
 			"P0", "P10", "P12", "P13", "P17", "P18", "P20", "P25", "P26", "P27", "P28",
 			"P29", "P71", "P75", "P77", "P78", "P79", "P80", "P81", "P86", "P99" ],
-			'subtract': [ "MH18. Delirium", "MH19. Intellectual disability" ], MIN_AGE_DAYS: 6570 },
+			'subtract': [ "MH18. Delirium", "MH19. Intellectual disability" ], 'MIN_AGE_DAYS': 6570 },
 		{ 'NAME': "MH15. Internet addiction", 'ICPC2': [] },
 		{ 'NAME': "MH16. Alcohol Use Disorder", 'ICPC2': [ "P15", "P16" ] },
 		{ 'NAME': "MH17. Substance (Drug) use disorder", 'ICPC2': [ "P19" ] },
@@ -1083,7 +1083,7 @@ def hmis105(request):
 		{ 'NAME': "NE08. Alzheimer Disease (Manually review with MH08-MH13, NE04)", 'ICPC2': [ "P70" ] },
 		{ 'NAME': "NE09. Down Syndrome (DS)", 'ICPC2': [] },
 		{ 'NAME': "NE10. CP / PMLD", 'ICPC2': [] },
-		{ 'NAME': "NE11. Child abuse and Neglect (Manually review)", 'ICPC2': [ "Z" ], MAX_AGE_DAYS: 6570 },
+		{ 'NAME': "NE11. Child abuse and Neglect (Manually review)", 'ICPC2': [ "Z" ], 'MAX_AGE_DAYS': 6570 },
 		{ 'NAME': "NE12. Attention Deficit Hyperactivity disorder (ADHD) (Manually review)", 'ICPC2': [ "P22", "P23", "P24" ] },
 		{ 'NAME': "NE13. Learning Disability", 'ICPC2': [ "P24" ] },
 		{ 'NAME': "NE14. Conduct disorders (Manually review)", 'ICPC2': [ "P22", "P23" ] },
