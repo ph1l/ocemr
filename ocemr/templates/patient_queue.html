@@ -79,20 +79,22 @@
 	| <A HREF=# onClick='window.open("/visit/{{v.id}}/claim/","Claim Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Claim</A>
 	| <A HREF=# onClick='window.open("/visit/{{v.id}}/unseen/","Patient Missed","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Seen</A>
 {%endif%}
-{% ifequal v.type "OUT" %}
-	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/IN","Set Inpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Inpatient</A>
-	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/MAT","Set Maternity","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Maternity</A>
-{%else%}
-{% ifequal v.type "IN" %}
-	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/OUT","Set Outpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Outpatient</A>
-	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/MAT","Set Maternity","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Maternity</A>
-{%else%}
-{% ifequal v.type "MAT" %}
-	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/IN","Set Inpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Inpatient</A>
-	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/OUT","Set Outpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Outpatient</A>
-{%endifequal%}
-{%endifequal%}
-{%endifequal%}
+{% if v.can_modify_visit_type %}
+	{% ifequal v.type "OUT" %}
+		| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/IN","Set Inpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Inpatient</A>
+		| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/MAT","Set Maternity","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Maternity</A>
+	{%else%}
+	{% ifequal v.type "IN" %}
+		| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/OUT","Set Outpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Outpatient</A>
+		| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/MAT","Set Maternity","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Maternity</A>
+	{%else%}
+	{% ifequal v.type "MAT" %}
+		| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/IN","Set Inpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Inpatient</A>
+		| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/OUT","Set Outpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Outpatient</A>
+	{%endifequal%}
+	{%endifequal%}
+	{%endifequal%}
+{%endif%}
 </TD>
 {% endfor %}
 </TABLE>

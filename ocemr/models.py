@@ -355,6 +355,18 @@ class Visit(models.Model):
 			out_txt += "\n\nSeen By: %s %s\n\n" %( self.claimedBy.first_name, self.claimedBy.last_name)
 		return out_txt
 
+	def can_modify_visit_type(self):
+		"""
+		limit situations where visit type can change
+
+		during first day, while claimed, any type shift okay
+
+		during subsequent days none is
+		"""
+
+		if self.is_claimed and self.seenDateTime.date() == datetime.date.today():
+			return True
+
 class SymptomType(models.Model):
 	title = models.CharField(max_length=128)
 	def __unicode__(self):
