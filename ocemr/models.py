@@ -115,9 +115,15 @@ class Visit(models.Model):
 		('RESO',  'Resolved'),
 		('MISS',  'Missed'),
 	)
+	VISIT_TYPE_CHOICES = (
+		('OUT', 'Outpatient'),
+		('IN',  'Inpatient'),
+		('MAT',  'Maternity'),
+	)
 	patient = models.ForeignKey(Patient)
 	scheduledDate = models.DateField('Date scheduled')
 	scheduledBy = models.ForeignKey(User, related_name="visit_scheduled_by")
+	type = models.CharField(max_length=3, choices=VISIT_TYPE_CHOICES, default='OUT')
 	status = models.CharField(max_length=4, choices=VISIT_STATUS_CHOICES, default='SCHE')
 	reason = models.CharField(max_length=3, choices=VISIT_REASON_CHOICES, default='NEW')
 	reasonDetail = models.TextField('Reason for Visit',default="")
