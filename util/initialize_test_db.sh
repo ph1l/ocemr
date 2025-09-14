@@ -20,7 +20,7 @@ if [ -e ${VAR}/db/ocemr.db ]; then
 fi
 
 
-python ${APP}/manage.py migrate
+python ${APP}/../manage.py migrate
 
 #----------
 
