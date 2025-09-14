@@ -36,11 +36,12 @@
 {% if visits %}
 <DIV STYLE="font-size: 1.2em;">Active({{num_active}}):</DIV>
 <TABLE>
-<TR><TH>Seen</TH><TH>Patient Id</TH><TH>Status</TH><TH>Claimed</TH><TH>Labs</TH><TH>Actions</TH></TR>
+<TR><TH>Seen</TH><TH>Patient Id</TH><TH>Type</TH><TH>Status</TH><TH>Claimed</TH><TH>Labs</TH><TH>Actions</TH></TR>
 {% for v in visits %}
 <TR>
 <TD>{{v.seenDateTime|date:"SHORT_DATETIME_FORMAT"}}</TD>
 <TD><A HREF=/patient/{{v.patient.id}}/>{{ v.patient }}</A></TD>
+<TD>{{v.displayType}}</TD>
 	{% ifequal v.status "MISS" %}
 		<TD STYLE='background-color:#FF5555;'>
 	{% else %} {% ifequal v.status "INPR" %}
@@ -78,6 +79,20 @@
 	| <A HREF=# onClick='window.open("/visit/{{v.id}}/claim/","Claim Patient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Claim</A>
 	| <A HREF=# onClick='window.open("/visit/{{v.id}}/unseen/","Patient Missed","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Undo-Seen</A>
 {%endif%}
+{% ifequal v.type "OUT" %}
+	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/IN","Set Inpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Inpatient</A>
+	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/MAT","Set Maternity","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Maternity</A>
+{%else%}
+{% ifequal v.type "IN" %}
+	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/OUT","Set Outpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Outpatient</A>
+	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/MAT","Set Maternity","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Maternity</A>
+{%else%}
+{% ifequal v.type "MAT" %}
+	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/IN","Set Inpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Inpatient</A>
+	| <A HREF=# onClick='window.open("/visit/{{v.id}}/set_type/OUT","Set Outpatient","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Set-Outpatient</A>
+{%endifequal%}
+{%endifequal%}
+{%endifequal%}
 </TD>
 {% endfor %}
 </TABLE>

@@ -152,7 +152,11 @@ class EditVisitReasonForm(forms.Form):
 		super(EditVisitReasonForm, self).__init__(*args, **kwargs)
 		#raise(" | ".join(dir(self.fields['createdBy'])))
 		self.fields['reasonDetail'].initial=v.reasonDetail
-		
+
+class EditVisitTypeForm(forms.Form):
+    from models import Visit
+    visit_type = forms.ChoiceField(label='Visit Type',choices=Visit.VISIT_TYPE_CHOICES)
+
 class NewWalkinVisitForm(forms.ModelForm):
 	from models import Patient
 	from models import Visit

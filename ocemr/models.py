@@ -139,6 +139,11 @@ class Visit(models.Model):
 	cost = models.FloatField(default=0)
 	def __unicode__(self):
 		return "Visit %d: %s %s"%(self.id,self.patient,self.scheduledDate)
+	def _get_displayType(self):
+		for code, displayType in self.VISIT_TYPE_CHOICES:
+			if code == self.type:
+				return displayType
+		return ""
 	def _get_displayStatus(self):
 		for code, displayStatus in self.VISIT_STATUS_CHOICES:
 			if code == self.status:
@@ -166,6 +171,7 @@ class Visit(models.Model):
 		meds = Med.objects.filter(visit=self)
 		return len(meds)
 
+	displayType = property(_get_displayType)
 	displayStatus = property(_get_displayStatus)
 	displayReason = property(_get_displayReason)
 	is_claimed = property(_is_claimed)

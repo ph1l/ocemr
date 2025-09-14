@@ -72,11 +72,12 @@
 </TABLE>
 </TD><TD VALIGN=TOP>
 <TABLE>Scheduled Visits(<A HREF="#" onClick='window.open("/patient/schedule_new_visit/{{p.id}}/","Add Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Schedule Future Visit</a>):
-<TR><TH>Visit ID<TH>Scheduled<TH>Status<TH>Reason<TH>Detail<TH>Action</TR>
+<TR><TH>Visit ID<TH>Scheduled<TH>Type<TH>Status<TH>Reason<TH>Detail<TH>Action</TR>
 {% for v in upcoming_visits %}
 <TR>
   <TD><A HREF=/visit/{{v.id}}>{{ v.id }}</A>
   <TD>{{ v.scheduledDate|date:"SHORT_DATE_FORMAT" }} by {{ v.scheduledBy }}
+  <TD>{{ v.displayType }}
   <TD>{{ v.displayStatus }}
    <TD>{{ v.reason }}
    <TD>{{ v.reasonDetail }} 
@@ -89,12 +90,13 @@
 </TD></TR></TABLE>
 <TABLE>Past &amp; Current Visits
 (<A HREF="#" onClick='window.open("/patient/schedule_walkin_visit/{{p.id}}/","Add Visit","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>Schedule Walk-up Visit Now!</a>):
-<TR><TH>Scheduled<TH>by<TH>Status<TH>Seen<TH>Claimed<TH>Finished<TH>Resolved<TH>Cost<TH>Collected<TH>Actions</TR>
+<TR><TH>Scheduled<TH>by<TH>Type<TH>Status<TH>Seen<TH>Claimed<TH>Finished<TH>Resolved<TH>Cost<TH>Collected<TH>Actions</TR>
 <TR><TH>Reason<TH>Detail</TR>
 {% for v in visits %}
 <TR>
    <TD>{{ v.scheduledDate|date:"SHORT_DATE_FORMAT" }}
    <TD>{{ v.scheduledBy }}
+   <TD>{{v.displayType}} <A HREF=# onClick='window.open("/visit/{{v.id}}/edit_type/","Edit Visit Type","menubar=no,width=540,height=420,toolbar=no,scrollbars=yes");'>(edit)</A></TD>
 
 	{% ifequal v.status "MISS" %}
 		<TD STYLE='background-color:#FF5555;'>

@@ -77,6 +77,8 @@ urlpatterns = [
     url(r'^patient/merge/(?P<id>\d+)/(?P<dupid>\d+)/$', views.patient.patient_do_merge),
 
     url(r'^visit/(?P<id>\d+)/$', views.visit.visit),
+    url(r'^visit/(?P<id>\d+)/edit_type/$', views.visit.visit_edit_type),
+    url(r'^visit/(?P<id>\d+)/set_type/(?P<new_type>\w+)/$', views.visit.visit_set_type),
     url(r'^visit/(?P<id>\d+)/seen/$', views.visit.visit_seen),
     url(r'^visit/(?P<id>\d+)/unseen/$', views.visit.visit_unseen),
     url(r'^visit/(?P<id>\d+)/claim/$', views.visit.visit_claim),
