@@ -62,6 +62,9 @@ def patient_queue(request,dayoffset=0):
 
 	d_today = datetime.today()
 
+	#
+	filter_visit_type = request.GET.get('filter_visit_type', None)
+
 	# Cleanup missed visits
 	d_missed = d_today-timedelta(7)
 	missed_q = Q(scheduledDate__lte=str(d_missed.date())) & Q(status='SCHE')
@@ -82,11 +85,16 @@ def patient_queue(request,dayoffset=0):
 	dt_start = datetime(d_today.year,d_today.month,d_today.day,0,0,0)
         dt_end = datetime(d_today.year,d_today.month,d_today.day,23,59,59)
 
+	if filter_visit_type:
+		visit_type_q = Q(type=filter_visit_type)
+	else:
+		visit_type_q = Q()
+
 	active_q = Q(status='WAIT') | Q(status='INPR')
 	resolved_q =  ( Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end) ) & ( Q(status='CHOT') | Q(status='RESO') )
 
-	visits = Visit.objects.filter(active_q).order_by('seenDateTime')
-	r_visits = Visit.objects.filter(resolved_q).order_by('-finishedDateTime')
+	visits = Visit.objects.filter(visit_type_q).filter(active_q).order_by('seenDateTime')
+	r_visits = Visit.objects.filter(visit_type_q).filter(resolved_q).order_by('-finishedDateTime')
 	num_active = len(visits)
 	num_inactive = len(r_visits)
 
