@@ -1,0 +1,23 @@
+name: Check Formatting
+
+on: [push]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    container:
+      image: debian:buster-slim
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - run: sed -i -e 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
+
+    - run: |
+        apt-get update
+        apt-get install -y yapf
+      env:
+        DEBIAN_FRONTEND: noninteractive
+
+    - run: yapf --diff --verbose --recursive --style pep8 ocemr util manage.py
