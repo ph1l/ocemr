@@ -27,14 +27,14 @@ __svnid__ = "$Id$"
 __license__ = "Python"
 __author__ = "Antonio Cavedoni <http://cavedoni.com/>"
 __contributors__ = [
-   "Stefano J. Attardi <http://attardi.org/>",
-   "limodou <http://www.donews.net/limodou/>",
-   "Carlo C8E Miron",
-   "Andre Campos <cahenan@gmail.com>",
-   "Justin Findlay <jfindlay@gmail.com>",
-   "Alexander Houben <alexander@houben.ch>",
-   "Christopher Schmidt <crschmidt@metacarta.com>",
-   ]
+    "Stefano J. Attardi <http://attardi.org/>",
+    "limodou <http://www.donews.net/limodou/>",
+    "Carlo C8E Miron",
+    "Andre Campos <cahenan@gmail.com>",
+    "Justin Findlay <jfindlay@gmail.com>",
+    "Alexander Houben <alexander@houben.ch>",
+    "Christopher Schmidt <crschmidt@metacarta.com>",
+]
 
 import getopt, sys
 
@@ -116,6 +116,7 @@ tail_template = """
 }
 """
 
+
 def generate_dot(app_labels, **kwargs):
     disable_fields = kwargs.get('disable_fields', False)
     include_models = kwargs.get('include_models', [])
@@ -129,22 +130,19 @@ def generate_dot(app_labels, **kwargs):
             'name': '"%s"' % app.__name__,
             'disable_fields': disable_fields,
             'models': []
-            })
+        })
 
         for appmodel in get_models(app):
-            
+
             # consider given model name ?
             def consider(model_name):
-                return (not include_models or model_name in include_models) and (not model_name in exclude_models)
-            
+                return (not include_models or model_name in include_models
+                        ) and (not model_name in exclude_models)
+
             if not consider(appmodel._meta.object_name):
                 continue
-            
-            model = {
-                'name': appmodel.__name__,
-                'fields': [],
-                'relations': []
-                }
+
+            model = {'name': appmodel.__name__, 'fields': [], 'relations': []}
 
             # model attributes
             def add_attributes():
@@ -152,7 +150,7 @@ def generate_dot(app_labels, **kwargs):
                     'name': field.name,
                     'type': type(field).__name__,
                     'blank': field.blank
-                    })
+                })
 
             for field in appmodel._meta.fields:
                 add_attributes()
@@ -168,7 +166,7 @@ def generate_dot(app_labels, **kwargs):
                     'type': type(field).__name__,
                     'name': field.name,
                     'arrows': extras
-                    }
+                }
                 if _rel not in model['relations'] and consider(_rel['target']):
                     model['relations'].append(_rel)
 
@@ -184,9 +182,10 @@ def generate_dot(app_labels, **kwargs):
                         add_relation("[arrowhead=normal arrowtail=normal]")
                     elif isinstance(field, GenericRelation):
                         add_relation(
-                            '[style="dotted"] [arrowhead=normal arrowtail=normal]')
+                            '[style="dotted"] [arrowhead=normal arrowtail=normal]'
+                        )
             graph['models'].append(model)
-                
+
         t = Template(body_template)
         dot += '\n' + t.render(graph)
 
@@ -194,10 +193,12 @@ def generate_dot(app_labels, **kwargs):
 
     return dot
 
+
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hdi:e:",
-                    ["help", "disable_fields", "include_models=", "exclude_models="])
+        opts, args = getopt.getopt(
+            sys.argv[1:], "hdi:e:",
+            ["help", "disable_fields", "include_models=", "exclude_models="])
     except getopt.GetoptError, error:
         print __doc__
         sys.exit(error)
@@ -218,6 +219,7 @@ def main():
         if opt in ("-e", "--exclude_models"):
             kwargs['exclude_models'] = arg.split(',')
     print generate_dot(args, **kwargs)
+
 
 if __name__ == "__main__":
     main()

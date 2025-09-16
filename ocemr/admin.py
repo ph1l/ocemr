@@ -23,73 +23,101 @@
 from ocemr.models import *
 from django.contrib import admin
 
+
 class PatientAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'familyName', 'givenName', 'age', 'village', 'numVisits', ]
-	search_fields = [ 'familyName', 'givenName' ]
+    list_display = [
+        'id',
+        'familyName',
+        'givenName',
+        'age',
+        'village',
+        'numVisits',
+    ]
+    search_fields = ['familyName', 'givenName']
+
 
 admin.site.register(Patient, PatientAdmin)
 
+
 class VillageAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'name' ]
-	search_fields = [ 'name' ]
+    list_display = ['id', 'name']
+    search_fields = ['name']
+
 
 admin.site.register(Village, VillageAdmin)
 
+
 class VisitAdmin(admin.ModelAdmin):
-	list_display = [
-		'id', 'patient', 'scheduledDate', 'status', 'seenDateTime',
-		'claimedDateTime', 'finishedDateTime', 'resolvedDateTime'
-		]
-	search_fields = [ 'patient__fullName' ]
+    list_display = [
+        'id', 'patient', 'scheduledDate', 'status', 'seenDateTime',
+        'claimedDateTime', 'finishedDateTime', 'resolvedDateTime'
+    ]
+    search_fields = ['patient__fullName']
+
 
 admin.site.register(Visit, VisitAdmin)
 
-class SymptomTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title' ]
-	search_fields = [ 'title' ]
 
-admin.site.register(SymptomType,SymptomTypeAdmin)
+class SymptomTypeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title']
+    search_fields = ['title']
+
+
+admin.site.register(SymptomType, SymptomTypeAdmin)
+
 
 class VitalTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title', 'unit', 'minValue', 'maxValue' ]
-	search_fields = [ 'title' ]
+    list_display = ['id', 'title', 'unit', 'minValue', 'maxValue']
+    search_fields = ['title']
 
-admin.site.register(VitalType,VitalTypeAdmin)
+
+admin.site.register(VitalType, VitalTypeAdmin)
 
 
 class LabTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title', 'cost', 'active' ]
-	search_fields = [ 'title' ]
+    list_display = ['id', 'title', 'cost', 'active']
+    search_fields = ['title']
 
-admin.site.register(LabType,LabTypeAdmin)
+
+admin.site.register(LabType, LabTypeAdmin)
+
 
 class DiagnosisTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'icpc2Code', 'title', 'active' ]
-	search_fields = [ 'icpc2Code', 'title' ]
+    list_display = ['id', 'icpc2Code', 'title', 'active']
+    search_fields = ['icpc2Code', 'title']
+
 
 admin.site.register(DiagnosisType, DiagnosisTypeAdmin)
 
-class MedTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title', 'cost', 'active' ]
-	search_fields = [ 'title' ]
 
-admin.site.register(MedType,MedTypeAdmin)
+class MedTypeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title', 'cost', 'active']
+    search_fields = ['title']
+
+
+admin.site.register(MedType, MedTypeAdmin)
+
 
 class ExamNoteTypeAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'title' ]
-	search_fields = [ 'title' ]
+    list_display = ['id', 'title']
+    search_fields = ['title']
 
-admin.site.register(ExamNoteType,ExamNoteTypeAdmin)
+
+admin.site.register(ExamNoteType, ExamNoteTypeAdmin)
+
 
 class DBVerisionAdmin(admin.ModelAdmin):
-	list_display = [ 'id', 'major', 'minor', 'addedDateTime' ]
+    list_display = ['id', 'major', 'minor', 'addedDateTime']
 
-admin.site.register(DBVersion,DBVerisionAdmin)
+
+admin.site.register(DBVersion, DBVerisionAdmin)
+
 
 class CustomizedTextFieldAdmin(admin.ModelAdmin):
-	list_display = [ 'fieldName', 'content' ]
+    list_display = ['fieldName', 'content']
 
-admin.site.register(CustomizedTextField,CustomizedTextFieldAdmin)
+
+admin.site.register(CustomizedTextField, CustomizedTextFieldAdmin)
 
 #admin.site.register(Referral)
 #admin.site.register(VisitSymptom)

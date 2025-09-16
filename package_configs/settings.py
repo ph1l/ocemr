@@ -5,7 +5,7 @@
 #
 
 # DATABASES
-DATABASES = { }
+DATABASES = {}
 
 # mysql
 DATABASES = {
@@ -16,8 +16,8 @@ DATABASES = {
         'PASSWORD': 'password',
         'HOST': '',
         'PORT': '',
-        }
     }
+}
 
 # sqlite3
 # Remove / comment out to use mysql
@@ -29,8 +29,8 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
-        }
     }
+}
 
 # DB_BACKUP_*
 #
@@ -44,8 +44,8 @@ DATABASES = {
 #
 #  TODO: document adding a personal key to the server keyring.
 
-DB_BACKUP_ENCRYPT=False
-DB_BACKUP_ENCRYPT_TO=[ "ocemr@localhost" ]
+DB_BACKUP_ENCRYPT = False
+DB_BACKUP_ENCRYPT_TO = ["ocemr@localhost"]
 
 #
 # DEBUG -
@@ -70,10 +70,10 @@ SERVER_EMAIL = 'ocemr@example.com'
 # *_PATH -
 #       Location the software is installed.
 #
-APP_PATH="/usr/share/ocemr/apps/ocemr"
-CONTRIB_PATH="/usr/share/ocemr/contrib"
-UTIL_PATH="/usr/share/ocemr/util"
-VAR_PATH="/var/lib/ocemr"
+APP_PATH = "/usr/share/ocemr/apps/ocemr"
+CONTRIB_PATH = "/usr/share/ocemr/contrib"
+UTIL_PATH = "/usr/share/ocemr/util"
+VAR_PATH = "/var/lib/ocemr"
 
 #
 # OCEMR PRINTER SETTINGS
@@ -87,7 +87,6 @@ VAR_PATH="/var/lib/ocemr"
 
 PRINTER_NAME = "Some_CUPS_Printer"
 PAPER_SIZE = "Letter"
-
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -108,7 +107,6 @@ SECRET_KEY = '5!&)hu8!_=l-*y2gwm9z9z&qro+m7%wswqpzk1)hlt_nxi)k_x'
 #
 ##############################################################################
 
-
 # Session Security
 #
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -119,18 +117,18 @@ USE_I18N = True
 STATIC_URL = '/media/ocemr/'
 TEMPLATES = [
     {
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [],
-    'APP_DIRS': True,
-    'OPTIONS': {
-        'context_processors': [
-        'django.template.context_processors.debug',
-        'django.template.context_processors.i18n',
-        'django.template.context_processors.request',
-        'django.contrib.auth.context_processors.auth',
-        'django.contrib.messages.context_processors.messages',
-        ],
-    },
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
     },
 ]
 
@@ -142,7 +140,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 ROOT_URLCONF = 'ocemr.urls'
-FORMAT_MODULE_PATH='ocemr.formats'
+FORMAT_MODULE_PATH = 'ocemr.formats'
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -154,7 +152,7 @@ INSTALLED_APPS = (
     'ocemr',
 )
 
-ALLOWED_HOSTS = ( '*' )
+ALLOWED_HOSTS = ('*')
 
 import version
-OCEMR_VERSION=version.OCEMR_VERSION
+OCEMR_VERSION = version.OCEMR_VERSION

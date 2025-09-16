@@ -22,7 +22,6 @@
 #       Copyright 2011-8 Philip Freeman <elektron@halo.nu>
 ##########################################################################
 
-
 #
 #   This is a quick and dirty hack to see which patients have the most
 # visits. It makes it easier to find the best patients to test some
@@ -32,7 +31,7 @@
 import sys, re
 
 import util_conf
-sys.path = [ util_conf.APP_PATH ] + sys.path
+sys.path = [util_conf.APP_PATH] + sys.path
 
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocemr.settings")
@@ -47,9 +46,9 @@ from ocemr.models import Visit
 from django.db.models import get_model, Q
 from datetime import datetime
 
-patient_visit_count={}
+patient_visit_count = {}
 for p in Patient.objects.all():
-	patient_visit_count[p] = 0
-	for v in Visit.objects.filter( Q(status='RESO') ).filter(patient=p):
-		patient_visit_count[p] += 1
-	print "%d %s" % ( patient_visit_count[p], p)
+    patient_visit_count[p] = 0
+    for v in Visit.objects.filter(Q(status='RESO')).filter(patient=p):
+        patient_visit_count[p] += 1
+    print "%d %s" % (patient_visit_count[p], p)

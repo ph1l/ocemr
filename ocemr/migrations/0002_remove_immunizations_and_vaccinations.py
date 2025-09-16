@@ -44,16 +44,8 @@ class Migration(migrations.Migration):
             model_name='vacnote',
             name='type',
         ),
-        migrations.DeleteModel(
-            name='ImmunizationLog',
-        ),
-        migrations.DeleteModel(
-            name='Vac',
-        ),
-        migrations.DeleteModel(
-            name='VacNote',
-        ),
-        migrations.DeleteModel(
-            name='VacType',
-        ),
+        migrations.DeleteModel(name='ImmunizationLog', ),
+        migrations.DeleteModel(name='Vac', ),
+        migrations.DeleteModel(name='VacNote', ),
+        migrations.DeleteModel(name='VacType', ),
     ]

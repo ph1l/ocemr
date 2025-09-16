@@ -19,25 +19,55 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Pregnancy',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id',
+                 models.AutoField(
+                     auto_created=True,
+                     primary_key=True,
+                     serialize=False,
+                     verbose_name='ID')),
                 ('deliveryDate', models.DateTimeField()),
                 ('gestationalAge', models.IntegerField(default=40)),
                 ('gestationalAgePlusDays', models.IntegerField(default=0)),
-                ('deliveryMode', models.CharField(choices=[(b'NVD', b'Normal Vaginal Delivery'), (b'C/S', b'C-Section'), (b'VAVD', b'Vacuum Assisted Vaginal Delivery'), (b'FAVD', b'Forceps Assisted Vaginal Delivery')], default=b'NVD', max_length=4)),
-                ('gender', models.CharField(choices=[(b'M', b'Male'), (b'F', b'Female')], max_length=1)),
+                ('deliveryMode',
+                 models.CharField(
+                     choices=[(b'NVD', b'Normal Vaginal Delivery'),
+                              (b'C/S', b'C-Section'),
+                              (b'VAVD', b'Vacuum Assisted Vaginal Delivery'),
+                              (b'FAVD', b'Forceps Assisted Vaginal Delivery')],
+                     default=b'NVD',
+                     max_length=4)),
+                ('gender',
+                 models.CharField(
+                     choices=[(b'M', b'Male'), (b'F', b'Female')],
+                     max_length=1)),
                 ('presentation', models.CharField(default=b'', max_length=32)),
-                ('laborLength', models.CharField(default=b'00:00', max_length=6)),
+                ('laborLength', models.CharField(
+                    default=b'00:00', max_length=6)),
                 ('complications', models.TextField(default=b'')),
                 ('referral', models.CharField(default=b'', max_length=128)),
                 ('referralOutcome', models.TextField(default=b'')),
-                ('postpartumFollowUp', models.BooleanField(choices=[(True, b'Yes'), (False, b'No')], default=True)),
+                ('postpartumFollowUp',
+                 models.BooleanField(
+                     choices=[(True, b'Yes'), (False, b'No')], default=True)),
                 ('postpartumComplications', models.TextField(default=b'')),
-                ('breastfeedingProblems', models.BooleanField(choices=[(True, b'Yes'), (False, b'No')], default=False)),
-                ('pmtct', models.BooleanField(choices=[(True, b'Yes'), (False, b'No')], default=True)),
-                ('tetanusBoosterDate', models.DateTimeField(blank=True, null=True)),
-                ('addedDateTime', models.DateTimeField(default=datetime.datetime.now)),
-                ('addedBy', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('patient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ocemr.Patient')),
+                ('breastfeedingProblems',
+                 models.BooleanField(
+                     choices=[(True, b'Yes'), (False, b'No')], default=False)),
+                ('pmtct',
+                 models.BooleanField(
+                     choices=[(True, b'Yes'), (False, b'No')], default=True)),
+                ('tetanusBoosterDate',
+                 models.DateTimeField(blank=True, null=True)),
+                ('addedDateTime',
+                 models.DateTimeField(default=datetime.datetime.now)),
+                ('addedBy',
+                 models.ForeignKey(
+                     on_delete=django.db.models.deletion.CASCADE,
+                     to=settings.AUTH_USER_MODEL)),
+                ('patient',
+                 models.ForeignKey(
+                     on_delete=django.db.models.deletion.CASCADE,
+                     to='ocemr.Patient')),
             ],
         ),
     ]
