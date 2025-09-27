@@ -910,7 +910,6 @@ def hmis105(request):
 	from ocemr.models import Visit, Referral, Diagnosis, DiagnosisType
 
 	summary_rows=[]
-	new_patient_visits=[0,0,0,0,0,0,0,0,0,0]
 	old_patient_visits=[[],[],[],[],[],[],[],[],[],[]]
 	total_visits=[0,0,0,0,0,0,0,0,0,0]
 	referrals_from=[0,0,0,0,0,0,0,0,0,0]
@@ -1121,8 +1120,6 @@ def hmis105(request):
 		total_visits[index] += 1
 		if Visit.objects.filter(Q(patient=v.patient) & Q(finishedDateTime__gte=dt_start) & Q(finishedDateTime__lte=dt_end)).count() > 1:
 			old_patient_visits[index].append(v.patient.id)
-		if Visit.objects.filter(Q(patient=v.patient) & Q(finishedDateTime__lte=dt_start)).count() < 1:
-			new_patient_visits[index] += 1
 		referrals = Referral.objects.filter(visit=v)
 		referrals_from[index] += len(referrals)
 
@@ -1169,16 +1166,16 @@ def hmis105(request):
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "New Attendance",
-				'lt28dm': new_patient_visits[0],
-				'lt28df': new_patient_visits[1],
-				'lt4m': new_patient_visits[2],
-				'lt4f': new_patient_visits[3],
-				'gt4m': new_patient_visits[4],
-				'gt4f': new_patient_visits[5],
-				'gt9m': new_patient_visits[6],
-				'gt9f': new_patient_visits[7],
-				'gt19m': new_patient_visits[8],
-				'gt19f': new_patient_visits[9],
+				'lt28dm': total_visits[0]-(len(old_patient_visits[0])-len(set(old_patient_visits[0]))),
+				'lt28df': total_visits[1]-(len(old_patient_visits[1])-len(set(old_patient_visits[1]))),
+				'lt4m': total_visits[2]-(len(old_patient_visits[2])-len(set(old_patient_visits[2]))),
+				'lt4f': total_visits[3]-(len(old_patient_visits[3])-len(set(old_patient_visits[3]))),
+				'gt4m': total_visits[4]-(len(old_patient_visits[4])-len(set(old_patient_visits[4]))),
+				'gt4f': total_visits[5]-(len(old_patient_visits[5])-len(set(old_patient_visits[5]))),
+				'gt9m': total_visits[6]-(len(old_patient_visits[6])-len(set(old_patient_visits[6]))),
+				'gt9f': total_visits[7]-(len(old_patient_visits[7])-len(set(old_patient_visits[7]))),
+				'gt19m': total_visits[8]-(len(old_patient_visits[8])-len(set(old_patient_visits[8]))),
+				'gt19f': total_visits[9]-(len(old_patient_visits[9])-len(set(old_patient_visits[9]))),
 				'visit_list': "",
 				})
 	summary_rows.append({	'cat': "Re-Attendance",
@@ -1248,11 +1245,11 @@ def hmis105(request):
 		if d.has_key("types") and len(d["types"]) == 0:
 			summary_rows.append({
 				'cat': d['NAME'],
-				'lt28dm': "", 'lt28df': "",
+				'lt28dm': "-", 'lt28df': "-",
 				'lt4m': "-", 'lt4f': "-",
 				'gt4m': "-", 'gt4f': "-",
-				'gt9m': "", 'gt9f': "",
-				'gt19m': "", 'gt19f': "",
+				'gt9m': "-", 'gt9f': "-",
+				'gt19m': "-", 'gt19f': "-",
 				'visit_list': "-",
 				})
 		else:
