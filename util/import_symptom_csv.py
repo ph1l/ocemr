@@ -24,7 +24,7 @@
 import sys, csv, re
 
 import util_conf
-sys.path = [ util_conf.APP_PATH ] + sys.path
+sys.path = [util_conf.APP_PATH] + sys.path
 
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocemr.settings")
@@ -36,18 +36,20 @@ from django.conf import settings
 
 #from ocemr.models import ###
 from ocemr.models import SymptomType
-reader = csv.reader(open("%s/source_data/%s/EngeyeEMRsymptoms.csv"%(settings.CONTRIB_PATH, util_conf.SOURCE_TEMPLATE), "rb"))
+reader = csv.reader(
+    open(
+        "%s/source_data/%s/EngeyeEMRsymptoms.csv" %
+        (settings.CONTRIB_PATH, util_conf.SOURCE_TEMPLATE), "rb"))
 
 for row in reader:
-	if len(row) < 1: continue
-	if row[0] =="": continue
-	title=row[0]
-	print "[%s] "%(title),
-	dt, is_new = SymptomType.objects.get_or_create(title=title)
-	if is_new:
-		print "{NEW} ",
-		dt.save()
-	else:
-		print "{exists} ",
-	print ""
-	
+    if len(row) < 1: continue
+    if row[0] == "": continue
+    title = row[0]
+    print "[%s] " % (title),
+    dt, is_new = SymptomType.objects.get_or_create(title=title)
+    if is_new:
+        print "{NEW} ",
+        dt.save()
+    else:
+        print "{exists} ",
+    print ""
