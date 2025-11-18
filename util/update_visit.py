@@ -22,7 +22,6 @@
 #       Copyright 2011-8 Philip Freeman <elektron@halo.nu>
 ##########################################################################
 
-
 #
 #  This was a quick and dirty hack to add some data to the DB after a schema
 # change.
@@ -31,7 +30,7 @@
 import sys, re
 
 import util_conf
-sys.path = [ util_conf.APP_PATH ] + sys.path
+sys.path = [util_conf.APP_PATH] + sys.path
 
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ocemr.settings")
@@ -45,34 +44,27 @@ from ocemr.models import User
 
 from django.db.models import get_model, Q
 from datetime import datetime
-visits = Visit.objects.filter( Q(status='RESO') & 
-		(
-		Q(seenDateTime=None) |
-		Q(claimedDateTime=None) |
-		Q(finishedDateTime=None) |
-		Q(resolvedDateTime=None) |
-		Q(claimedBy=None) |
-		Q(finishedBy=None) |
-		Q(resolvedBy=None)
-		)
-		)
+visits = Visit.objects.filter(
+    Q(status='RESO') & (Q(seenDateTime=None) | Q(claimedDateTime=None) | Q(
+        finishedDateTime=None) | Q(resolvedDateTime=None) | Q(claimedBy=None)
+                        | Q(finishedBy=None) | Q(resolvedBy=None)))
 u = User.objects.get(pk=1)
 
 for v in visits:
-	print v
-	dd = v.scheduledDate
-	if v.seenDateTime == None:
-		v.seenDateTime=datetime(dd.year,dd.month,dd.day,9,42,0)
-	if v.claimedDateTime == None:
-		v.claimedDateTime=datetime(dd.year,dd.month,dd.day,9,42,0)
-	if v.claimedBy == None:
-		v.claimedBy = u
-	if v.finishedDateTime == None:
-		v.finishedDateTime=datetime(dd.year,dd.month,dd.day,9,42,0)
-	if v.finishedBy == None:
-		v.finishedBy = u
-	if v.resolvedDateTime == None:
-		v.resolvedDateTime=datetime(dd.year,dd.month,dd.day,9,42,0)
-	if v.resolvedBy == None:
-		v.resolvedBy = u
-	v.save()
+    print v
+    dd = v.scheduledDate
+    if v.seenDateTime == None:
+        v.seenDateTime = datetime(dd.year, dd.month, dd.day, 9, 42, 0)
+    if v.claimedDateTime == None:
+        v.claimedDateTime = datetime(dd.year, dd.month, dd.day, 9, 42, 0)
+    if v.claimedBy == None:
+        v.claimedBy = u
+    if v.finishedDateTime == None:
+        v.finishedDateTime = datetime(dd.year, dd.month, dd.day, 9, 42, 0)
+    if v.finishedBy == None:
+        v.finishedBy = u
+    if v.resolvedDateTime == None:
+        v.resolvedDateTime = datetime(dd.year, dd.month, dd.day, 9, 42, 0)
+    if v.resolvedBy == None:
+        v.resolvedBy = u
+    v.save()
